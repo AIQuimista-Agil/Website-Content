@@ -1,151 +1,209 @@
-<section class="px-8 py-12 text-gray-200 bg-black bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden">
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Términos y Condiciones | AI.Quimista Ágil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: radial-gradient(circle at center, #001a09 0%, #000 100%);
+      color: #18ff5c;
+      font-family: 'Share Tech Mono', monospace;
+      margin: 0;
+      padding: 40px;
+      overflow-x: hidden;
+      text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-  <!-- Fondo animado sutil de fuego -->
-  <div class="absolute inset-0 opacity-10 animate-pulse bg-[radial-gradient(circle_at_center,rgba(255,153,0,0.2),transparent_70%)]"></div>
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(22px, 5vw, 32px);
+      color: #22ff77;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
+      animation: fireGlow 2.5s infinite alternate;
+    }
 
-  <div class="max-w-5xl mx-auto space-y-12 relative z-10">
-    
-    <!-- Encabezado principal -->
-    <div class="text-center space-y-2">
-      <h1 class="text-4xl font-semibold tracking-wider text-amber-400 uppercase transition-all duration-500 hover:tracking-widest hover:text-amber-300 drop-shadow-[0_0_8px_rgba(255,153,0,0.3)]">
-        Términos y Condiciones de Uso
-      </h1>
-      <p class="text-sm text-gray-400">AI.Quimista Ágil | Última actualización: 30 de octubre de 2025 | 11:35 AM</p>
-      <div class="w-24 h-0.5 mx-auto mt-3 bg-gradient-to-r from-amber-500 via-amber-300 to-amber-500 rounded-full animate-pulse"></div>
-    </div>
+    @keyframes fireGlow {
+      0% {
+        text-shadow: 
+          0 0 10px #18ff5c,
+          0 0 20px #00ff88,
+          0 0 30px #00ffaa,
+          0 0 40px #00ff77;
+      }
+      100% {
+        text-shadow:
+          0 0 20px #00ff99,
+          0 0 40px #00ff66,
+          0 0 60px #18ff5c,
+          0 0 80px #00ff44;
+      }
+    }
 
-    <!-- Introducción -->
-    <div class="text-center text-gray-300 leading-relaxed transition-all duration-700 hover:text-gray-200">
-      <p>
-        Bienvenido(a) a <span class="text-amber-400 font-medium hover:text-amber-300 transition-colors">AI.Quimista Ágil</span>.  
-        Al acceder y utilizar este sitio web, aceptas cumplir con los presentes Términos y Condiciones de uso, 
-        así como con todas las leyes y regulaciones aplicables en los 
-        <span class="italic">Estados Unidos Mexicanos</span>.  
-        Te pedimos que leas cuidadosamente este documento antes de continuar navegando.
-      </p>
-    </div>
+    #terminal {
+      max-width: 900px;
+      width: 100%;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.7;
+      letter-spacing: 0.5px;
+      background: rgba(0, 20, 10, 0.25);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset, 0 0 40px rgba(24, 255, 92, 0.15);
+      border: 1px solid rgba(24, 255, 92, 0.2);
+      animation: greenFlame 3s infinite alternate;
+    }
 
-    <!-- Secciones -->
-    <div class="space-y-10 text-gray-300 leading-relaxed">
-      
-      <!-- Cada sección tiene un efecto de iluminación al pasar el cursor -->
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 transition-all duration-300 hover:text-amber-300 hover:translate-x-1">
-          I. Propósito del sitio
-        </h2>
-        <p>
-          El sitio <span class="text-amber-400 font-medium">AI.Quimista Ágil</span> tiene un carácter informativo, creativo y formativo.  
-          Su propósito es compartir reflexiones, proyectos y contenidos relacionados con 
-          agilidad, desarrollo personal, espiritualidad aplicada, neurotecnología, arte simbólico 
-          y servicios vinculados a estos temas.
-        </p>
-        <p class="mt-2">
-          El contenido publicado no constituye asesoramiento legal, médico, financiero ni técnico especializado.  
-          Las decisiones que el usuario tome con base en la información compartida son de su exclusiva responsabilidad.
-        </p>
-      </div>
+    @keyframes greenFlame {
+      0% {
+        box-shadow: 0 0 15px rgba(24, 255, 92, 0.1) inset, 0 0 25px rgba(24, 255, 92, 0.2);
+      }
+      100% {
+        box-shadow: 0 0 30px rgba(24, 255, 92, 0.3) inset, 0 0 50px rgba(24, 255, 92, 0.5);
+      }
+    }
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">II. Uso permitido</h2>
-        <p>Puedes navegar libremente por el sitio y compartir enlaces a su contenido, siempre citando la fuente original.</p>
-        <p class="mt-2">No está permitido:</p>
-        <ul class="list-disc list-inside space-y-1 mt-2 text-gray-400">
-          <li>Utilizar el sitio para fines ilícitos, fraudulentos o que vulneren derechos de terceros.</li>
-          <li>Copiar, modificar, distribuir o reproducir el contenido sin autorización expresa por escrito.</li>
-          <li>Realizar acciones que afecten la seguridad, integridad o disponibilidad del sitio.</li>
-        </ul>
-      </div>
+    h2 {
+      font-family: 'Cinzel', serif;
+      color: #22ff77;
+      text-shadow: 0 0 12px rgba(24, 255, 92, 0.8);
+      margin-top: 25px;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">III. Propiedad intelectual</h2>
-        <p>
-          Todos los contenidos publicados en este sitio (textos, imágenes, logotipos, ilustraciones, diseños, código, audio, video 
-          y cualquier material creado para AI.Quimista Ágil) son propiedad intelectual del autor, salvo que se indique lo contrario.
-        </p>
-        <p class="mt-2">
-          El uso no autorizado de este material puede dar lugar a acciones legales conforme a la 
-          <span class="italic">Ley Federal del Derecho de Autor</span> y demás legislación aplicable.
-        </p>
-      </div>
+    p {
+      margin: 6px 0;
+      color: #aaffc3;
+    }
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">IV. Contenido de terceros</h2>
-        <p>
-          Este sitio puede contener enlaces o referencias a páginas externas de terceros.  
-          Dichos enlaces se proporcionan como recurso adicional para el usuario.  
-          <span class="text-amber-400 font-medium">AI.Quimista Ágil</span> no tiene control sobre dichos sitios ni asume 
-          responsabilidad por su veracidad, seguridad, disponibilidad o políticas de privacidad.
-        </p>
-      </div>
+    .cursor {
+      display: inline-block;
+      width: 12px;
+      height: 24px;
+      background-color: #18ff5c;
+      animation: blink 1s step-end infinite, cursorFlame 2s infinite alternate;
+      vertical-align: bottom;
+      margin-left: 4px;
+      box-shadow: 0 0 8px rgba(24, 255, 92, 0.9);
+    }
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">V. Servicios ofrecidos</h2>
-        <p>
-          En caso de ofrecer servicios específicos (por ejemplo: consultorías, talleres, mentorías, colaboraciones o experiencias ritualizadas), 
-          estos se regirán por acuerdos adicionales entre el autor del sitio y el cliente o colaborador.
-        </p>
-        <p class="mt-2">
-          Dichos acuerdos establecerán condiciones particulares como precios, plazos, entregables y alcances.
-        </p>
-      </div>
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">VI. Limitación de responsabilidad</h2>
-        <p>
-          Este sitio se ofrece <span class="italic">“tal cual está”</span>, sin garantías de disponibilidad continua, exactitud absoluta o ausencia de errores.  
-          <span class="text-amber-400 font-medium">AI.Quimista Ágil</span> no será responsable por daños directos, indirectos, incidentales o consecuentes 
-          derivados del uso o imposibilidad de uso del sitio.
-        </p>
-        <p class="mt-2">Cada usuario es responsable del uso que haga de la información compartida.</p>
-      </div>
+    @keyframes cursorFlame {
+      0% {
+        box-shadow: 0 0 8px rgba(24, 255, 92, 0.8), 0 0 15px #00ff66;
+      }
+      100% {
+        box-shadow: 0 0 12px rgba(24, 255, 92, 1), 0 0 25px #00ff88;
+      }
+    }
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">VII. Privacidad y protección de datos</h2>
-        <p>
-          El tratamiento de datos personales se rige por nuestra 
-          <a href="/politica-de-privacidad" class="text-amber-300 underline hover:text-amber-200 transition-colors">Política de Privacidad</a>,  
-          la cual puedes consultar en este mismo sitio.  
-          Esta política cumple con la <span class="italic">Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</span>.
-        </p>
-      </div>
+    @media screen and (max-width: 600px) {
+      body { padding: 20px; }
+      #terminal { padding: 20px; }
+      .cursor { height: 20px; width: 10px; }
+    }
+  </style>
+</head>
+<body>
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">VIII. Cambios en los términos</h2>
-        <p>
-          Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento.  
-          La versión vigente estará disponible en este sitio web, con su respectiva fecha de actualización.
-        </p>
-        <p class="mt-2">
-          El uso continuado del sitio después de la publicación de cambios implica tu aceptación de estos.
-        </p>
-      </div>
+  <h1>Términos y Condiciones | AI.Quimista Ágil</h1>
+  <div id="terminal"></div><span class="cursor"></span>
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">IX. Legislación aplicable y jurisdicción</h2>
-        <p>
-          Estos Términos y Condiciones se regirán e interpretarán conforme a las leyes de los 
-          <span class="italic">Estados Unidos Mexicanos</span>.  
-          En caso de controversia, las partes acuerdan someterse a la jurisdicción de los tribunales competentes 
-          en la ciudad de <span class="text-amber-400 font-medium">León, Guanajuato</span>, renunciando a cualquier otro fuero que pudiera corresponderles.
-        </p>
-      </div>
+  <!-- Sonido de escritura -->
+  <audio id="typeSound" src="https://pixabay.com/es/sound-effects/keyboard-typing-sound-effect-335503/" preload="auto"></audio>
 
-      <div class="transition duration-700 hover:bg-gradient-to-r hover:from-gray-900/40 hover:to-gray-800/40 hover:shadow-[0_0_20px_rgba(255,191,73,0.2)] rounded-xl p-4">
-        <h2 class="text-amber-400 text-xl font-semibold mb-2 hover:text-amber-300 hover:translate-x-1 transition-all">X. Contacto</h2>
-        <p>
-          Si tienes preguntas, comentarios o solicitudes relacionadas con estos Términos y Condiciones, 
-          puedes escribirnos a través de la sección 
-          <a href="/contacto" class="text-amber-300 underline hover:text-amber-200 transition-colors">Contacto</a>.
-        </p>
-      </div>
-    </div>
+  <!-- Sonido ambiental alquímico -->
+  <audio id="ambience" src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_1c1a9de9b1.mp3?filename=ambient-space-pad-6230.mp3" preload="auto" loop></audio>
 
-    <!-- Pie decorativo -->
-    <div class="text-center pt-8 border-t border-gray-800 mt-12">
-      <p class="text-xs text-gray-500 tracking-widest">
-        © 2025 AI.Quimista Ágil — “La Alquimia del Código, la Llama del Conocimiento.”
-      </p>
-    </div>
+  <script>
+    const text = `Última actualización: 30 de Octubre de 2025 | 11:35 AM
 
-  </div>
-</section>
+Bienvenido(a) a AI.Quimista Ágil. Al acceder y utilizar este sitio web, aceptas cumplir con los presentes Términos y Condiciones de uso, así como con todas las leyes y regulaciones aplicables en los Estados Unidos Mexicanos.
+
+Te pedimos que leas cuidadosamente este documento antes de continuar navegando.
+
+I️) Propósito del sitio
+El sitio AI.Quimista Ágil tiene un carácter informativo, creativo y formativo. Su propósito es compartir reflexiones, proyectos, contenidos relacionados con agilidad, desarrollo personal, espiritualidad aplicada, neurotecnología, arte simbólico y servicios vinculados a estos temas.
+El contenido publicado no constituye asesoramiento legal, médico, financiero ni técnico especializado. Las decisiones que el usuario tome con base en la información compartida son de su exclusiva responsabilidad.
+
+II️) Uso permitido
+Puedes navegar libremente por el sitio y compartir enlaces a su contenido, siempre citando la fuente original.
+No está permitido:
+• Utilizar el sitio para fines ilícitos, fraudulentos o que vulneren derechos de terceros.
+•	Copiar, modificar, distribuir o reproducir el contenido sin autorización expresa por escrito.
+• Realizar acciones que afecten la seguridad, integridad o disponibilidad del sitio.
+
+III️) Propiedad intelectual
+Todos los contenidos publicados en este sitio (textos, imágenes, logotipos, ilustraciones, diseños, código, audio, video y cualquier material creado para AI.Quimista Ágil) son propiedad intelectual del autor, salvo que se indique lo contrario.
+El uso no autorizado de este material puede dar lugar a acciones legales conforme a la Ley Federal del Derecho de Autor y demás legislación aplicable.
+
+IV️) Contenido de terceros
+Este sitio puede contener enlaces o referencias a páginas externas de terceros. Dichos enlaces se proporcionan como recurso adicional para el usuario.
+AI.Quimista Ágil no tiene control sobre dichos sitios, ni asume responsabilidad por su veracidad, seguridad, disponibilidad o políticas de privacidad.
+
+V️) Servicios ofrecidos
+En caso de ofrecer servicios específicos (por ejemplo: consultorías, talleres, mentorías, colaboraciones o experiencias ritualizadas), estos se regirán por acuerdos adicionales entre el autor del sitio y el cliente o colaborador.
+Dichos acuerdos establecerán condiciones particulares como precios, plazos, entregables y alcances.
+
+VI️) Limitación de responsabilidad
+Este sitio se ofrece “tal cual está”, sin garantías de disponibilidad continua, exactitud absoluta o ausencia de errores.
+AI.Quimista Ágil no será responsable por daños directos, indirectos, incidentales o consecuentes derivados del uso o imposibilidad de uso del sitio.
+Cada usuario es responsable del uso que haga de la información compartida.
+
+VII️) Privacidad y protección de datos
+El tratamiento de datos personales se rige por nuestra Política de Privacidad, la cual puedes consultar en este mismo sitio. Esta política cumple con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).
+
+VIII) Cambios en los términos
+Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento. La versión vigente estará disponible en este sitio web, con su respectiva fecha de actualización.
+El uso continuado del sitio después de la publicación de cambios implica tu aceptación de estos.
+
+IX) Legislación aplicable y jurisdicción
+Estos Términos y Condiciones se regirán e interpretarán conforme a las leyes de los Estados Unidos Mexicanos.
+En caso de controversia, las partes acuerdan someterse a la jurisdicción de los tribunales competentes en la ciudad de León, Guanajuato, renunciando a cualquier otro fuero que pudiera corresponderles por razón de domicilio presente o futuro.
+
+X) Contacto
+Si tienes preguntas, comentarios o solicitudes relacionadas con estos Términos y Condiciones, puedes escribirnos en Contacto.
+Responderemos en un plazo máximo de 20 días hábiles conforme a la normativa vigente.`;
+
+    const terminal = document.getElementById("terminal");
+    const typeSound = document.getElementById("typeSound");
+    const ambience = document.getElementById("ambience");
+
+    let i = 0;
+
+    function typeWriter() {
+      if (i < text.length) {
+        terminal.textContent += text.charAt(i);
+        if (text.charAt(i) !== ' ' && text.charAt(i) !== '\n') {
+          typeSound.currentTime = 0;
+          typeSound.play();
+        }
+        i++;
+        setTimeout(typeWriter, 25);
+      } else {
+        document.querySelector(".cursor").style.display = "inline-block";
+      }
+    }
+
+    // Activa el sonido ambiental al primer clic/tap (requerido en móviles)
+    document.body.addEventListener("click", () => {
+      ambience.volume = 3.3;
+      ambience.play().catch(() => {});
+    }, { once: true });
+
+    // Inicia la animación
+    typeWriter();
+  </script>
+</body>
+</html>
