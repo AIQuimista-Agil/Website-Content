@@ -70,6 +70,20 @@
       }
     }
 
+    h2 {
+      font-family: 'Cinzel', serif;
+      color: #22ff77;
+      text-shadow: 0 0 12px rgba(24, 255, 92, 0.8);
+      margin-top: 25px;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    p {
+      margin: 6px 0;
+      color: #aaffc3;
+    }
+
     .cursor {
       display: inline-block;
       width: 12px;
@@ -103,7 +117,7 @@
 </head>
 <body>
 
-  <h1>Política de Privacidad | AI.Quimista Ágil</h1>
+  <h1>🧪 Política de Privacidad | AI.Quimista Ágil</h1>
   <div id="terminal"></div><span class="cursor"></span>
 
   <!-- Sonido de escritura -->
@@ -113,47 +127,50 @@
   <audio id="ambience" src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_1c1a9de9b1.mp3?filename=ambient-space-pad-6230.mp3" preload="auto" loop></audio>
 
   <script>
-    const text = `Última actualización: 30 de Octubre de 2025
+    const text = `Política de Privacidad de AI.Quimista Ágil
+
+Última actualización: 30 de Octubre de 2025
 
 En AI.Quimista Ágil, valoramos profundamente tu privacidad. Creemos que la confianza es la base de toda relación, también en el entorno digital. Por ello, nos comprometemos a proteger la información personal que compartas en este sitio, conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.
+
 Esta política tiene como propósito ser clara, transparente y comprensible. Aquí te explicamos qué datos recopilamos, cómo los usamos, y cuáles son tus derechos.
 
-1. Información que recopilamos
+I️⃣ Información que recopilamos
 Podemos recopilar los siguientes datos personales:
-•	Datos de navegación: dirección IP, tipo de dispositivo, navegador, páginas visitadas, tiempo de permanencia.
-•	Datos que tú decides compartir: nombre, correo electrónico, redes sociales, comentarios, formularios, suscripciones.
-•	Datos técnicos y analíticos: mediante cookies, etiquetas de seguimiento y herramientas de análisis.
+• Datos de navegación: dirección IP, tipo de dispositivo, navegador, páginas visitadas, tiempo de permanencia.
+• Datos que tú decides compartir: nombre, correo electrónico, redes sociales, comentarios, formularios, suscripciones.
+• Datos técnicos y analíticos: mediante cookies, etiquetas de seguimiento y herramientas de análisis.
 
-2. Cómo obtenemos esta información
+II️⃣ Cómo obtenemos esta información
 La recopilación puede ocurrir:
-•	Automáticamente, a través de cookies, scripts y herramientas de análisis.
-•	Directamente, cuando tú compartes información al interactuar con formularios, suscripciones, encuestas o comentarios.
+• Automáticamente, a través de cookies, scripts y herramientas de análisis.
+• Directamente, cuando tú compartes información al interactuar con formularios, suscripciones, encuestas o comentarios.
 
-3. Finalidades del tratamiento
+III️⃣ Finalidades del tratamiento
 Usamos tus datos personales para:
-•	Mejorar tu experiencia de navegación y personalizar el contenido.
-•	Enviarte información relevante sobre nuestros artículos, servicios o actualizaciones (solo con tu consentimiento).
-•	Responder a tus consultas y mantener comunicación contigo.
-•	Cumplir con obligaciones legales aplicables.
+• Mejorar tu experiencia de navegación y personalizar el contenido.
+• Enviarte información relevante sobre nuestros artículos, servicios o actualizaciones (solo con tu consentimiento).
+• Responder a tus consultas y mantener comunicación contigo.
+• Cumplir con obligaciones legales aplicables.
 
-4. Almacenamiento y protección
+IV️⃣ Almacenamiento y protección
 Implementamos medidas técnicas, administrativas y físicas para proteger tu información contra accesos no autorizados, pérdida, alteración o uso indebido. Conservamos tus datos solo durante el tiempo necesario para cumplir con las finalidades descritas.
 
-5. Divulgación a terceros
+V️⃣ Divulgación a terceros
 No vendemos ni compartimos tu información personal con terceros, salvo en los siguientes casos:
-•	Cumplimiento de obligaciones legales o requerimientos de autoridad competente.
-•	Prestación de servicios por terceros (por ejemplo, hosting, análisis web), siempre que cumplan con estándares de seguridad y confidencialidad.
+• Cumplimiento de obligaciones legales o requerimientos de autoridad competente.
+• Prestación de servicios por terceros (por ejemplo, hosting, análisis web), siempre que cumplan con estándares de seguridad y confidencialidad.
 
-6. Privacidad de menores
+VI️⃣ Privacidad de menores
 Este sitio no está dirigido a menores de 13 años. No recopilamos intencionalmente información de niños. Si detectamos que se ha recopilado información de un menor sin consentimiento, la eliminaremos de inmediato.
 
-7. Cambios en esta política
+VII️⃣ Cambios en esta política
 Podemos actualizar esta política para reflejar cambios en nuestras prácticas o en la legislación aplicable. Te recomendamos revisarla periódicamente. Las modificaciones entrarán en vigor desde su publicación en este sitio.
 
-8. Derechos ARCO y contacto
-Tienes derecho a Acceder, Rectificar, Cancelar u Oponerte al tratamiento de tus datos personales (derechos ARCO). Para ejercerlos, envíanos una solicitud con tu nombre completo, correo electrónico y la descripción del derecho que deseas ejercer.
-Responderemos en un plazo máximo de 20 días hábiles conforme a la normativa vigente.
-</script>
+VIII️⃣ Derechos ARCO y contacto
+Tienes derecho a Acceder, Rectificar, Cancelar u Oponerte al tratamiento de tus datos personales (derechos ARCO). 
+Para ejercerlos, envíanos una solicitud con tu nombre completo, correo electrónico y la descripción del derecho que deseas ejercer.
+Responderemos en un plazo máximo de 20 días hábiles conforme a la normativa vigente.`;
 
     const terminal = document.getElementById("terminal");
     const typeSound = document.getElementById("typeSound");
@@ -175,13 +192,13 @@ Responderemos en un plazo máximo de 20 días hábiles conforme a la normativa v
       }
     }
 
-    // Activa audio tras la primera interacción (necesario por políticas móviles)
+    // Activa el sonido ambiental al primer clic/tap (requerido en móviles)
     document.body.addEventListener("click", () => {
       ambience.volume = 0.3;
       ambience.play().catch(() => {});
     }, { once: true });
 
-    // Inicia efecto de escritura
+    // Inicia la animación
     typeWriter();
   </script>
 </body>
