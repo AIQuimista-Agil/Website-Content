@@ -6,13 +6,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
-      background: radial-gradient(circle at center, #001a09 0%, #000 100%);
-      color: #18ff5c;
+      background: radial-gradient(circle at center, #050100 0%, #000 100%);
+      color: #ffae42;
       font-family: 'Share Tech Mono', monospace;
       margin: 0;
       padding: 40px;
       overflow-x: hidden;
-      text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
     }
 
     #terminal {
@@ -23,35 +22,81 @@
       font-size: 17px;
       line-height: 1.7;
       letter-spacing: 0.5px;
-      background: rgba(0, 20, 10, 0.25);
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset;
-      border: 1px solid rgba(24, 255, 92, 0.2);
+      background: rgba(40, 15, 0, 0.25);
+      box-shadow: 0 0 25px rgba(255, 180, 80, 0.1) inset;
+      border: 1px solid rgba(255, 200, 100, 0.2);
+      text-shadow: 0 0 10px rgba(255, 140, 0, 0.4);
     }
 
     h1 {
       font-family: 'Cinzel', serif;
       font-size: 28px;
-      color: #22ff77;
+      color: #ffcc66;
       text-align: center;
       margin-bottom: 20px;
-      text-shadow: 0 0 10px rgba(24, 255, 92, 0.8);
+      text-shadow: 0 0 15px rgba(255, 150, 50, 0.9);
     }
 
     .cursor {
       display: inline-block;
       width: 12px;
       height: 24px;
-      background-color: #18ff5c;
+      background-color: #ffae42;
       animation: blink 1s step-end infinite;
       vertical-align: bottom;
       margin-left: 4px;
-      box-shadow: 0 0 6px rgba(24, 255, 92, 0.9);
+      box-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
     }
 
     @keyframes blink {
       50% { opacity: 0; }
+    }
+
+    .fire {
+      animation: ignite 1.6s ease forwards;
+    }
+
+    @keyframes ignite {
+      0% {
+        opacity: 0;
+        text-shadow: none;
+        color: #331500;
+      }
+      30% {
+        opacity: 1;
+        color: #ff5c00;
+        text-shadow: 0 0 8px #ff3c00, 0 0 12px #ff6f00;
+      }
+      60% {
+        color: #ffd080;
+        text-shadow: 0 0 12px #ffae42, 0 0 20px #ffdd99;
+      }
+      100% {
+        color: #ffae42;
+        text-shadow: 0 0 10px rgba(255, 150, 50, 0.6);
+      }
+    }
+
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 24px;
+      background: linear-gradient(90deg, #ff7b00, #ffb347);
+      color: black;
+      font-family: 'Cinzel', serif;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 12px rgba(255, 150, 50, 0.6);
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(255, 180, 80, 0.8);
     }
 
     @media screen and (max-width: 600px) {
@@ -64,80 +109,90 @@
 </head>
 <body>
 
-  <h1>🧪 Política de Privacidad | AI.Quimista Ágil</h1>
-  <div id="terminal"></div><span class="cursor"></span>
+<h1>Política de Privacidad | AI.Quimista Ágil</h1>
+<button id="startBtn">🔥 Iniciar Lectura Alquímica</button>
+<div id="terminal"></div><span class="cursor"></span>
 
-  <!-- Sonido de escritura -->
-  <audio id="typeSound" src="https://cdn.pixabay.com/download/audio/2023/02/28/audio_2d7b43b73a.mp3?filename=keyboard-sci-fi-typing-142651.mp3" preload="auto"></audio>
+<!-- Sonido de escritura -->
+<audio id="typeSound" src="https://cdn.pixabay.com/download/audio/2023/02/28/audio_2d7b43b73a.mp3?filename=keyboard-sci-fi-typing-142651.mp3" preload="auto"></audio>
 
-  <!-- Sonido ambiental alquímico -->
-  <audio id="ambience" src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_1c1a9de9b1.mp3?filename=ambient-space-pad-6230.mp3" preload="auto" loop></audio>
+<!-- Sonido ambiental -->
+<audio id="ambience" src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_1c1a9de9b1.mp3?filename=ambient-space-pad-6230.mp3" preload="auto" loop></audio>
 
-  <script>
-    const text = `Última actualización: 7 de Octubre de 2025
+<script>
+  const text = `Última actualización: VII de Octubre de MMXXV
 
-En AI.Quimista Ágil, la privacidad es un acto de alquimia: transformar la información en confianza. 
-Creemos que proteger tus datos es tan esencial como preservar la esencia misma del conocimiento.
+En AI.Quimista Ágil, la privacidad es un acto de alquimia: transmutar la información en confianza.
+Creemos que proteger tus datos es preservar la esencia misma del conocimiento.
 
-1️⃣ Información que recopilamos:
-- Datos de navegación (IP, dispositivo, navegador, tiempo de visita)
-- Datos compartidos (nombre, correo, comentarios)
-- Datos técnicos (cookies, analítica, formularios)
+I. Información que recopilamos
+- Datos de navegación: IP, dispositivo, navegador, duración de visita.
+- Datos compartidos: nombre, correo electrónico, formularios y comentarios.
+- Datos técnicos: cookies, analítica y scripts.
 
-2️⃣ Cómo los obtenemos:
-- Automáticamente, mediante scripts y herramientas analíticas.
-- Directamente, cuando decides compartir tu información.
+II. Cómo los obtenemos
+- Automáticamente, mediante herramientas de análisis y rendimiento.
+- Directamente, cuando compartes tu información con intención consciente.
 
-3️⃣ Finalidades:
-- Mejorar tu experiencia y personalizar contenidos.
-- Enviarte información relevante, siempre con tu consentimiento.
-- Cumplir con obligaciones legales y mantener comunicación transparente.
+III. Finalidades
+- Mejorar tu experiencia digital.
+- Personalizar contenidos y comunicaciones.
+- Cumplir obligaciones legales.
 
-4️⃣ Protección:
-Aplicamos medidas de seguridad físicas y digitales, 
-asegurando que tus datos se mantengan cifrados y resguardados del caos informático.
+IV. Protección
+Aplicamos medidas físicas y digitales para mantener tus datos seguros,
+resguardados del caos y la corrupción de la red.
 
-5️⃣ Terceros:
-No vendemos tu información. 
-Solo compartimos datos con servicios seguros que mantienen nuestro mismo compromiso ético.
+V. Terceros
+Nunca vendemos información personal. 
+Solo trabajamos con aliados tecnológicos que mantienen juramento de confidencialidad.
 
-6️⃣ Privacidad de menores:
-No se recopila información de menores de 13 años. 
-Si detectamos algún registro, será eliminado con la celeridad del rayo verde de Metatrón.
+VI. Privacidad de menores
+No se recopilan datos de menores de XIII años.
+Si lo detectamos, serán eliminados con la celeridad del rayo dorado de Metatrón.
 
-7️⃣ Cambios en esta política:
-La alquimia es evolución. Si algo cambia, lo sabrás aquí mismo.
+VII. Cambios en esta política
+La alquimia es evolución. Toda transformación será reflejada en este sitio.
 
-8️⃣ Derechos ARCO:
-Puedes Acceder, Rectificar, Cancelar u Oponerte al uso de tus datos.
-Escríbenos con claridad y propósito, y responderemos en menos de 20 días hábiles.
+VIII. Derechos ARCO
+Acceder, Rectificar, Cancelar u Oponerte: tus derechos permanecen inviolables.
+Solicítalos y responderemos en un plazo máximo de XX días hábiles.
 
-Gracias por confiar en este laboratorio digital donde la ética, la tecnología y la conciencia se entrelazan.`;
+Gracias por confiar en este laboratorio digital
+donde la conciencia y el código se funden en una misma llama.`;
 
-    const terminal = document.getElementById("terminal");
-    const typeSound = document.getElementById("typeSound");
-    const ambience = document.getElementById("ambience");
+  const terminal = document.getElementById("terminal");
+  const typeSound = document.getElementById("typeSound");
+  const ambience = document.getElementById("ambience");
+  const startBtn = document.getElementById("startBtn");
+  const cursor = document.querySelector(".cursor");
+  let i = 0;
 
-    let i = 0;
-
-    function typeWriter() {
-      if (i < text.length) {
-        terminal.textContent += text.charAt(i);
-        if (text.charAt(i) !== ' ' && text.charAt(i) !== '\n') {
-          typeSound.currentTime = 0;
-          typeSound.play();
-        }
-        i++;
-        setTimeout(typeWriter, 25);
-      } else {
-        document.querySelector(".cursor").style.display = "inline-block";
+  function typeWriter() {
+    if (i < text.length) {
+      const char = text.charAt(i);
+      const span = document.createElement("span");
+      span.textContent = char;
+      terminal.appendChild(span);
+      if (char !== ' ' && char !== '\n') {
+        span.classList.add("fire");
+        typeSound.currentTime = 0;
+        typeSound.play();
       }
+      i++;
+      setTimeout(typeWriter, 28);
+    } else {
+      cursor.style.display = "inline-block";
     }
+  }
 
-    // Reproduce ambiente y empieza escritura
+  startBtn.addEventListener("click", () => {
+    startBtn.style.display = "none";
     ambience.volume = 0.3;
-    ambience.play().catch(() => console.log("Esperando interacción para reproducir ambiente."));
+    ambience.play();
     typeWriter();
-  </script>
+  });
+</script>
+
 </body>
 </html>
