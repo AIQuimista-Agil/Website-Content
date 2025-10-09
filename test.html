@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa del Sitio | AI.Quimista Ágil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: radial-gradient(circle at center, #001a09 0%, #000 100%);
+      color: #18ff5c;
+      text-align: center;
+      padding: 50px 20px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 32px;
+      color: #22ff77;
+      text-shadow: 0 0 12px rgba(24, 255, 92, 0.9);
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    .site-map {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .section {
+      width: 100%;
+      background: rgba(0, 40, 20, 0.2);
+      border: 1px solid rgba(24, 255, 92, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .section:hover {
+      background: rgba(0, 80, 30, 0.25);
+      box-shadow: 0 0 25px rgba(24, 255, 92, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .section h2 {
+      color: #18ff5c;
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 8px rgba(24, 255, 92, 0.7);
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    button {
+      background: transparent;
+      border: 1px solid #18ff5c;
+      color: #18ff5c;
+      font-size: 15px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(24, 255, 92, 0.4), transparent);
+      transform: skewX(-25deg);
+      transition: all 0.5s;
+    }
+
+    button:hover::before {
+      left: 125%;
+    }
+
+    button:hover {
+      background: rgba(24, 255, 92, 0.15);
+      box-shadow: 0 0 10px rgba(24, 255, 92, 0.6);
+      color: #b8ffd1;
+      transform: scale(1.03);
+    }
+
+    /* Sub-secciones */
+    .sub-buttons {
+      margin-top: 10px;
+      margin-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sub-buttons button {
+      font-size: 14px;
+      border-color: rgba(24, 255, 92, 0.6);
+      color: rgba(24, 255, 92, 0.8);
+    }
+
+    .sub-buttons button:hover {
+      background: rgba(24, 255, 92, 0.1);
+      color: #18ff5c;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 13px;
+      color: #0f0;
+      opacity: 0.7;
+      text-shadow: 0 0 8px rgba(24, 255, 92, 0.3);
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 26px; }
+      .section h2 { font-size: 18px; }
+      button { font-size: 13px; padding: 10px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧪 Mapa del Sitio | AI.Quimista Ágil</h1>
+
+  <div class="site-map">
+
+    <!-- INICIO -->
+    <div class="section">
+      <h2>Inicio</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Ir a Inicio</button>
+      </div>
+    </div>
+
+    <!-- AI.Quimista Ágil -->
+    <div class="section">
+      <h2>AI.Quimista Ágil</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Ir a AI.Quimista Ágil</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Ser Introspectivo</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimista de Realidades</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Conexión Ilusión / Realidad Líder</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Portador del Fuego</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Llamado Acción / Despertar</button>
+      </div>
+    </div>
+
+    <!-- SERVICIOS -->
+    <div class="section">
+      <h2>Servicios</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Servicios</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Profesional</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimia</button>
+      </div>
+    </div>
+
+    <!-- PORTAFOLIO -->
+    <div class="section">
+      <h2>Portafolio</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Portafolio</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Profesional</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimia</button>
+      </div>
+    </div>
+
+    <!-- BLOG -->
+    <div class="section">
+      <h2>Blog</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Blog</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Profesional</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimia</button>
+      </div>
+    </div>
+
+    <!-- CONTACTO -->
+    <div class="section">
+      <h2>Contacto</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Ir a Contacto</button>
+      </div>
+    </div>
+
+    <!-- ACERCA DE -->
+    <div class="section">
+      <h2>Acerca De</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Acerca de AI.Quimista Ágil</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Política de Privacidad</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Términos y Condiciones</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Mapa del Sitio</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 AI.Quimista Ágil — “La Alquimia del Código, la Llama del Conocimiento.”</footer>
+
+</body>
+</html>
