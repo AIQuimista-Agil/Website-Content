@@ -1,165 +1,231 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapa del Sitio | AI.Quimista Ágil</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
+      margin: 0;
+      font-family: 'Share Tech Mono', monospace;
       background: radial-gradient(circle at center, #001a09 0%, #000 100%);
       color: #18ff5c;
-      font-family: 'Share Tech Mono', monospace;
-      margin: 0;
-      padding: 40px;
+      text-align: center;
+      padding: 50px 20px;
       overflow-x: hidden;
-      text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: clamp(22px, 5vw, 32px);
+      font-size: 32px;
       color: #22ff77;
-      text-align: center;
-      margin-bottom: 20px;
-      text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
-      animation: fireGlow 2.5s infinite alternate;
+      text-shadow: 0 0 12px rgba(24, 255, 92, 0.9);
+      margin-bottom: 40px;
+      letter-spacing: 1px;
     }
 
-    @keyframes fireGlow {
-      0% {
-        text-shadow: 
-          0 0 10px #18ff5c,
-          0 0 20px #00ff88,
-          0 0 30px #00ffaa,
-          0 0 40px #00ff77;
-      }
-      100% {
-        text-shadow:
-          0 0 20px #00ff99,
-          0 0 40px #00ff66,
-          0 0 60px #18ff5c,
-          0 0 80px #00ff44;
-      }
+    .site-map {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      max-width: 600px;
+      margin: auto;
     }
 
-    #terminal {
-      max-width: 900px;
+    .section {
       width: 100%;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: clamp(15px, 2vw, 18px);
-      line-height: 1.7;
-      letter-spacing: 0.5px;
-      background: rgba(0, 20, 10, 0.25);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset, 0 0 40px rgba(24, 255, 92, 0.15);
+      background: rgba(0, 40, 20, 0.2);
       border: 1px solid rgba(24, 255, 92, 0.2);
-      animation: greenFlame 3s infinite alternate;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset;
+      transition: all 0.4s ease-in-out;
     }
 
-    @keyframes greenFlame {
-      0% {
-        box-shadow: 0 0 15px rgba(24, 255, 92, 0.1) inset, 0 0 25px rgba(24, 255, 92, 0.2);
-      }
-      100% {
-        box-shadow: 0 0 30px rgba(24, 255, 92, 0.3) inset, 0 0 50px rgba(24, 255, 92, 0.5);
-      }
+    .section:hover {
+      background: rgba(0, 80, 30, 0.25);
+      box-shadow: 0 0 25px rgba(24, 255, 92, 0.3);
+      transform: translateY(-3px);
     }
 
-    h2 {
+    .section h2 {
+      color: #18ff5c;
       font-family: 'Cinzel', serif;
-      color: #22ff77;
-      text-shadow: 0 0 12px rgba(24, 255, 92, 0.8);
-      margin-top: 25px;
-      margin-bottom: 10px;
-      font-size: 20px;
+      font-size: 22px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 8px rgba(24, 255, 92, 0.7);
     }
 
-    p {
-      margin: 6px 0;
-      color: #aaffc3;
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .cursor {
-      display: inline-block;
-      width: 12px;
-      height: 24px;
-      background-color: #18ff5c;
-      animation: blink 1s step-end infinite, cursorFlame 2s infinite alternate;
-      vertical-align: bottom;
-      margin-left: 4px;
-      box-shadow: 0 0 8px rgba(24, 255, 92, 0.9);
+    button {
+      background: transparent;
+      border: 1px solid #18ff5c;
+      color: #18ff5c;
+      font-size: 15px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
-    @keyframes blink {
-      50% { opacity: 0; }
+    button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(24, 255, 92, 0.4), transparent);
+      transform: skewX(-25deg);
+      transition: all 0.5s;
     }
 
-    @keyframes cursorFlame {
-      0% {
-        box-shadow: 0 0 8px rgba(24, 255, 92, 0.8), 0 0 15px #00ff66;
-      }
-      100% {
-        box-shadow: 0 0 12px rgba(24, 255, 92, 1), 0 0 25px #00ff88;
-      }
+    button:hover::before {
+      left: 125%;
     }
 
-    @media screen and (max-width: 600px) {
-      body { padding: 20px; }
-      #terminal { padding: 20px; }
-      .cursor { height: 20px; width: 10px; }
+    button:hover {
+      background: rgba(24, 255, 92, 0.15);
+      box-shadow: 0 0 10px rgba(24, 255, 92, 0.6);
+      color: #b8ffd1;
+      transform: scale(1.03);
+    }
+
+    /* Sub-secciones */
+    .sub-buttons {
+      margin-top: 10px;
+      margin-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sub-buttons button {
+      font-size: 14px;
+      border-color: rgba(24, 255, 92, 0.6);
+      color: rgba(24, 255, 92, 0.8);
+    }
+
+    .sub-buttons button:hover {
+      background: rgba(24, 255, 92, 0.1);
+      color: #18ff5c;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 13px;
+      color: #0f0;
+      opacity: 0.7;
+      text-shadow: 0 0 8px rgba(24, 255, 92, 0.3);
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 26px; }
+      .section h2 { font-size: 18px; }
+      button { font-size: 13px; padding: 10px 14px; }
     }
   </style>
 </head>
 <body>
 
   <h1>Mapa del Sitio | AI.Quimista Ágil</h1>
-  <div id="terminal"></div><span class="cursor"></span>
 
-  <!-- Sonido de escritura -->
-  <audio id="typeSound" src="https://pixabay.com/es/sound-effects/keyboard-typing-sound-effect-335503/" preload="auto"></audio>
+  <div class="site-map">
 
-  <!-- Sonido ambiental alquímico -->
-  <audio id="ambience" src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_1c1a9de9b1.mp3?filename=ambient-space-pad-6230.mp3" preload="auto" loop></audio>
+    <!-- INICIO -->
+    <div class="section">
+      <h2>Inicio</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.quimista-agil.com/','_blank')">Ir a Inicio</button>
+      </div>
+    </div>
 
-  <script>
-    const text = `Última actualización: 30 de Octubre de 2025 | 11:35 AM
+    <!-- AI.Quimista Ágil -->
+    <div class="section">
+      <h2>AI.Quimista Ágil</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Ir a AI.Quimista Ágil</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Ser Introspectivo</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimista de Realidades</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Conexión Ilusión / Realidad Líder</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Portador del Fuego</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Llamado Acción / Despertar</button>
+      </div>
+    </div>
 
-AI.Quimista Ágil
-Autor: Carlos David Navarro Navarro`;
+    <!-- SERVICIOS -->
+    <div class="section">
+      <h2>Servicios</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Servicios</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Profesional</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimia</button>
+      </div>
+    </div>
 
-    const terminal = document.getElementById("terminal");
-    const typeSound = document.getElementById("typeSound");
-    const ambience = document.getElementById("ambience");
+    <!-- PORTAFOLIO -->
+    <div class="section">
+      <h2>Portafolio</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Portafolio</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Profesional</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimia</button>
+      </div>
+    </div>
 
-    let i = 0;
+    <!-- BLOG -->
+    <div class="section">
+      <h2>Blog</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Blog</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Profesional</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Alquimia</button>
+      </div>
+    </div>
 
-    function typeWriter() {
-      if (i < text.length) {
-        terminal.textContent += text.charAt(i);
-        if (text.charAt(i) !== ' ' && text.charAt(i) !== '\n') {
-          typeSound.currentTime = 0;
-          typeSound.play();
-        }
-        i++;
-        setTimeout(typeWriter, 25);
-      } else {
-        document.querySelector(".cursor").style.display = "inline-block";
-      }
-    }
+    <!-- CONTACTO -->
+    <div class="section">
+      <h2>Contacto</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Ir a Contacto</button>
+      </div>
+    </div>
 
-    // Activa el sonido ambiental al primer clic/tap (requerido en móviles)
-    document.body.addEventListener("click", () => {
-      ambience.volume = 3.3;
-      ambience.play().catch(() => {});
-    }, { once: true });
+    <!-- ACERCA DE -->
+    <div class="section">
+      <h2>Acerca De</h2>
+      <div class="buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Acerca de AI.Quimista Ágil</button>
+      </div>
+      <div class="sub-buttons">
+        <button onclick="window.open('https://www.test.com','_blank')">Política de Privacidad</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Términos y Condiciones</button>
+        <button onclick="window.open('https://www.test.com','_blank')">Mapa del Sitio</button>
+      </div>
+    </div>
+  </div>
 
-    // Inicia la animación
-    typeWriter();
-  </script>
+  <footer>© 2025 AI.Quimista Ágil — Carlos David Navarro Navarro</footer>
+
 </body>
 </html>
