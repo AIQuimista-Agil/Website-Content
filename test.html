@@ -6,16 +6,25 @@
   <title>Mapa del Sitio | AI.Quimista Ágil</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
+    /* Fondo animado tipo energía/flama */
     body {
       margin: 0;
       font-family: 'Share Tech Mono', monospace;
-      background: radial-gradient(circle at center, #001a09 0%, #000 100%);
       color: #18ff5c;
       text-align: center;
       padding: 50px 20px;
       overflow-x: hidden;
       opacity: 0;
       animation: fadeIn 2s ease-out forwards;
+      background: radial-gradient(circle at center, #001a09 0%, #000 100%);
+      background-size: 400% 400%;
+      animation: fadeIn 2s ease-out forwards, energyFlow 18s ease-in-out infinite;
+    }
+
+    @keyframes energyFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     @keyframes fadeIn {
@@ -63,6 +72,7 @@
       transition: all 0.4s ease-in-out;
       animation: floatUp 0.8s ease-out forwards;
       opacity: 0;
+      backdrop-filter: blur(4px);
     }
 
     .section:nth-child(1) { animation-delay: 0.5s; }
