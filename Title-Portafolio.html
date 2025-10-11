@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Portafolio | AI.Quimista Ágil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      text-align: center;
+      text-shadow:
+        0 0 8px #0099ff,
+        0 0 16px #00ccff,
+        0 0 30px #00aaff,
+        0 0 60px #0099ff,
+        0 0 120px #00e6ff,
+        0 0 200px #66ffff;
+      animation:
+        flicker 4s infinite,
+        pulseGlow 6s ease-in-out infinite alternate,
+        fadeIn 2s ease-out forwards;
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        text-shadow:
+          0 0 6px #005577,
+          0 0 12px #0077ff,
+          0 0 25px #00aaff,
+          0 0 50px #0099ff,
+          0 0 80px #00e6ff;
+      }
+      100% {
+        text-shadow:
+          0 0 10px #00ccff,
+          0 0 25px #33ccff,
+          0 0 50px #00ffff,
+          0 0 100px #66ffff,
+          0 0 160px #b3ffff;
+      }
+    }
+
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.85;
+      }
+      22%, 57% {
+        opacity: 0.65;
+      }
+      70% {
+        opacity: 0.95;
+      }
+    }
+
+    /* Pequeño resplandor ambiental que simula reflejo del neón */
+    h1::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      background: radial-gradient(circle at center, rgba(0, 170, 255, 0.2) 0%, transparent 70%);
+      z-index: -1;
+      animation: ambientGlow 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientGlow {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.6; }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Portafolio</h1>
+</body>
+</html>
