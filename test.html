@@ -3,273 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa del Sitio | AI.Quimista Ágil</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <title>Portafolio</title>
+
+  <!-- Fuente Cinzel -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
   <style>
-    /* Fondo animado tipo energía/flama */
     body {
+      background-color: #000; /* Fondo negro para resaltar el efecto */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
-      font-family: 'Share Tech Mono', monospace;
-      color: #18ff5c;
-      text-align: center;
-      padding: 50px 20px;
-      overflow-x: hidden;
-      opacity: 0;
-      animation: fadeIn 2s ease-out forwards;
-      background: radial-gradient(circle at center, #001a09 0%, #000 100%);
-      background-size: 400% 400%;
-      animation: fadeIn 2s ease-out forwards, energyFlow 18s ease-in-out infinite;
-    }
-
-    @keyframes energyFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); filter: blur(6px); }
-      to { opacity: 1; transform: translateY(0); filter: blur(0); }
     }
 
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: 32px;
-      color: #22ff77;
-      text-shadow: 0 0 12px rgba(24, 255, 92, 0.9);
-      margin-bottom: 40px;
-      letter-spacing: 1px;
-      animation: glow 2.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 0 0 8px #18ff5c, 0 0 16px #18ff5c44; }
-      to { text-shadow: 0 0 16px #18ff5c, 0 0 32px #18ff5c77; }
-    }
-
-    .site-map {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-      max-width: 600px;
-      margin: auto;
-      animation: riseIn 2s ease-in-out;
-    }
-
-    @keyframes riseIn {
-      from { opacity: 0; transform: translateY(40px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .section {
-      width: 100%;
-      background: rgba(0, 40, 20, 0.2);
-      border: 1px solid rgba(24, 255, 92, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset;
-      transition: all 0.4s ease-in-out;
-      animation: floatUp 0.8s ease-out forwards;
-      opacity: 0;
-      backdrop-filter: blur(4px);
-    }
-
-    .section:nth-child(1) { animation-delay: 0.5s; }
-    .section:nth-child(2) { animation-delay: 0.7s; }
-    .section:nth-child(3) { animation-delay: 0.9s; }
-    .section:nth-child(4) { animation-delay: 1.1s; }
-    .section:nth-child(5) { animation-delay: 1.3s; }
-    .section:nth-child(6) { animation-delay: 1.5s; }
-    .section:nth-child(7) { animation-delay: 1.7s; }
-
-    @keyframes floatUp {
-      from { opacity: 0; transform: translateY(25px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section:hover {
-      background: rgba(0, 80, 30, 0.25);
-      box-shadow: 0 0 25px rgba(24, 255, 92, 0.3);
-      transform: translateY(-3px);
-    }
-
-    .section h2 {
-      color: #18ff5c;
-      font-family: 'Cinzel', serif;
-      font-size: 22px;
-      margin-bottom: 15px;
-      text-shadow: 0 0 8px rgba(24, 255, 92, 0.7);
-    }
-
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    button {
-      background: transparent;
-      border: 1px solid #18ff5c;
-      color: #18ff5c;
-      font-size: 15px;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
+      font-size: 6rem;
+      color: #001f3f; /* Azul muy oscuro (base del texto) */
       text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: all 0.3s ease-in-out;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
+      letter-spacing: 6px;
+      text-align: center;
+
+      /* Efecto de resplandor */
+      text-shadow:
+        0 0 10px #0077ff,
+        0 0 20px #00aaff,
+        0 0 40px #0088ff,
+        0 0 80px #00ccff,
+        0 0 120px #33ccff;
+
+      animation: flicker 4s infinite, glowPulse 6s ease-in-out infinite alternate;
+      opacity: 0;
+      animation-delay: 0.5s;
+      animation-fill-mode: forwards;
     }
 
-    button::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -75%;
-      width: 50%;
-      height: 100%;
-      background: linear-gradient(120deg, transparent, rgba(24, 255, 92, 0.4), transparent);
-      transform: skewX(-25deg);
-      transition: all 0.5s;
+    /* Encendido suave */
+    @keyframes glowPulse {
+      0% { text-shadow:
+        0 0 5px #004477,
+        0 0 10px #0077ff,
+        0 0 20px #00aaff,
+        0 0 30px #0099ff;
+      }
+      100% { text-shadow:
+        0 0 10px #0077ff,
+        0 0 20px #00ccff,
+        0 0 40px #00e6ff,
+        0 0 80px #66ffff;
+      }
     }
 
-    button:hover::before {
-      left: 125%;
+    /* Parpadeo leve tipo neón-fuego */
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.8;
+      }
+      22%, 57% {
+        opacity: 0.6;
+      }
+      70% {
+        opacity: 0.9;
+      }
     }
 
-    button:hover {
-      background: rgba(24, 255, 92, 0.15);
-      box-shadow: 0 0 10px rgba(24, 255, 92, 0.6);
-      color: #b8ffd1;
-      transform: scale(1.03);
+    /* Animación de encendido */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    .sub-buttons {
-      margin-top: 10px;
-      margin-left: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .sub-buttons button {
-      font-size: 14px;
-      border-color: rgba(24, 255, 92, 0.6);
-      color: rgba(24, 255, 92, 0.8);
-    }
-
-    .sub-buttons button:hover {
-      background: rgba(24, 255, 92, 0.1);
-      color: #18ff5c;
-    }
-
-    footer {
-      margin-top: 50px;
-      font-size: 13px;
-      color: #0f0;
-      opacity: 0.7;
-      text-shadow: 0 0 8px rgba(24, 255, 92, 0.3);
-      animation: fadeIn 3s ease-out 1.5s forwards;
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 26px; }
-      .section h2 { font-size: 18px; }
-      button { font-size: 13px; padding: 10px 14px; }
+    h1 {
+      animation: fadeIn 2s ease-out forwards, flicker 4s infinite, glowPulse 6s ease-in-out infinite alternate;
     }
   </style>
 </head>
 <body>
-
-  <h1>🧪 Mapa del Sitio | AI.Quimista Ágil</h1>
-
-  <div class="site-map">
-
-    <div class="section">
-      <h2>Inicio</h2>
-      <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Ir a Inicio</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>AI.Quimista Ágil</h2>
-      <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Ir a AI.Quimista Ágil</button>
-      </div>
-      <div class="sub-buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Ser Introspectivo</button>
-        <button onclick="abrirVentana('https://www.test.com')">Alquimista de Realidades</button>
-        <button onclick="abrirVentana('https://www.test.com')">Conexión Ilusión / Realidad Líder</button>
-        <button onclick="abrirVentana('https://www.test.com')">Portador del Fuego</button>
-        <button onclick="abrirVentana('https://www.test.com')">Llamado Acción / Despertar</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Servicios</h2>
-      <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Servicios</button>
-      </div>
-      <div class="sub-buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Profesional</button>
-        <button onclick="abrirVentana('https://www.test.com')">Alquimia</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Portafolio</h2>
-      <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Portafolio</button>
-      </div>
-      <div class="sub-buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Profesional</button>
-        <button onclick="abrirVentana('https://www.test.com')">Alquimia</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Blog</h2>
-      <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Blog</button>
-      </div>
-      <div class="sub-buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Profesional</button>
-        <button onclick="abrirVentana('https://www.test.com')">Alquimia</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Contacto</h2>
-      <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Ir a Contacto</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Acerca De</h2>
-      <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Acerca de AI.Quimista Ágil</button>
-      </div>
-      <div class="sub-buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Política de Privacidad</button>
-        <button onclick="abrirVentana('https://www.test.com')">Términos y Condiciones</button>
-        <button onclick="abrirVentana('https://www.test.com')">Mapa del Sitio</button>
-      </div>
-    </div>
-  </div>
-
-  <footer>© 2025 AI.Quimista Ágil — “La Alquimia del Código, la Llama del Conocimiento.”</footer>
-
-  <script>
-    // Abre los enlaces en una nueva ventana separada
-    function abrirVentana(url) {
-      window.open(url, '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no,status=no');
-    }
-  </script>
-
+  <h1>Portafolio</h1>
 </body>
 </html>
