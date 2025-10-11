@@ -12,136 +12,115 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at center, #050012 0%, #000 100%);
+      background: black;
       overflow: hidden;
     }
 
     h1 {
       font-family: 'Cinzel', serif;
       font-weight: 400;
-      font-size: clamp(2.5rem, 7vw, 6rem);
+      font-size: clamp(3rem, 8vw, 6rem);
       text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: #f8faff;
+      letter-spacing: 0.22em;
+      color: #ffffff;
       text-align: center;
+      display: inline-block;
       position: relative;
-      /* Borde 3D sutil */
-      -webkit-text-stroke: 1px rgba(160, 180, 255, 0.6);
-      /* Efecto de neón multicapa con luz más realista */
-      text-shadow:
-        0 0 6px #ffffff,
-        0 0 12px #aaccff,
-        0 0 25px #88aaff,
-        0 0 50px #5577ff,
-        0 0 90px #2244ff,
-        0 0 140px #1122ff;
       opacity: 0;
-      transform: scale(0.9);
-      animation: fadeFire 4s ease-out forwards, pulseGlow 6s ease-in-out infinite alternate;
+      animation: fadeInContainer 1s ease forwards 0.5s;
     }
 
-    /* Brillo interior para dar sensación de tubo y relieve */
-    h1::before {
-      content: attr(data-text);
+    /* Cada letra animada como si se encendiera en fuego-neón */
+    .letter {
+      display: inline-block;
+      opacity: 0;
+      transform: scale(0.8) rotateX(90deg);
+      animation: ignite 0.7s forwards;
+    }
+
+    /* Relieve 3D y brillo tipo tubo */
+    .letter::before {
+      content: attr(data-char);
       position: absolute;
       top: 1px;
       left: 1px;
-      right: 1px;
-      bottom: 1px;
-      color: #ffffff;
-      opacity: 0.7;
-      filter: blur(2px);
+      color: #e6eaff;
+      filter: blur(1px);
+      opacity: 0.6;
       z-index: -1;
     }
 
-    /* Luz ambiental que envuelve la palabra */
-    h1::after {
-      content: "";
-      position: absolute;
-      width: 180%;
-      height: 250%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle at center, rgba(40, 80, 255, 0.25) 0%, transparent 70%);
-      z-index: -2;
-      animation: ambientGlow 8s ease-in-out infinite alternate;
-    }
-
-    /* Aparición tipo encendido de fuego */
-    @keyframes fadeFire {
+    @keyframes ignite {
       0% {
         opacity: 0;
         text-shadow: none;
-        transform: scale(0.95);
+        transform: scale(0.8) rotateX(90deg);
       }
-      30% {
-        opacity: 0.5;
-        text-shadow:
-          0 0 4px #4455ff,
-          0 0 8px #5577ff,
-          0 0 16px #88aaff;
-      }
-      60% {
-        opacity: 0.9;
+      50% {
+        opacity: 1;
+        color: #aaccff;
         text-shadow:
           0 0 6px #ffffff,
-          0 0 14px #aaccff,
-          0 0 25px #88aaff;
+          0 0 12px #99ccff,
+          0 0 25px #6699ff,
+          0 0 50px #4466ff,
+          0 0 100px #2233ff;
       }
       100% {
         opacity: 1;
-        transform: scale(1);
+        color: #ffffff;
+        transform: scale(1) rotateX(0deg);
+        text-shadow:
+          0 0 5px #ffffff,
+          0 0 10px #aaccff,
+          0 0 20px #7799ff,
+          0 0 40px #5577ff,
+          0 0 80px #3355ff;
       }
     }
 
-    /* Respiración del brillo */
-    @keyframes pulseGlow {
-      0% {
-        text-shadow:
-          0 0 6px #ffffff,
-          0 0 16px #aaccff,
-          0 0 30px #88aaff,
-          0 0 60px #5577ff,
-          0 0 120px #2244ff;
-      }
-      100% {
-        text-shadow:
-          0 0 8px #ffffff,
-          0 0 22px #cce0ff,
-          0 0 45px #88bbff,
-          0 0 80px #4466ff,
-          0 0 160px #2233ff;
-      }
+    @keyframes fadeInContainer {
+      to { opacity: 1; }
     }
 
-    /* Luz ambiental */
+    /* Luz ambiental envolvente */
+    h1::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 150%;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      background: radial-gradient(circle at center, rgba(80, 100, 255, 0.3) 0%, transparent 80%);
+      z-index: -1;
+      animation: ambientGlow 6s ease-in-out infinite alternate;
+    }
+
     @keyframes ambientGlow {
-      0% { opacity: 0.25; }
+      0% { opacity: 0.3; }
       100% { opacity: 0.6; }
-    }
-
-    /* Adaptabilidad para pantallas pequeñas */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: clamp(2rem, 10vw, 4rem);
-        letter-spacing: 0.1em;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: clamp(1.8rem, 12vw, 3rem);
-        text-shadow:
-          0 0 4px #ffffff,
-          0 0 10px #99ccff,
-          0 0 18px #5577ff;
-      }
     }
   </style>
 </head>
 
 <body>
-  <h1 data-text="Portafolio">Portafolio</h1>
+  <h1 id="title">Portafolio</h1>
+
+  <script>
+    const title = document.getElementById("title");
+    const text = title.textContent;
+    title.textContent = "";
+
+    // Crear animación letra por letra
+    [...text].forEach((char, i) => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      span.setAttribute("data-char", char);
+      span.classList.add("letter");
+      span.style.animationDelay = `${i * 0.15}s`; // intervalo entre letras
+      title.appendChild(span);
+    });
+  </script>
 </body>
 </html>
