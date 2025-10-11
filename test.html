@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Portafolio | AI.Quimista Ágil</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -12,132 +12,105 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      background: black;
       overflow: hidden;
     }
 
-    h1 {
-      font-family: 'Cinzel', serif;
-      font-weight: 400;
-      font-size: clamp(3rem, 8vw, 6rem);
+    .tron-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      position: relative;
+    }
+
+    .tron-bar {
+      width: 100px;
+      height: 8px;
+      border-radius: 4px;
+      border: 2px solid rgba(0, 255, 255, 0.8);
+      box-shadow:
+        0 0 10px rgba(0, 255, 255, 0.7),
+        0 0 20px rgba(0, 200, 255, 0.5),
+        0 0 40px rgba(0, 100, 255, 0.3);
+      background: transparent;
+    }
+
+    .tron-text {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(3rem, 10vw, 8rem);
       text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: #00ffff;
-      text-align: center;
-      display: inline-block;
+      color: transparent;
+      -webkit-text-stroke: 2px #00e6ff;
+      text-shadow:
+        0 0 5px #00ffff,
+        0 0 15px #00aaff,
+        0 0 30px #0077ff,
+        0 0 60px #0044ff;
       position: relative;
+      background: transparent;
+      animation: glowPulse 3s ease-in-out infinite alternate, fadeIn 2s ease-out forwards;
       opacity: 0;
-      animation: fadeInContainer 1s ease forwards 0.5s;
     }
 
-    .letter {
-      display: inline-block;
-      position: relative;
-      opacity: 0;
-      transform: scale(0.8) rotateX(90deg);
-      animation: flicker 1.5s linear forwards, ignite 0.7s forwards;
-    }
-
-    .letter::before {
-      content: attr(data-char);
-      position: absolute;
-      top: 1px;
-      left: 1px;
-      color: #e6eaff;
-      filter: blur(2px);
-      opacity: 0.6;
-      z-index: -1;
-    }
-
-    .letter::after {
-      content: attr(data-char);
-      position: absolute;
-      top: 0;
-      left: 0;
-      color: #00ffff;
-      filter: blur(4px);
-      opacity: 0.5;
-      z-index: -2;
-    }
-
-    @keyframes ignite {
+    @keyframes glowPulse {
       0% {
-        opacity: 0;
-        text-shadow: none;
-        transform: scale(0.8) rotateX(90deg);
-      }
-      50% {
-        opacity: 1;
-        color: #00ffff;
         text-shadow:
-          0 0 6px #ffffff,
-          0 0 12px #00ffff,
-          0 0 25px #00ccff,
-          0 0 50px #0099ff,
-          0 0 100px #0066ff;
+          0 0 6px #00ffff,
+          0 0 20px #00aaff,
+          0 0 40px #0077ff,
+          0 0 80px #0033ff;
       }
       100% {
-        opacity: 1;
-        color: #00ffff;
-        transform: scale(1) rotateX(0deg);
         text-shadow:
-          0 0 5px #ffffff,
           0 0 10px #00ffff,
-          0 0 20px #00ccff,
-          0 0 40px #0099ff,
-          0 0 80px #0066ff,
-          0 0 160px #0033ff;
+          0 0 30px #33ccff,
+          0 0 60px #0099ff,
+          0 0 120px #0055ff;
       }
     }
 
-    @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-      }
-      20%, 22%, 24%, 55% {
-        opacity: 0.4;
-      }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    @keyframes fadeInContainer {
-      to { opacity: 1; }
-    }
-
-    h1::after {
-      content: "";
+    /* Aberturas laterales con efecto neón y transparencia */
+    .neon-frame {
       position: absolute;
-      width: 100%;
-      height: 150%;
       top: 50%;
-      left: 0;
       transform: translateY(-50%);
-      background: radial-gradient(circle at center, rgba(0, 255, 255, 0.3) 0%, transparent 80%);
-      z-index: -3;
-      animation: ambientGlow 6s ease-in-out infinite alternate;
+      width: 150px;
+      height: 250px;
+      border: 3px solid rgba(0, 255, 255, 0.7);
+      border-radius: 10px;
+      box-shadow:
+        0 0 10px rgba(0, 255, 255, 0.6),
+        0 0 30px rgba(0, 150, 255, 0.5),
+        0 0 60px rgba(0, 80, 255, 0.3);
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(2px);
     }
 
-    @keyframes ambientGlow {
-      0% { opacity: 0.3; }
-      100% { opacity: 0.6; }
+    .neon-frame.left { left: 5%; }
+    .neon-frame.right { right: 5%; }
+
+    @media (max-width: 768px) {
+      .tron-container { flex-direction: column; gap: 40px; }
+      .neon-frame { display: none; }
     }
   </style>
 </head>
 
 <body>
-  <h1 id="title">Portafolio</h1>
+  <div class="neon-frame left"></div>
 
-  <script>
-    const title = document.getElementById("title");
-    const text = title.textContent;
-    title.textContent = "";
+  <div class="tron-container">
+    <div class="tron-bar"></div>
+    <h1 class="tron-text">Portafolio</h1>
+    <div class="tron-bar"></div>
+  </div>
 
-    [...text].forEach((char, i) => {
-      const span = document.createElement("span");
-      span.textContent = char;
-      span.setAttribute("data-char", char);
-      span.classList.add("letter");
-      span.style.animationDelay = `${i * 0.15}s`;
-      title.appendChild(span);
-    });
-  </script>
+  <div class="neon-frame right"></div>
 </body>
 </html>
