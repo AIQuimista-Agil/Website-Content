@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscripción Ritual</title>
+
+  <!-- Fuente romana clásica -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .ritual-text {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: clamp(0.8rem, 2vw, 1.8rem);
+      text-transform: uppercase;
+      text-align: center;
+      letter-spacing: 0.28em; /* espaciado más amplio, estilo romano lapidario */
+      white-space: nowrap;
+      line-height: 1;
+      color: #7a0000; /* rubí pétreo profundo */
+      background: transparent;
+
+      /* Efecto piedra sólida en relieve */
+      text-shadow:
+        1px 1px 0 #3a0000,
+        2px 2px 0 #2b0000,
+        3px 3px 1px #1f0000,
+        4px 4px 2px rgba(0, 0, 0, 0.8);
+
+      transition: all 0.6s ease-in-out;
+    }
+
+    /* Efecto fuego estático al pasar el cursor */
+    .ritual-text:hover {
+      background: linear-gradient(180deg, #ff6a00 0%, #ff2200 30%, #990000 60%, #330000 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow:
+        0 0 3px rgba(255, 100, 0, 0.7),
+        0 0 10px rgba(255, 60, 0, 0.5),
+        2px 2px 3px rgba(0, 0, 0, 0.9);
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .ritual-text {
+        font-size: clamp(0.7rem, 4vw, 1.4rem);
+        letter-spacing: 0.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ritual-text">
+    PHOENIX QUAE INFEROS ULTRA SPELUNCAM PLATONIS TRANSCENDIT
+  </div>
+</body>
+</html>
