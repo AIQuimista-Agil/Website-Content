@@ -6,24 +6,19 @@
   <style>
     body {
       margin: 0;
+      background: transparent;
       height: 100vh;
-      background: linear-gradient(to top, #00111a 0%, #87ceeb 100%);
       overflow: hidden;
       position: relative;
-      transition: background 1s ease-in-out;
     }
 
     .sun-container {
       position: absolute;
+      top: 40%;
       border-radius: 50%;
-      background-image:
-        radial-gradient(circle at 30% 30%, #fff9c4 0%, #fdd835 60%, #fbc02d 100%),
-        radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
-        radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px);
       background-blend-mode: screen;
       box-shadow: 0 0 40px rgba(255, 200, 0, 0.5);
       transition: all 1s ease-in-out;
-      pointer-events: none;
     }
   </style>
 </head>
@@ -40,44 +35,49 @@
       const sunset = 18;
       const midday = (sunrise + sunset) / 2;
 
-      // Ocultar sol durante la noche
       if (hour < sunrise || hour > sunset) {
         sun.style.display = 'none';
-        document.body.style.background = 'linear-gradient(to top, #000010 0%, #001830 100%)';
         return;
       }
 
-      sun.style.display = 'block';
+      const dayProgress = (hour - sunrise) / (sunset - sunrise);
 
-      const dayProgress = (hour - sunrise) / (sunset - sunrise); // 0 = amanecer, 1 = atardecer
+      // Tamaño entre 30px y 60px
       const size = 30 + (1 - Math.abs(midday - hour) / (midday - sunrise)) * 30;
 
-      // Movimiento en arco (de izquierda a derecha, con altura parabólica)
-      const xPercent = dayProgress * 100;
-      const yPercent = 60 - Math.sin(dayProgress * Math.PI) * 40; // más alto al mediodía
+      // Posición horizontal en píxeles reales
+      const screenWidth = window.innerWidth;
+      const usableWidth = screenWidth - size;
+      const positionX = usableWidth * dayProgress;
+
+      // Color dinámico según hora
+      let colorStart, colorMid, colorEnd;
+      if (hour < 8) {
+        // Amanecer
+        colorStart = '#ffcc80'; // naranja suave
+        colorMid = '#ff8a65';   // coral
+        colorEnd = '#e65100';   // rojizo
+      } else if (hour > 16) {
+        // Atardecer
+        colorStart = '#ffab91';
+        colorMid = '#ff7043';
+        colorEnd = '#bf360c';
+      } else {
+        // Día pleno
+        colorStart = '#fff9c4';
+        colorMid = '#fdd835';
+        colorEnd = '#fbc02d';
+      }
 
       sun.style.width = `${size}px`;
       sun.style.height = `${size}px`;
-      sun.style.left = `calc(${xPercent}% - ${size / 2}px)`;
-      sun.style.top = `${yPercent}%`;
-
-      // Color según hora (rojizo al amanecer/anochecer)
-      const redness = Math.abs(midday - hour) / (midday - sunrise); // 0 en mediodía, 1 en amanecer/anochecer
-      const colorCenter = `hsl(${45 + redness * 25}, 100%, ${65 - redness * 15}%)`;
-      const colorEdge = `hsl(${50 + redness * 40}, 90%, ${55 - redness * 20}%)`;
-
+      sun.style.left = `${positionX}px`;
       sun.style.backgroundImage = `
-        radial-gradient(circle at 30% 30%, #fff9c4 0%, ${colorCenter} 60%, ${colorEdge} 100%),
-        radial-gradient(circle at 70% 70%, rgba(255,140,0,${0.3 + redness * 0.4}) 2px, transparent 3px),
-        radial-gradient(circle at 40% 60%, rgba(255,200,0,${0.2 + redness * 0.3}) 1.5px, transparent 2px)
+        radial-gradient(circle at 30% 30%, ${colorStart} 0%, ${colorMid} 60%, ${colorEnd} 100%),
+        radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
+        radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px)
       `;
-
-      // Luz y fondo dinámico
-      const brightness = 0.3 + (1 - redness) * 0.7;
-      document.body.style.background = `linear-gradient(to top, rgba(0,17,26,1) 0%, rgba(135,206,235,${brightness}) 100%)`;
-
-      // Ajustar brillo y sombra del sol
-      sun.style.boxShadow = `0 0 ${50 + (1 - redness) * 50}px rgba(255, 200, 0, ${0.5 + (1 - redness) * 0.3})`;
+      sun.style.display = 'block';
     }
 
     updateSun();
