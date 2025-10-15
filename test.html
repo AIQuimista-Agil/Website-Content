@@ -6,19 +6,22 @@
   <style>
     body {
       margin: 0;
-      background: linear-gradient(to top, #fdd835, #fffde7);
+      background: transparent;
       height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      overflow: hidden;
+      position: relative;
     }
 
     .sun-container {
       position: absolute;
       top: 40%;
       border-radius: 50%;
-      background: radial-gradient(circle at center, #fff176 0%, #fbc02d 60%, #f57f17 100%);
-      box-shadow: 0 0 30px rgba(255, 200, 0, 0.6);
+      background-image:
+        radial-gradient(circle at 30% 30%, #fff9c4 0%, #fdd835 60%, #fbc02d 100%),
+        radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
+        radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px);
+      background-blend-mode: screen;
+      box-shadow: 0 0 40px rgba(255, 200, 0, 0.5);
       transition: all 1s ease-in-out;
     }
   </style>
@@ -27,37 +30,34 @@
   <div class="sun-container" id="sun"></div>
 
   <script>
-    function updateSunPosition() {
+    function updateSun() {
       const sun = document.getElementById('sun');
       const now = new Date();
       const hour = now.getHours() + now.getMinutes() / 60;
 
-      // Configura el rango solar visible (por ejemplo, de 6 a 18 horas)
       const sunrise = 6;
       const sunset = 18;
       const midday = (sunrise + sunset) / 2;
 
-      // Si está fuera del rango solar, oculta el sol
       if (hour < sunrise || hour > sunset) {
         sun.style.display = 'none';
         return;
       }
 
-      // Calcula la posición horizontal en porcentaje
       const dayProgress = (hour - sunrise) / (sunset - sunrise);
       const positionPercent = dayProgress * 100;
 
-      // Calcula el tamaño del sol (mínimo 30px, máximo 60px)
-      const size = 30 + Math.abs(midday - hour) * -5 + 30;
+      // Tamaño entre 30px (amanecer/anochecer) y 60px (mediodía)
+      const size = 30 + (1 - Math.abs(midday - hour) / (midday - sunrise)) * 30;
 
-      // Aplica estilos
       sun.style.width = `${size}px`;
       sun.style.height = `${size}px`;
       sun.style.left = `calc(${positionPercent}% - ${size / 2}px)`;
+      sun.style.display = 'block';
     }
 
-    updateSunPosition();
-    setInterval(updateSunPosition, 60000); // Actualiza cada minuto
+    updateSun();
+    setInterval(updateSun, 60000); // Actualiza cada minuto
   </script>
 </body>
 </html>
