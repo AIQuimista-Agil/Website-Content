@@ -6,123 +6,79 @@
   <style>
     body {
       margin: 0;
-      background: transparent;
+      background: radial-gradient(circle at center, #000000 0%, #0a0a0a 100%);
       height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .lunar-table {
       display: grid;
-      grid-template-columns: repeat(28, 1fr);
-      width: 95vw;
-      height: 120px;
-      background-color: rgba(255,255,255,0.02);
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 40px;
+      align-items: center;
+      justify-items: center;
+      padding: 40px;
     }
 
-    .cell {
+    .celestial {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
       position: relative;
-      border: none;
-    }
-
-    .moon-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background-blend-mode: screen;
+      box-shadow: 0 0 40px rgba(255,255,255,0.2);
       transition: all 1s ease-in-out;
-      overflow: hidden;
-      z-index: 2;
     }
 
-    .moon-shadow {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: radial-gradient(circle at center, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.75) 60%, rgba(10,10,10,0.4) 100%);
-      mask-image: radial-gradient(circle at var(--mask-x, 50%) 50%, black 45%, transparent 100%);
-      -webkit-mask-image: radial-gradient(circle at var(--mask-x, 50%) 50%, black 45%, transparent 100%);
-      transition: all 1.2s ease-in-out;
+    .eclipse-solar {
+      background: radial-gradient(circle at center, #111 0%, #000 60%, #222 100%);
     }
 
-    .moon-container::after {
+    .eclipse-solar::after {
       content: "";
       position: absolute;
-      inset: -5px;
+      inset: -10px;
       border-radius: 50%;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
-      transition: opacity 1s ease-in-out;
+      box-shadow:
+        0 0 30px rgba(255, 255, 200, 0.4),
+        0 0 60px rgba(255, 255, 150, 0.3),
+        0 0 90px rgba(255, 255, 100, 0.2);
+    }
+
+    .eclipse-lunar {
+      background: radial-gradient(circle at center, #4b1e1e 0%, #2c0d0d 60%, #1a0505 100%);
+      box-shadow: 0 0 30px rgba(150, 0, 0, 0.4);
+    }
+
+    .luna-azul {
+      background: radial-gradient(circle at 30% 30%, #e0f7fa 0%, #81d4fa 60%, #0288d1 100%);
+      box-shadow: 0 0 40px rgba(100, 200, 255, 0.5);
+    }
+
+    .luna-roja {
+      background: radial-gradient(circle at 30% 30%, #ff8a65 0%, #e53935 60%, #b71c1c 100%);
+      box-shadow: 0 0 40px rgba(255, 80, 80, 0.6);
+    }
+
+    .luna-negra {
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+      opacity: 0.15;
+    }
+
+    .luna-llena {
+      background-image:
+        radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #999999 100%),
+        radial-gradient(circle at 20% 40%, rgba(150,150,150,0.3) 2px, transparent 3px),
+        radial-gradient(circle at 70% 60%, rgba(120,120,120,0.2) 1.5px, transparent 2px),
+        radial-gradient(circle at 50% 20%, rgba(180,180,180,0.25) 2px, transparent 3px);
+      background-blend-mode: screen;
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
     }
   </style>
 </head>
 <body>
-  <div class="lunar-table" id="lunarTable">
-    <script>
-      for (let i = 0; i < 28; i++) {
-        document.write(`<div class="cell" id="day${i}"></div>`);
-      }
-    </script>
-  </div>
-
-  <script>
-    function getMoonPhase() {
-      const now = new Date();
-      const synodicMonth = 29.53058867;
-      const knownNewMoon = new Date('2024-01-11T11:57:00Z');
-      const diff = (now - knownNewMoon) / (1000 * 60 * 60 * 24);
-      return (diff % synodicMonth) / synodicMonth;
-    }
-
-    function placeMoon() {
-      const phase = getMoonPhase();
-      const dayIndex = Math.floor(phase * 28);
-      const cell = document.getElementById(`day${dayIndex}`);
-      if (!cell) return;
-
-      const now = new Date();
-      const hour = now.getHours();
-      const isNight = hour >= 18 || hour < 6;
-
-      const distanceToFull = Math.abs(0.5 - phase);
-      const intensity = 1 - distanceToFull * 2;
-      const size = 40 + intensity * 30;
-
-      const moon = document.createElement('div');
-      moon.className = 'moon-container';
-      moon.style.width = `${size}px`;
-      moon.style.height = `${size}px`;
-
-      // Transparencia diurna
-      moon.style.opacity = isNight ? 1 : 0.1;
-
-      // Ilusión atmosférica
-      const glow = isNight ? 0.4 + intensity * 0.6 : 0.1;
-      moon.style.boxShadow = `0 0 ${20 * glow}px rgba(255, 255, 255, ${glow})`;
-
-      // Textura lunar
-      moon.style.backgroundImage = `
-        radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #999999 100%),
-        radial-gradient(circle at 20% 40%, rgba(150,150,150,0.3) 2px, transparent 3px),
-        radial-gradient(circle at 70% 60%, rgba(120,120,120,0.2) 1.5px, transparent 2px),
-        radial-gradient(circle at 50% 20%, rgba(180,180,180,0.25) 2px, transparent 3px)
-      `;
-
-      // Sombra lunar
-      const shadow = document.createElement('div');
-      shadow.className = 'moon-shadow';
-      const maskX = phase <= 0.5
-        ? `${100 - phase * 200}%`
-        : `${phase * 200}%`;
-      shadow.style.setProperty('--mask-x', maskX);
-
-      moon.appendChild(shadow);
-      cell.appendChild(moon);
-    }
-
-    placeMoon();
-  </script>
+  <div class="celestial eclipse-solar" title="Eclipse Solar Total"></div>
+  <div class="celestial eclipse-lunar" title="Eclipse Lunar"></div>
+  <div class="celestial luna-azul" title="Luna Azul"></div>
+  <div class="celestial luna-roja" title="Luna Roja"></div>
+  <div class="celestial luna-negra" title="Luna Negra"></div>
+  <div class="celestial luna-llena" title="Luna Llena"></div>
 </body>
 </html>
