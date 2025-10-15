@@ -24,10 +24,10 @@
       letter-spacing: 0.3px;
       color: #fff;
       text-shadow:
-        0 0 4px var(--glow-color),
-        0 0 8px var(--glow-color),
-        0 0 12px var(--glow-color),
-        0 0 16px var(--glow-color);
+        0 0 calc(4px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(8px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(12px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(16px * var(--glow-intensity)) var(--glow-color);
       animation: pulseGlow 3s infinite ease-in-out;
       transition: all 0.3s ease;
     }
@@ -35,17 +35,17 @@
     @keyframes pulseGlow {
       0%, 100% {
         text-shadow:
-          0 0 4px var(--glow-color),
-          0 0 8px var(--glow-color),
-          0 0 12px var(--glow-color),
-          0 0 16px var(--glow-color);
+          0 0 calc(4px * var(--glow-intensity)) var(--glow-color),
+          0 0 calc(8px * var(--glow-intensity)) var(--glow-color),
+          0 0 calc(12px * var(--glow-intensity)) var(--glow-color),
+          0 0 calc(16px * var(--glow-intensity)) var(--glow-color);
       }
       50% {
         text-shadow:
-          0 0 6px var(--glow-color),
-          0 0 12px var(--glow-color),
-          0 0 18px var(--glow-color),
-          0 0 24px var(--glow-color);
+          0 0 calc(6px * var(--glow-intensity)) var(--glow-color),
+          0 0 calc(12px * var(--glow-intensity)) var(--glow-color),
+          0 0 calc(18px * var(--glow-intensity)) var(--glow-color),
+          0 0 calc(24px * var(--glow-intensity)) var(--glow-color);
       }
     }
   </style>
@@ -68,15 +68,27 @@
     function getGlowColor(phase) {
       if (phase < 0.125) return '#3366ff'; // Luna nueva - azul profundo
       if (phase < 0.25) return '#00ffff';  // Creciente - cian
-      if (phase < 0.5) return '#ffffff';   // Luna llena - blanco puro
+      if (phase < 0.5) return '#ffffff';   // Llena - blanco puro
       if (phase < 0.75) return '#ff8800';  // Menguante - ámbar
       return '#ff3366';                    // Oscura - rojo-magenta
     }
 
-    // --- Aplicar color ---
+    // --- Determinar intensidad (brillo) según fase ---
+    function getGlowIntensity(phase) {
+      // La intensidad aumenta desde 0.4 (luna nueva) hasta 1.5 (luna llena)
+      const distanceToFull = Math.abs(0.5 - phase); // distancia desde la luna llena
+      const brightness = 1.5 - distanceToFull * 2.2; // escala inversa
+      return Math.max(0.4, Math.min(brightness, 1.5));
+    }
+
+    // --- Aplicar color e intensidad ---
     const phase = getMoonPhase();
     const color = getGlowColor(phase);
+    const intensity = getGlowIntensity(phase);
     document.documentElement.style.setProperty('--glow-color', color);
+    document.documentElement.style.setProperty('--glow-intensity', intensity.toFixed(2));
+
+    console.log(`🌙 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color}`);
   </script>
 </body>
 </html>
