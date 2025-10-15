@@ -8,80 +8,94 @@
       margin: 0;
       background: transparent;
       height: 100vh;
-      overflow: hidden;
-      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .sun-container {
+    .solar-table {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      width: 90vw;
+      height: 100px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background-color: rgba(255,255,255,0.05);
+    }
+
+    .cell {
+      position: relative;
+      border-left: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .sun {
       position: absolute;
-      top: 40%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       border-radius: 50%;
+      background-image:
+        radial-gradient(circle at 30% 30%, #fff9c4 0%, #fdd835 60%, #fbc02d 100%),
+        radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
+        radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px);
       background-blend-mode: screen;
-      box-shadow: 0 0 40px rgba(255, 200, 0, 0.5);
+      box-shadow: 0 0 30px rgba(255, 200, 0, 0.5);
       transition: all 1s ease-in-out;
     }
   </style>
 </head>
 <body>
-  <div class="sun-container" id="sun"></div>
+  <div class="solar-table" id="solarTable">
+    <!-- 12 celdas para las horas de 6am a 6pm -->
+    <div class="cell" id="h6"></div>
+    <div class="cell" id="h7"></div>
+    <div class="cell" id="h8"></div>
+    <div class="cell" id="h9"></div>
+    <div class="cell" id="h10"></div>
+    <div class="cell" id="h11"></div>
+    <div class="cell" id="h12"></div>
+    <div class="cell" id="h13"></div>
+    <div class="cell" id="h14"></div>
+    <div class="cell" id="h15"></div>
+    <div class="cell" id="h16"></div>
+    <div class="cell" id="h17"></div>
+  </div>
 
   <script>
-    function updateSun() {
-      const sun = document.getElementById('sun');
+    function placeSun() {
       const now = new Date();
-      const hour = now.getHours() + now.getMinutes() / 60;
+      const hour = now.getHours();
+      const minute = now.getMinutes();
 
-      const sunrise = 6;
-      const sunset = 18;
-      const midday = (sunrise + sunset) / 2;
+      if (hour < 6 || hour > 17) return;
 
-      if (hour < sunrise || hour > sunset) {
-        sun.style.display = 'none';
-        return;
-      }
+      const cellId = `h${hour}`;
+      const cell = document.getElementById(cellId);
+      if (!cell) return;
 
-      const dayProgress = (hour - sunrise) / (sunset - sunrise);
+      // Tamaño del sol según cercanía al mediodía
+      const midday = 12;
+      const distance = Math.abs(midday - hour - minute / 60);
+      const size = 30 + (1 - distance / 6) * 30;
 
-      // Tamaño entre 30px y 60px
-      const size = 30 + (1 - Math.abs(midday - hour) / (midday - sunrise)) * 30;
-
-      // Posición horizontal en píxeles reales
-      const screenWidth = window.innerWidth;
-      const usableWidth = screenWidth - size;
-      const positionX = usableWidth * dayProgress;
-
-      // Color dinámico según hora
-      let colorStart, colorMid, colorEnd;
-      if (hour < 8) {
-        // Amanecer
-        colorStart = '#ffcc80'; // naranja suave
-        colorMid = '#ff8a65';   // coral
-        colorEnd = '#e65100';   // rojizo
-      } else if (hour > 16) {
-        // Atardecer
-        colorStart = '#ffab91';
-        colorMid = '#ff7043';
-        colorEnd = '#bf360c';
-      } else {
-        // Día pleno
-        colorStart = '#fff9c4';
-        colorMid = '#fdd835';
-        colorEnd = '#fbc02d';
-      }
-
+      const sun = document.createElement('div');
+      sun.className = 'sun';
       sun.style.width = `${size}px`;
       sun.style.height = `${size}px`;
-      sun.style.left = `${positionX}px`;
-      sun.style.backgroundImage = `
-        radial-gradient(circle at 30% 30%, ${colorStart} 0%, ${colorMid} 60%, ${colorEnd} 100%),
-        radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
-        radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px)
-      `;
-      sun.style.display = 'block';
+
+      // Color rojizo si es amanecer o atardecer
+      if (hour <= 7 || hour >= 16) {
+        sun.style.backgroundImage = `
+          radial-gradient(circle at 30% 30%, #ffcc80 0%, #ff8a65 60%, #e65100 100%),
+          radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
+          radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px)
+        `;
+        sun.style.boxShadow = '0 0 30px rgba(255, 100, 0, 0.5)';
+      }
+
+      cell.appendChild(sun);
     }
 
-    updateSun();
-    setInterval(updateSun, 60000); // Actualiza cada minuto
+    placeSun();
   </script>
 </body>
 </html>
