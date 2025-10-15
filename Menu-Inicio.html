@@ -24,32 +24,12 @@
       letter-spacing: 0.3px;
       color: #fff;
       text-shadow:
-        0 0 calc(6px * var(--glow-intensity)) var(--glow-color),
-        0 0 calc(12px * var(--glow-intensity)) var(--glow-color),
-        0 0 calc(18px * var(--glow-intensity)) var(--glow-color),
-        0 0 calc(30px * var(--glow-intensity)) var(--glow-color),
-        0 0 calc(45px * var(--glow-intensity)) var(--glow-color);
-      animation: pulseGlow 3s infinite ease-in-out;
-      transition: all 0.4s ease;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% {
-        text-shadow:
-          0 0 calc(6px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(12px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(18px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(30px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(45px * var(--glow-intensity)) var(--glow-color);
-      }
-      50% {
-        text-shadow:
-          0 0 calc(10px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(20px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(35px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(55px * var(--glow-intensity)) var(--glow-color),
-          0 0 calc(70px * var(--glow-intensity)) var(--glow-color);
-      }
+        0 0 calc(8px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(16px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(28px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(40px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(60px * var(--glow-intensity)) var(--glow-color);
+      transition: all 0.5s ease;
     }
   </style>
 </head>
@@ -78,10 +58,10 @@
 
     // --- Determinar intensidad (brillo) según fase ---
     function getGlowIntensity(phase) {
-      // Aumentamos el rango: de 0.6 (nueva) a 2.0 (llena)
-      const distanceToFull = Math.abs(0.5 - phase); 
-      const brightness = 2.0 - distanceToFull * 2.6; 
-      return Math.max(0.6, Math.min(brightness, 2.0));
+      // La intensidad aumenta desde 0.5 (luna nueva) hasta 2.5 (luna llena)
+      const distanceToFull = Math.abs(0.5 - phase);
+      const brightness = 2.5 - distanceToFull * 4.0;
+      return Math.max(0.5, Math.min(brightness, 2.5));
     }
 
     // --- Aplicar color e intensidad ---
@@ -91,7 +71,7 @@
     document.documentElement.style.setProperty('--glow-color', color);
     document.documentElement.style.setProperty('--glow-intensity', intensity.toFixed(2));
 
-    console.log(`🌙 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color}`);
+    console.log(`🌕 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color}`);
   </script>
 </body>
 </html>
