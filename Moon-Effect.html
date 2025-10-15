@@ -1,45 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
       background: transparent;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lunar-table {
+      display: grid;
+      grid-template-columns: repeat(28, 1fr);
+      width: 95vw;
+      height: 120px;
+      background-color: rgba(255,255,255,0.02);
+    }
+
+    .cell {
+      position: relative;
+      border: none;
     }
 
     .moon-container {
-      position: relative;
-      width: 50px;
-      height: 50px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #dddddd 60%, #999999 100%);
       background-blend-mode: screen;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+      transition: all 1s ease-in-out;
       overflow: hidden;
+      z-index: 2;
     }
 
     .moon-shadow {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 50px;
-      height: 50px;
+      inset: 0;
       border-radius: 50%;
-      background: radial-gradient(circle at center, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.7) 60%, rgba(10,10,10,0.3) 100%);
-      mask-image: radial-gradient(circle at var(--mask-x) 50%, black 50%, transparent 100%);
-      -webkit-mask-image: radial-gradient(circle at var(--mask-x) 50%, black 50%, transparent 100%);
-      transition: all 1s ease-in-out;
+      background: radial-gradient(circle at center, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.75) 60%, rgba(10,10,10,0.4) 100%);
+      mask-image: radial-gradient(circle at var(--mask-x, 50%) 50%, black 45%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle at var(--mask-x, 50%) 50%, black 45%, transparent 100%);
+      transition: all 1.2s ease-in-out;
+    }
+
+    .moon-container::after {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+      transition: opacity 1s ease-in-out;
     }
   </style>
 </head>
 <body>
-  <div class="moon-container">
-    <div class="moon-shadow"></div>
+  <div class="lunar-table" id="lunarTable">
+    <script>
+      for (let i = 0; i < 28; i++) {
+        document.write(`<div class="cell" id="day${i}"></div>`);
+      }
+    </script>
   </div>
 
   <script>
@@ -48,21 +73,65 @@
       const synodicMonth = 29.53058867;
       const knownNewMoon = new Date('2024-01-11T11:57:00Z');
       const diff = (now - knownNewMoon) / (1000 * 60 * 60 * 24);
-      const phase = diff % synodicMonth;
-      return phase / synodicMonth;
+      return (diff % synodicMonth) / synodicMonth;
     }
 
-    const phase = getMoonPhase();
-    const shadow = document.querySelector('.moon-shadow');
+    function placeMoon() {
+      // Limpia el estado anterior
+      document.querySelectorAll('.moon-container').forEach(m => m.remove());
 
-    // Posición de la sombra curva (0% = izquierda, 100% = derecha)
-    const maskX = phase <= 0.5
-      ? `${100 - phase * 200}%`
-      : `${phase * 200}%`;
+      const phase = getMoonPhase();
+      const dayIndex = Math.floor(phase * 28);
+      const cell = document.getElementById(`day${dayIndex}`);
+      if (!cell) return;
 
-    shadow.style.setProperty('--mask-x', maskX);
+      const now = new Date();
+      const hour = now.getHours();
 
-    console.log(`🌔 Fase lunar: ${(phase*100).toFixed(1)}% | Sombra curva en: ${maskX}`);
+      // La luna es visible todo el día, pero más tenue durante el día
+      const isDay = hour >= 6 && hour < 18;
+
+      const distanceToFull = Math.abs(0.5 - phase);
+      const intensity = 1 - distanceToFull * 2; // 0 (nueva) → 1 (llena)
+      const size = 40 + intensity * 30; // 40px en luna nueva, hasta 70px en llena
+
+      const moon = document.createElement('div');
+      moon.className = 'moon-container';
+      moon.style.width = `${size}px`;
+      moon.style.height = `${size}px`;
+
+      // Transparencia según hora (más tenue de día)
+      moon.style.opacity = isDay ? 0.35 : 1;
+
+      // Brillo atmosférico más suave de día
+      const glow = isDay ? 0.2 + intensity * 0.3 : 0.5 + intensity * 0.5;
+      moon.style.boxShadow = `0 0 ${25 * glow}px rgba(255, 255, 255, ${glow})`;
+
+      // Textura lunar
+      moon.style.backgroundImage = `
+        radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #999999 100%),
+        radial-gradient(circle at 20% 40%, rgba(150,150,150,0.3) 2px, transparent 3px),
+        radial-gradient(circle at 70% 60%, rgba(120,120,120,0.2) 1.5px, transparent 2px),
+        radial-gradient(circle at 50% 20%, rgba(180,180,180,0.25) 2px, transparent 3px)
+      `;
+
+      // Sombra lunar (fase)
+      const shadow = document.createElement('div');
+      shadow.className = 'moon-shadow';
+      const maskX = phase <= 0.5
+        ? `${100 - phase * 200}%`
+        : `${phase * 200}%`;
+      shadow.style.setProperty('--mask-x', maskX);
+
+      moon.appendChild(shadow);
+      cell.appendChild(moon);
+    }
+
+    // Ejecuta al cargar
+    placeMoon();
+
+    // Actualiza cada minuto para mantener sincronía real
+    setInterval(placeMoon, 60000);
   </script>
 </body>
 </html>
