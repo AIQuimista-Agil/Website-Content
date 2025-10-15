@@ -15,16 +15,16 @@
 
     .solar-table {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      width: 90vw;
-      height: 100px;
-      border: 1px solid rgba(255,255,255,0.1);
+      grid-template-columns: repeat(48, 1fr);
+      width: 95vw;
+      height: 120px;
+      border: 2px solid rgba(255,255,255,0.2);
       background-color: rgba(255,255,255,0.05);
     }
 
     .cell {
       position: relative;
-      border-left: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     .sun {
@@ -45,19 +45,16 @@
 </head>
 <body>
   <div class="solar-table" id="solarTable">
-    <!-- 12 celdas para las horas de 6am a 6pm -->
-    <div class="cell" id="h6"></div>
-    <div class="cell" id="h7"></div>
-    <div class="cell" id="h8"></div>
-    <div class="cell" id="h9"></div>
-    <div class="cell" id="h10"></div>
-    <div class="cell" id="h11"></div>
-    <div class="cell" id="h12"></div>
-    <div class="cell" id="h13"></div>
-    <div class="cell" id="h14"></div>
-    <div class="cell" id="h15"></div>
-    <div class="cell" id="h16"></div>
-    <div class="cell" id="h17"></div>
+    <!-- 12 horas × 4 subceldas = 48 celdas -->
+    <!-- Cada celda representa 15 minutos -->
+    <!-- IDs: h6m0, h6m15, h6m30, h6m45, ..., h17m45 -->
+    <script>
+      for (let h = 6; h <= 17; h++) {
+        for (let m of [0, 15, 30, 45]) {
+          document.write(`<div class="cell" id="h${h}m${m}"></div>`);
+        }
+      }
+    </script>
   </div>
 
   <script>
@@ -68,13 +65,15 @@
 
       if (hour < 6 || hour > 17) return;
 
-      const cellId = `h${hour}`;
+      // Encuentra el cuarto de hora más cercano
+      const rounded = Math.floor(minute / 15) * 15;
+      const cellId = `h${hour}m${rounded}`;
       const cell = document.getElementById(cellId);
       if (!cell) return;
 
       // Tamaño del sol según cercanía al mediodía
       const midday = 12;
-      const distance = Math.abs(midday - hour - minute / 60);
+      const distance = Math.abs(midday - hour - rounded / 60);
       const size = 30 + (1 - distance / 6) * 30;
 
       const sun = document.createElement('div');
@@ -82,7 +81,7 @@
       sun.style.width = `${size}px`;
       sun.style.height = `${size}px`;
 
-      // Color rojizo si es amanecer o atardecer
+      // Color ritual para amanecer y atardecer
       if (hour <= 7 || hour >= 16) {
         sun.style.backgroundImage = `
           radial-gradient(circle at 30% 30%, #ffcc80 0%, #ff8a65 60%, #e65100 100%),
