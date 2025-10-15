@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .solar-table {
+      display: grid;
+      grid-template-columns: repeat(48, 1fr);
+      width: 95vw;
+      height: 120px;
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .cell {
+      position: relative;
+      border: none;
+    }
+
+    .sun {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background-blend-mode: screen;
+      transition: all 1s ease-in-out;
+      filter: blur(0.3px) saturate(1.3);
+      animation: subtlePulse 6s ease-in-out infinite;
+      z-index: 2;
+      opacity: 1;
+    }
+
+    @keyframes subtlePulse {
+      0%, 100% {
+        filter: blur(0.3px) saturate(1.3) brightness(1);
+      }
+      50% {
+        filter: blur(0.6px) saturate(1.5) brightness(1.25);
+      }
+    }
+
+    .sun::before,
+    .sun::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg);
+      border-radius: 50%;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 1;
+    }
+
+    @keyframes flareRotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="solar-table" id="solarTable">
+    <script>
+      // Crear celdas de 15 minutos de 6:00 a 17:45
+      for (let h = 6; h <= 17; h++) {
+        for (let m of [0, 15, 30, 45]) {
+          document.write(`<div class="cell" id="h${h}m${m}"></div>`);
+        }
+      }
+    </script>
+  </div>
+
+  <script>
+    function placeSun() {
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+
+      // 🕕 Ocultar sol entre 6:01pm y 5:59am
+      if (hour >= 18 || hour < 6) {
+        document.querySelectorAll(".sun").forEach(sun => {
+          sun.style.opacity = 0;
+          setTimeout(() => sun.remove(), 1000);
+        });
+        return;
+      }
+
+      // Redondeo a intervalos de 15 minutos
+      const rounded = Math.floor(minute / 15) * 15;
+      const cellId = `h${hour}m${rounded}`;
+      const cell = document.getElementById(cellId);
+      if (!cell) return;
+
+      // Elimina soles previos
+      document.querySelectorAll(".sun").forEach(el => el.remove());
+
+      // Distancia al mediodía
+      const midday = 12;
+      const distance = Math.abs(midday - hour - rounded / 60);
+      const intensity = 1 - distance / 6; // 0 amanecer/anochecer, 1 mediodía
+
+      // 🟡 Tamaño 30px → 80px
+      const minSize = 30;
+      const maxSize = 80;
+      const size = minSize + (maxSize - minSize) * intensity;
+
+      // 💡 Brillo
+      const glow = 0.3 + intensity * 0.7;
+
+      // Colores
+      const isSunriseOrSunset = hour <= 7 || hour >= 16;
+      const colorStart = isSunriseOrSunset ? "#ffcc80" : "#fff9c4";
+      const colorMid = isSunriseOrSunset ? "#ff8a65" : "#fdd835";
+      const colorEnd = isSunriseOrSunset ? "#e65100" : "#fbc02d";
+      const shadowColor = isSunriseOrSunset
+        ? `rgba(255, 100, 0, ${glow})`
+        : `rgba(255, 200, 0, ${glow})`;
+
+      const sun = document.createElement("div");
+      sun.className = "sun";
+      sun.style.width = `${size}px`;
+      sun.style.height = `${size}px`;
+      sun.style.opacity = 1;
+
+      // 🎨 Textura hiperrealista
+      sun.style.backgroundImage = `
+        radial-gradient(circle at 50% 50%, #fffde7 0%, ${colorStart} 25%, ${colorMid} 60%, ${colorEnd} 90%, rgba(255,100,0,0.4) 100%),
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0%, transparent 40%),
+        radial-gradient(circle at 70% 70%, rgba(255,180,50,0.25) 10%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255,180,0,0.15) 20%, transparent 80%)
+      `;
+
+      // 🌟 Halo
+      sun.style.boxShadow = `
+        0 0 ${50 * glow}px ${shadowColor},
+        0 0 ${80 * glow}px rgba(255, 200, 100, ${0.4 + glow * 0.2}),
+        0 0 ${120 * glow}px rgba(255, 180, 50, ${0.3 + glow * 0.1})
+      `;
+
+      // 🔥 Llamaradas
+      const flareHue = isSunriseOrSunset ? 25 : 45;
+      const flareOpacity = 0.08 + intensity * 0.12;
+      const flareSpeed = 35 - intensity * 20;
+
+      sun.style.setProperty("--flare1", `
+        conic-gradient(
+          from 0deg,
+          hsla(${flareHue},100%,60%,${flareOpacity}) 0deg,
+          hsla(${flareHue + 10},100%,50%,${flareOpacity + 0.1}) 40deg,
+          transparent 100deg,
+          hsla(${flareHue + 20},100%,70%,${flareOpacity}) 200deg,
+          transparent 360deg
+        )
+      `);
+
+      sun.style.setProperty("--flare2", `
+        conic-gradient(
+          from 180deg,
+          hsla(${flareHue + 10},100%,60%,${flareOpacity / 2}) 0deg,
+          hsla(${flareHue + 30},100%,50%,${flareOpacity / 1.5}) 60deg,
+          transparent 120deg,
+          hsla(${flareHue + 15},100%,65%,${flareOpacity / 1.5}) 240deg,
+          transparent 360deg
+        )
+      `);
+
+      sun.style.setProperty("--flare-speed", `${flareSpeed}s`);
+
+      cell.appendChild(sun);
+
+      // Flares rotatorios
+      const styleSheet = document.createElement("style");
+      styleSheet.textContent = `
+        .sun::before {
+          width: 160%;
+          height: 160%;
+          background: var(--flare1);
+          animation: flareRotate var(--flare-speed) linear infinite;
+        }
+        .sun::after {
+          width: 180%;
+          height: 180%;
+          background: var(--flare2);
+          opacity: 0.4;
+          filter: blur(10px);
+          animation: flareRotate calc(var(--flare-speed) * 1.5) linear infinite reverse;
+        }
+      `;
+      document.head.appendChild(styleSheet);
+    }
+
+    // 🌞 Actualización cada minuto (sin recargar página)
+    placeSun();
+    setInterval(placeSun, 60 * 1000);
+  </script>
+</body>
+</html>
