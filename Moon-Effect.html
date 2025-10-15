@@ -3,12 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    @font-face {
-      font-family: 'Futura';
-      src: local('Futura'),
-           url('https://fonts.cdnfonts.com/s/16110/Futura.woff') format('woff');
-    }
-
     body {
       margin: 0;
       background: transparent;
@@ -18,26 +12,27 @@
       height: 100vh;
     }
 
-    /* --- Contenedor de la luna --- */
     .moon-container {
       position: relative;
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #fff, #ddd 70%, #999 100%);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #dddddd 60%, #999999 100%);
+      background-blend-mode: screen;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
       overflow: hidden;
     }
 
-    /* --- Sombra lunar difuminada --- */
     .moon-shadow {
       position: absolute;
       top: 0;
       left: 0;
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.2) 100%);
+      background: radial-gradient(circle at center, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.7) 60%, rgba(10,10,10,0.3) 100%);
+      mask-image: radial-gradient(circle at var(--mask-x) 50%, black 50%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle at var(--mask-x) 50%, black 50%, transparent 100%);
       transition: all 1s ease-in-out;
     }
   </style>
@@ -60,17 +55,14 @@
     const phase = getMoonPhase();
     const shadow = document.querySelector('.moon-shadow');
 
-    const offset = (phase <= 0.5)
-      ? 60 * (phase * 2)
-      : 60 * (2 - phase * 2);
+    // Posición de la sombra curva (0% = izquierda, 100% = derecha)
+    const maskX = phase <= 0.5
+      ? `${100 - phase * 200}%`
+      : `${phase * 200}%`;
 
-    if (phase < 0.5) {
-      shadow.style.clipPath = `inset(0 ${offset}px 0 0)`;
-    } else {
-      shadow.style.clipPath = `inset(0 0 0 ${offset}px)`;
-    }
+    shadow.style.setProperty('--mask-x', maskX);
 
-    console.log(`🌔 Fase lunar: ${(phase*100).toFixed(1)}%`);
+    console.log(`🌔 Fase lunar: ${(phase*100).toFixed(1)}% | Sombra curva en: ${maskX}`);
   </script>
 </body>
 </html>
