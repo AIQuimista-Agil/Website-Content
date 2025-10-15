@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @font-face {
+      font-family: 'Futura';
+      src: local('Futura'),
+           url('https://fonts.cdnfonts.com/s/16110/Futura.woff') format('woff');
+    }
+
+    body {
+      margin: 0;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      gap: 25px;
+    }
+
+    /* --- Texto neón --- */
+    .neon-text {
+      font-family: 'Futura', sans-serif;
+      font-size: 17px;
+      letter-spacing: 0.3px;
+      color: #fff;
+      text-shadow:
+        0 0 calc(8px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(16px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(28px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(40px * var(--glow-intensity)) var(--glow-color),
+        0 0 calc(60px * var(--glow-intensity)) var(--glow-color);
+      transition: all 0.5s ease;
+    }
+
+    /* --- Contenedor de la luna --- */
+    .moon-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #ddd 70%, #999 100%);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+      overflow: hidden;
+    }
+
+    /* --- Sombra lunar dinámica --- */
+    .moon-shadow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #0a0a0a;
+      transition: all 1s ease-in-out;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="moon-container">
+    <div class="moon-shadow"></div>
+  </div>
+  <div class="neon-text">Fase Lunar Actual</div>
+
+  <script>
+    // --- Cálculo de fase lunar aproximada ---
+    function getMoonPhase() {
+      const now = new Date();
+      const synodicMonth = 29.53058867;
+      const knownNewMoon = new Date('2024-01-11T11:57:00Z');
+      const diff = (now - knownNewMoon) / (1000 * 60 * 60 * 24);
+      const phase = diff % synodicMonth;
+      return phase / synodicMonth; // 0 → 1
+    }
+
+    // --- Determinar color según fase ---
+    function getGlowColor(phase) {
+      if (phase < 0.125) return '#3366ff'; // Luna nueva
+      if (phase < 0.25) return '#00ffff';  // Creciente
+      if (phase < 0.5) return '#ffffff';   // Llena
+      if (phase < 0.75) return '#ff8800';  // Menguante
+      return '#ff3366';                    // Oscura
+    }
+
+    // --- Intensidad del brillo ---
+    function getGlowIntensity(phase) {
+      const distanceToFull = Math.abs(0.5 - phase);
+      const brightness = 2.5 - distanceToFull * 4.0;
+      return Math.max(0.5, Math.min(brightness, 2.5));
+    }
+
+    // --- Aplicar color e intensidad ---
+    const phase = getMoonPhase();
+    const color = getGlowColor(phase);
+    const intensity = getGlowIntensity(phase);
+    document.documentElement.style.setProperty('--glow-color', color);
+    document.documentElement.style.setProperty('--glow-intensity', intensity.toFixed(2));
+
+    // --- Simulación visual de la fase lunar ---
+    const shadow = document.querySelector('.moon-shadow');
+    const container = document.querySelector('.moon-container');
+
+    // Mover la sombra según la fase (0 = luna nueva, 0.5 = llena, 1 = nueva)
+    const offset = (phase <= 0.5)
+      ? 80 * (phase * 2) // Creciente
+      : 80 * (2 - phase * 2); // Menguante
+
+    // Direccionalidad (sombra de izquierda o derecha)
+    if (phase < 0.5) {
+      // Luna creciente (sombra a la derecha)
+      shadow.style.clipPath = `inset(0 ${offset}px 0 0)`;
+    } else {
+      // Luna menguante (sombra a la izquierda)
+      shadow.style.clipPath = `inset(0 0 0 ${offset}px)`;
+    }
+
+    console.log(`🌔 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color}`);
+  </script>
+</body>
+</html>
