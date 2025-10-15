@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @font-face {
+      font-family: 'Futura';
+      src: local('Futura'),
+           url('https://fonts.cdnfonts.com/s/16110/Futura.woff') format('woff');
+    }
+
+    body {
+      margin: 0;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .neon-text {
+      font-family: 'Futura', sans-serif;
+      font-size: 17px;
+      letter-spacing: 0.3px;
+      color: #fff;
+      text-shadow:
+        0 0 4px var(--glow-color),
+        0 0 8px var(--glow-color),
+        0 0 12px var(--glow-color),
+        0 0 16px var(--glow-color);
+      animation: pulseGlow 3s infinite ease-in-out;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        text-shadow:
+          0 0 4px var(--glow-color),
+          0 0 8px var(--glow-color),
+          0 0 12px var(--glow-color),
+          0 0 16px var(--glow-color);
+      }
+      50% {
+        text-shadow:
+          0 0 6px var(--glow-color),
+          0 0 12px var(--glow-color),
+          0 0 18px var(--glow-color),
+          0 0 24px var(--glow-color);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="neon-text">PHOENIX QUAE INFEROS ULTRA SPELUNCAM PLATONIS ASCENDIT</div>
+
+  <script>
+    // --- Cálculo de fase lunar aproximada ---
+    function getMoonPhase() {
+      const now = new Date();
+      const synodicMonth = 29.53058867; // duración promedio del ciclo lunar
+      const knownNewMoon = new Date('2024-01-11T11:57:00Z'); // referencia
+      const diff = (now - knownNewMoon) / (1000 * 60 * 60 * 24);
+      const phase = diff % synodicMonth;
+      return phase / synodicMonth; // valor entre 0 y 1
+    }
+
+    // --- Determinar color según fase ---
+    function getGlowColor(phase) {
+      if (phase < 0.125) return '#3366ff'; // Luna nueva - azul profundo
+      if (phase < 0.25) return '#00ffff';  // Creciente - cian
+      if (phase < 0.5) return '#ffffff';   // Luna llena - blanco puro
+      if (phase < 0.75) return '#ff8800';  // Menguante - ámbar
+      return '#ff3366';                    // Oscura - rojo-magenta
+    }
+
+    // --- Aplicar color ---
+    const phase = getMoonPhase();
+    const color = getGlowColor(phase);
+    document.documentElement.style.setProperty('--glow-color', color);
+  </script>
+</body>
+</html>
