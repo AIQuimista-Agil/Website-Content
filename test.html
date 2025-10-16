@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema Planetario (Sol, Luna y 5 Planetas)</title>
   <style>
     body {
       margin: 0;
-      background: radial-gradient(circle at center, #000000 0%, #0a0a0a 100%);
+      background: radial-gradient(circle at center, #000000 0%, #050505 100%);
       height: 100vh;
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr);
       gap: 40px;
       align-items: center;
-      justify-content: center;
+      justify-items: center;
       padding: 40px;
     }
 
@@ -22,79 +24,112 @@
       transition: all 1s ease-in-out;
     }
 
-    /* ☀️ Sol (usando diseño anterior simplificado) */
+    /* --- Sol --- */
     .sol {
       width: 80px;
       height: 80px;
-      background-image:
-        radial-gradient(circle at 30% 30%, #fff9c4 0%, #fdd835 60%, #fbc02d 100%),
-        radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
-        radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px);
-      background-blend-mode: screen;
-      box-shadow: 0 0 40px rgba(255, 200, 0, 0.5);
+      background: radial-gradient(circle at 30% 30%, #fff6b0 0%, #ffd54f 40%, #ff8f00 100%);
+      box-shadow:
+        0 0 40px rgba(255, 200, 80, 0.8),
+        0 0 100px rgba(255, 180, 50, 0.6),
+        0 0 160px rgba(255, 160, 20, 0.4);
+      animation: solPulse 6s ease-in-out infinite;
     }
 
-    /* 🌕 Luna llena (usando diseño anterior) */
+    @keyframes solPulse {
+      0%, 100% { filter: brightness(1.1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    /* --- Luna Llena --- */
     .luna {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       background-image:
         radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #999999 100%),
         radial-gradient(circle at 20% 40%, rgba(150,150,150,0.3) 2px, transparent 3px),
-        radial-gradient(circle at 70% 60%, rgba(120,120,120,0.2) 1.5px, transparent 2px),
-        radial-gradient(circle at 50% 20%, rgba(180,180,180,0.25) 2px, transparent 3px);
+        radial-gradient(circle at 70% 60%, rgba(120,120,120,0.2) 1.5px, transparent 2px);
       background-blend-mode: screen;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+      box-shadow:
+        0 0 25px rgba(255, 255, 255, 0.7),
+        0 0 60px rgba(255, 255, 255, 0.3);
     }
 
-    /* 🪐 Júpiter */
-    .jupiter {
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle at center, #f4e2d8 0%, #d7ccc8 60%, #a1887f 100%);
-      box-shadow: 0 0 30px rgba(200, 150, 100, 0.4);
-    }
-
-    /* 💍 Saturno */
-    .saturno {
-      width: 61px;
-      height: 61px;
-      background: radial-gradient(circle at center, #fbe9e7 0%, #ffe0b2 60%, #ffcc80 100%);
-      box-shadow: 0 0 25px rgba(255, 200, 100, 0.4);
-    }
-
-    /* 🔴 Marte */
-    .marte {
-      width: 4px;
-      height: 4px;
-      background: radial-gradient(circle at center, #ff7043 0%, #d84315 100%);
-      box-shadow: 0 0 10px rgba(255, 80, 50, 0.6);
-    }
-
-    /* 🧊 Mercurio */
+    /* --- Mercurio --- */
     .mercurio {
-      width: 3px;
-      height: 3px;
-      background: radial-gradient(circle at center, #cfd8dc 0%, #90a4ae 100%);
-      box-shadow: 0 0 8px rgba(180, 180, 180, 0.4);
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle at 30% 30%, #c7b198 0%, #8c7b6b 60%, #5d5349 100%);
+      box-shadow: 0 0 15px rgba(180, 150, 120, 0.4);
     }
 
-    /* 🌕 Venus */
+    /* --- Venus --- */
     .venus {
-      width: 7px;
-      height: 7px;
-      background: radial-gradient(circle at center, #ffe082 0%, #ffca28 100%);
-      box-shadow: 0 0 12px rgba(255, 220, 100, 0.5);
+      width: 55px;
+      height: 55px;
+      background: radial-gradient(circle at 40% 40%, #fff2b0 0%, #f6c667 60%, #b77f30 100%);
+      box-shadow: 0 0 25px rgba(255, 210, 130, 0.4);
+      filter: brightness(1.1);
+    }
+
+    /* --- Marte --- */
+    .marte {
+      width: 45px;
+      height: 45px;
+      background: radial-gradient(circle at 35% 35%, #ffb080 0%, #d84315 60%, #7f1d1d 100%);
+      box-shadow:
+        0 0 20px rgba(255, 100, 50, 0.4),
+        0 0 40px rgba(255, 60, 0, 0.2);
+    }
+
+    /* --- Júpiter --- */
+    .jupiter {
+      width: 70px;
+      height: 70px;
+      background: repeating-linear-gradient(
+        10deg,
+        #f8e0b0 0%,
+        #e0b080 8%,
+        #d7a071 16%,
+        #c48f65 24%,
+        #f0d0a0 32%
+      );
+      border-radius: 50%;
+      box-shadow:
+        0 0 25px rgba(255, 210, 150, 0.4),
+        0 0 60px rgba(200, 160, 120, 0.2);
+    }
+
+    /* --- Saturno --- */
+    .saturno {
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle at 40% 40%, #f8e8b0 0%, #d6b25f 60%, #9b7b3a 100%);
+      box-shadow: 0 0 25px rgba(255, 220, 150, 0.4);
+      position: relative;
+    }
+
+    .saturno::before {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 20px;
+      background: radial-gradient(ellipse at center, rgba(200,180,120,0.9) 0%, rgba(80,60,30,0.1) 80%);
+      border-radius: 50%;
+      top: 20px;
+      left: -25px;
+      transform: rotateX(65deg) rotateZ(20deg);
+      filter: blur(1px);
     }
   </style>
 </head>
 <body>
   <div class="celestial sol" title="Sol"></div>
-  <div class="celestial luna" title="Luna"></div>
-  <div class="celestial jupiter" title="Júpiter"></div>
-  <div class="celestial saturno" title="Saturno"></div>
+  <div class="celestial luna" title="Luna Llena"></div>
+  <div class="celestial mercurio" title="Mercurio"></div>
   <div class="celestial venus" title="Venus"></div>
   <div class="celestial marte" title="Marte"></div>
-  <div class="celestial mercurio" title="Mercurio"></div>
+  <div class="celestial jupiter" title="Júpiter"></div>
+  <div class="celestial saturno" title="Saturno"></div>
 </body>
 </html>
