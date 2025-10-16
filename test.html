@@ -6,151 +6,95 @@
   <style>
     body {
       margin: 0;
-      background: radial-gradient(circle at center, #000000 0%, #050505 100%);
+      background: radial-gradient(circle at center, #000000 0%, #0a0a0a 100%);
       height: 100vh;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, 1fr);
+      display: flex;
+      flex-wrap: wrap;
       gap: 40px;
       align-items: center;
-      justify-items: center;
+      justify-content: center;
       padding: 40px;
-      color: white;
-      font-family: sans-serif;
     }
 
     .celestial {
-      width: 90px;
-      height: 90px;
       border-radius: 50%;
       position: relative;
       transition: all 1s ease-in-out;
-      filter: brightness(1.1) contrast(1.05) saturate(1.2);
     }
 
-    /* ---- ECLIPSE SOLAR ---- */
-    .eclipse-solar {
-      background: radial-gradient(circle at center, #0a0a0a 0%, #000 60%, #111 100%);
+    /* ☀️ Sol (usando diseño anterior simplificado) */
+    .sol {
+      width: 80px;
+      height: 80px;
+      background-image:
+        radial-gradient(circle at 30% 30%, #fff9c4 0%, #fdd835 60%, #fbc02d 100%),
+        radial-gradient(circle at 70% 70%, rgba(255,140,0,0.3) 2px, transparent 3px),
+        radial-gradient(circle at 40% 60%, rgba(255,200,0,0.2) 1.5px, transparent 2px);
+      background-blend-mode: screen;
+      box-shadow: 0 0 40px rgba(255, 200, 0, 0.5);
     }
 
-    .eclipse-solar::after {
-      content: "";
-      position: absolute;
-      inset: -12px;
-      border-radius: 50%;
-      background: radial-gradient(circle at center,
-        rgba(255, 240, 150, 0.6) 0%,
-        rgba(255, 180, 60, 0.4) 40%,
-        rgba(255, 140, 0, 0.2) 70%,
-        transparent 100%);
-      box-shadow:
-        0 0 40px rgba(255, 220, 150, 0.4),
-        0 0 80px rgba(255, 200, 100, 0.3),
-        0 0 120px rgba(255, 160, 60, 0.2);
-      animation: solarPulse 6s ease-in-out infinite;
-    }
-
-    @keyframes solarPulse {
-      0%, 100% { opacity: 0.9; filter: brightness(1.1); }
-      50% { opacity: 1; filter: brightness(1.3); }
-    }
-
-    /* ---- ECLIPSE LUNAR ---- */
-    .eclipse-lunar {
-      background: radial-gradient(circle at center, #3a1b1b 0%, #1c0a0a 60%, #080202 100%);
-      box-shadow:
-        0 0 25px rgba(255, 100, 80, 0.3),
-        0 0 60px rgba(255, 60, 40, 0.15);
-      filter: saturate(1.4);
-    }
-
-    .eclipse-lunar::after {
-      content: "";
-      position: absolute;
-      inset: -5px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 50% 50%,
-        rgba(255, 80, 60, 0.3) 10%,
-        rgba(150, 20, 10, 0.2) 40%,
-        transparent 80%);
-    }
-
-    /* ---- LUNA AZUL ---- */
-    .luna-azul {
-      background: radial-gradient(circle at 30% 30%, #e3f2fd 0%, #90caf9 55%, #1565c0 100%);
-      box-shadow:
-        0 0 25px rgba(140, 200, 255, 0.6),
-        0 0 60px rgba(100, 180, 255, 0.4);
-      filter: brightness(1.1);
-    }
-
-    .luna-azul::after {
-      content: "";
-      position: absolute;
-      inset: -6px;
-      border-radius: 50%;
-      box-shadow:
-        0 0 40px rgba(180, 220, 255, 0.3),
-        0 0 80px rgba(120, 180, 255, 0.2);
-    }
-
-    /* ---- LUNA ROJA (Superluna de sangre) ---- */
-    .luna-roja {
-      background: radial-gradient(circle at 30% 30%, #ffb199 0%, #e53935 60%, #7f0000 100%);
-      box-shadow:
-        0 0 30px rgba(255, 80, 60, 0.7),
-        0 0 80px rgba(255, 50, 30, 0.3);
-      animation: redGlow 7s ease-in-out infinite;
-    }
-
-    @keyframes redGlow {
-      0%, 100% { filter: brightness(1) saturate(1.2); }
-      50% { filter: brightness(1.15) saturate(1.4); }
-    }
-
-    /* ---- LUNA NEGRA ---- */
-    .luna-negra {
-      background: radial-gradient(circle at center, #111 0%, #000 100%);
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
-      opacity: 0.2;
-    }
-
-    .luna-negra::after {
-      content: "";
-      position: absolute;
-      inset: -8px;
-      border-radius: 50%;
-      background: radial-gradient(circle at center,
-        rgba(255, 255, 255, 0.05) 0%,
-        transparent 80%);
-    }
-
-    /* ---- LUNA LLENA ---- */
-    .luna-llena {
+    /* 🌕 Luna llena (usando diseño anterior) */
+    .luna {
+      width: 70px;
+      height: 70px;
       background-image:
         radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #999999 100%),
         radial-gradient(circle at 20% 40%, rgba(150,150,150,0.3) 2px, transparent 3px),
         radial-gradient(circle at 70% 60%, rgba(120,120,120,0.2) 1.5px, transparent 2px),
         radial-gradient(circle at 50% 20%, rgba(180,180,180,0.25) 2px, transparent 3px);
       background-blend-mode: screen;
-      box-shadow:
-        0 0 40px rgba(255, 255, 255, 0.7),
-        0 0 90px rgba(255, 255, 255, 0.3);
-      animation: moonPulse 10s ease-in-out infinite;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
     }
 
-    @keyframes moonPulse {
-      0%, 100% { filter: brightness(1) saturate(1.2); }
-      50% { filter: brightness(1.2) saturate(1.3); }
+    /* 🪐 Júpiter */
+    .jupiter {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at center, #f4e2d8 0%, #d7ccc8 60%, #a1887f 100%);
+      box-shadow: 0 0 30px rgba(200, 150, 100, 0.4);
+    }
+
+    /* 💍 Saturno */
+    .saturno {
+      width: 61px;
+      height: 61px;
+      background: radial-gradient(circle at center, #fbe9e7 0%, #ffe0b2 60%, #ffcc80 100%);
+      box-shadow: 0 0 25px rgba(255, 200, 100, 0.4);
+    }
+
+    /* 🔴 Marte */
+    .marte {
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle at center, #ff7043 0%, #d84315 100%);
+      box-shadow: 0 0 10px rgba(255, 80, 50, 0.6);
+    }
+
+    /* 🧊 Mercurio */
+    .mercurio {
+      width: 3px;
+      height: 3px;
+      background: radial-gradient(circle at center, #cfd8dc 0%, #90a4ae 100%);
+      box-shadow: 0 0 8px rgba(180, 180, 180, 0.4);
+    }
+
+    /* 🌕 Venus */
+    .venus {
+      width: 7px;
+      height: 7px;
+      background: radial-gradient(circle at center, #ffe082 0%, #ffca28 100%);
+      box-shadow: 0 0 12px rgba(255, 220, 100, 0.5);
     }
   </style>
 </head>
 <body>
-  <div class="celestial eclipse-solar" title="Eclipse Solar Total"></div>
-  <div class="celestial eclipse-lunar" title="Eclipse Lunar"></div>
-  <div class="celestial luna-azul" title="Luna Azul"></div>
-  <div class="celestial luna-roja" title="Luna Roja"></div>
-  <div class="celestial luna-negra" title="Luna Nueva o Negra"></div>
-  <div class="celestial luna-llena" title="Luna Llena"></div>
+  <div class="celestial sol" title="Sol"></div>
+  <div class="celestial luna" title="Luna"></div>
+  <div class="celestial jupiter" title="Júpiter"></div>
+  <div class="celestial saturno" title="Saturno"></div>
+  <div class="celestial venus" title="Venus"></div>
+  <div class="celestial marte" title="Marte"></div>
+  <div class="celestial mercurio" title="Mercurio"></div>
 </body>
 </html>
