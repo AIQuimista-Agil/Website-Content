@@ -138,39 +138,41 @@
     }
 
     /* ♄ SATURNO — color y anillos amplios */
+/* 💍 Saturno */
     .saturno {
       width: 60px;
       height: 60px;
       background: radial-gradient(circle at 40% 40%, #f8e8b0 0%, #d6b25f 60%, #9b7b3a 100%);
-      box-shadow:
-        inset -7px -7px 10px rgba(0,0,0,0.4),
-        0 0 25px rgba(255, 220, 150, 0.4);
+      box-shadow: 0 0 25px rgba(255, 220, 150, 0.4);
       position: relative;
-      z-index: 1;
     }
 
-    /* Anillos más grandes, suaves y translúcidos */
     .saturno::before {
       content: "";
       position: absolute;
-      width: 160px;
-      height: 40px;
-      background: repeating-linear-gradient(
-        90deg,
-        rgba(255,230,170,0.8) 0%,
-        rgba(220,190,120,0.5) 10%,
-        rgba(160,130,70,0.3) 25%,
-        rgba(255,230,170,0.15) 40%,
-        rgba(255,255,200,0.05) 60%
-      );
+      width: 110px;
+      height: 20px;
+      background: radial-gradient(ellipse at center, rgba(200,180,120,0.9) 0%, rgba(80,60,30,0.1) 80%);
       border-radius: 50%;
-      top: 22px;
-      left: -50px;
-      transform: rotateX(65deg) rotateZ(25deg);
-      filter: blur(0.7px) brightness(1.1);
-      box-shadow: 0 0 20px rgba(255, 220, 180, 0.3);
-      z-index: 0;
+      top: 20px;
+      left: -25px;
+      transform: rotateX(65deg) rotateZ(20deg);
+      filter: blur(1px);
     }
+
+    .saturno::after {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 24px;
+      background: radial-gradient(ellipse at center, rgba(200,180,120,0.3) 0%, transparent 80%);
+      border-radius: 50%;
+      top: 18px;
+      left: -35px;
+      transform: rotateX(65deg) rotateZ(-10deg);
+      filter: blur(2px);
+    }
+    
   </style>
 </head>
 <body>
