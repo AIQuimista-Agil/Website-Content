@@ -1,312 +1,204 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mapa Astrológico — Header (tiempo real)</title>
-<style>
-  :root{
-    --header-h: 120px;
-    --sign-gap: 1px;
-    --max-planet: 80;
-  }
-  body{
-    margin:0;
-    background:#000;
-    color:#fff;
-    font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    min-height:100vh;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa Planetario Semanal</title>
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at center, #000 0%, #040404 100%);
+      height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: center;
+      justify-items: center;
+      color: #fff;
+      font-family: 'Futura', sans-serif;
+      overflow: hidden;
+    }
 
-  .astro-header{
-    width:100%;
-    max-width:1400px;
-    height:var(--header-h);
-    display:grid;
-    grid-template-columns:repeat(12,1fr);
-    gap:var(--sign-gap);
-    border-radius:8px;
-    overflow:hidden;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    box-shadow:0 6px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-  }
+    .celestial {
+      position: relative;
+      border-radius: 50%;
+      overflow: visible;
+      transition: all 1s ease-in-out;
+      opacity: 0;
+      transform: scale(0.8);
+    }
 
-  .sign {
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background: rgba(255,255,255,0.01);
-    border-right:1px solid rgba(255,255,255,0.01);
-    min-width:0;
-    overflow:visible;
-  }
+    .visible {
+      opacity: 1;
+      transform: scale(1);
+    }
 
-  .sign .label {
-    position:absolute;
-    left:8px;
-    top:6px;
-    font-size:12px;
-    opacity:0.85;
-    pointer-events:none;
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-  }
+    /* ☀️ Sol (domingo) */
+    .sol {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #fff6b0 0%, #ffd54f 40%, #ff8f00 70%, #ff6f00 100%);
+      box-shadow:
+        0 0 40px rgba(255, 200, 80, 0.9),
+        0 0 120px rgba(255, 160, 30, 0.6),
+        0 0 200px rgba(255, 130, 0, 0.4);
+      animation: solPulse 5s ease-in-out infinite;
+    }
+    @keyframes solPulse {
+      0%, 100% { filter: brightness(1.05); }
+      50% { filter: brightness(1.3) saturate(1.2); }
+    }
 
-  .planet {
-    position:absolute;
-    border-radius:50%;
-    box-shadow:0 6px 18px rgba(0,0,0,0.5), inset -6px -8px 12px rgba(0,0,0,0.35);
-    transition: all 900ms cubic-bezier(.2,.9,.2,1);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:transparent;
-    user-select:none;
-    pointer-events:none;
-  }
+    /* 🌕 Luna (lunes) */
+    .luna {
+      width: 60px;
+      height: 60px;
+      background-image:
+        radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #999999 100%),
+        radial-gradient(circle at 20% 40%, rgba(150,150,150,0.25) 2px, transparent 3px),
+        radial-gradient(circle at 70% 60%, rgba(100,100,100,0.3) 1.5px, transparent 3px),
+        radial-gradient(circle at 50% 80%, rgba(80,80,80,0.2) 2px, transparent 4px);
+      background-blend-mode: overlay;
+      box-shadow:
+        inset -8px -8px 15px rgba(0,0,0,0.4),
+        0 0 25px rgba(255, 255, 255, 0.7),
+        0 0 80px rgba(255, 255, 255, 0.3);
+    }
 
-  /* Basic visuals (kept simple; tune as desired) */
-  .planet.sun { background: radial-gradient(circle at 30% 30%, #fff6b0 0%, #ffd54f 40%, #ff8f00 70%); box-shadow:0 0 60px rgba(255,160,50,0.75); }
-  .planet.moon { background: radial-gradient(circle at 30% 30%, #fff 0%, #bbb 70%, #888 100%); box-shadow:0 0 18px rgba(255,255,255,0.6), inset -6px -6px 8px rgba(0,0,0,0.3); }
-  .planet.mercury{ background: radial-gradient(circle at 30% 30%, #b4a690 0%, #726b5f 100%); }
-  .planet.venus{ background: radial-gradient(circle at 40% 40%, #f8eab0 0%, #b77f30 100%); }
-  .planet.mars{ background: radial-gradient(circle at 35% 35%, #ffb080 0%, #b04020 100%); box-shadow:0 0 14px rgba(255,80,50,0.35); }
-  .planet.jupiter{ background: repeating-linear-gradient(10deg,#f8e0b0 0%,#e0b080 8%,#d7a071 16%); }
-  .planet.saturn{ background: radial-gradient(circle at 40% 40%, #f8e8b0 0%, #d6b25f 60%, #9b7b3a 100%); }
-  .planet.uranus{ background: radial-gradient(circle at 30% 30%, #a0e8f8 0%, #458ab0 100%); }
-  .planet.neptune{ background: radial-gradient(circle at 30% 30%, #4ab0ff 0%, #1a237e 100%); }
-  .planet.pluto{ background: radial-gradient(circle at 30% 30%, #d9c9b0 0%, #6b5a4a 100%); }
+    /* ♂ Marte (martes) */
+    .marte {
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle at 35% 35%, #ffb080 0%, #d84315 60%, #7f1d1d 100%);
+      box-shadow:
+        inset -6px -6px 10px rgba(0,0,0,0.5),
+        0 0 20px rgba(255, 80, 50, 0.4),
+        0 0 40px rgba(255, 60, 0, 0.2);
+    }
 
-  .planet .tag {
-    position:absolute;
-    bottom:-20px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:11px;
-    padding:3px 6px;
-    background: rgba(255,255,255,0.06);
-    border-radius:4px;
-    color:#fff;
-    opacity:0.95;
-    pointer-events:none;
-    white-space:nowrap;
-    font-weight:600;
-  }
+    /* ☿ Mercurio (miércoles) */
+    .mercurio {
+      width: 35px;
+      height: 35px;
+      background: radial-gradient(circle at 30% 30%, #cfc4b2 0%, #a29b8a 40%, #5e564b 100%);
+      box-shadow:
+        inset -4px -4px 8px rgba(0,0,0,0.5),
+        0 0 15px rgba(180, 150, 120, 0.4);
+    }
 
-  @media (max-width:420px){
-    :root{ --header-h: 90px; --max-planet: 56; }
-    .sign .label{ font-size:11px; }
-  }
-  @media (min-width:1024px){
-    :root{ --header-h: 140px; --max-planet: 90; }
-  }
-</style>
+    /* ♃ Júpiter (jueves) */
+    .jupiter {
+      width: 70px;
+      height: 70px;
+      background: repeating-linear-gradient(
+        10deg,
+        #f8e0b0 0%,
+        #e0b080 8%,
+        #d7a071 16%,
+        #c48f65 24%,
+        #f0d0a0 32%
+      );
+      box-shadow:
+        inset -8px -8px 14px rgba(0,0,0,0.4),
+        0 0 25px rgba(255, 210, 150, 0.4),
+        0 0 60px rgba(200, 160, 120, 0.2);
+      position: relative;
+    }
+    .jupiter::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 12px;
+      top: 50%;
+      left: 25%;
+      background: radial-gradient(circle at 40% 40%, #ff7640 0%, #b33515 70%, rgba(100,20,0,0.8) 100%);
+      border-radius: 50% / 60%;
+      box-shadow:
+        0 0 4px rgba(255, 120, 60, 0.6),
+        0 0 10px rgba(255, 80, 20, 0.4);
+    }
+
+    /* ♀ Venus (viernes) */
+    .venus {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #f8eab0 0%, #f3c677 40%, #b77f30 100%);
+      box-shadow:
+        inset -6px -6px 10px rgba(0,0,0,0.4),
+        0 0 25px rgba(255, 210, 130, 0.5),
+        0 0 70px rgba(255, 200, 100, 0.2);
+    }
+
+    /* ♄ Saturno (sábado) */
+    .saturno {
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle at 40% 40%, #f8e8b0 0%, #d6b25f 60%, #9b7b3a 100%);
+      box-shadow:
+        inset -7px -7px 10px rgba(0,0,0,0.4),
+        0 0 25px rgba(255, 220, 150, 0.4);
+      position: relative;
+    }
+
+    .saturno::before {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 40px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,230,170,0.9) 0%,
+        rgba(220,190,120,0.5) 15%,
+        rgba(160,130,70,0.3) 35%,
+        rgba(255,230,170,0.1) 55%,
+        rgba(255,255,200,0.05) 75%
+      );
+      border-radius: 50%;
+      top: 10px;
+      left: -50px;
+      transform: rotateX(65deg) rotateZ(25deg);
+      filter: blur(0.5px);
+      box-shadow:
+        0 0 25px rgba(255, 230, 180, 0.4),
+        0 0 40px rgba(255, 220, 150, 0.3);
+      z-index: 0;
+    }
+
+    @media (max-width: 768px) {
+      body { grid-template-columns: repeat(7, 1fr); }
+      .celestial { transform: scale(0.7); }
+    }
+  </style>
 </head>
 <body>
+  <div class="celestial sol" id="domingo"></div>
+  <div class="celestial luna" id="lunes"></div>
+  <div class="celestial marte" id="martes"></div>
+  <div class="celestial mercurio" id="miercoles"></div>
+  <div class="celestial jupiter" id="jueves"></div>
+  <div class="celestial venus" id="viernes"></div>
+  <div class="celestial saturno" id="sabado"></div>
 
-<div class="astro-header" id="astroHeader" aria-hidden="false"></div>
+  <script>
+    const planetas = {
+      0: "domingo",   // Sol
+      1: "lunes",     // Luna
+      2: "martes",    // Marte
+      3: "miercoles", // Mercurio
+      4: "jueves",    // Júpiter
+      5: "viernes",   // Venus
+      6: "sabado"     // Saturno
+    };
 
-<script>
-/*
-  Mejora solicitada:
-  - Quitar símbolos zodiacales (usamos nombres)
-  - Conectar opcionalmente con una fuente ephemeris real (AstronomyAPI)
-  - Mantener fallback local para evitar fallos por CORS o falta de credenciales
-  - Colocar planetas en casa (sign) y desplazar horizontalmente según grados dentro de la casa
-*/
-
-/* Signos: usamos nombres legibles */
-const SIGNS = [
-  'Aries','Tauro','Géminis','Cáncer','Leo','Virgo',
-  'Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'
-];
-
-/* Cuerpos a mostrar */
-const BODIES = [
-  { id:'sun', label:'Sol', cssClass:'sun', maxSizeFactor:1.00 },
-  { id:'moon', label:'Luna', cssClass:'moon', maxSizeFactor:0.75 },
-  { id:'mercury', label:'Mercurio', cssClass:'mercury', maxSizeFactor:0.44 },
-  { id:'venus', label:'Venus', cssClass:'venus', maxSizeFactor:0.68 },
-  { id:'mars', label:'Marte', cssClass:'mars', maxSizeFactor:0.5 },
-  { id:'jupiter', label:'Júpiter', cssClass:'jupiter', maxSizeFactor:0.88 },
-  { id:'saturn', label:'Saturno', cssClass:'saturn', maxSizeFactor:0.75 },
-  { id:'uranus', label:'Urano', cssClass:'uranus', maxSizeFactor:0.68 },
-  { id:'neptune', label:'Neptuno', cssClass:'neptune', maxSizeFactor:0.65 },
-  { id:'pluto', label:'Plutón', cssClass:'pluto', maxSizeFactor:0.35 }
-];
-
-/* Construir grid de 12 casas (signos) */
-const header = document.getElementById('astroHeader');
-SIGNS.forEach((name, idx) => {
-  const cell = document.createElement('div');
-  cell.className = 'sign';
-  cell.dataset.index = idx;
-  const label = document.createElement('div');
-  label.className = 'label';
-  label.textContent = name;
-  cell.appendChild(label);
-  header.appendChild(cell);
-});
-
-/* Utilidades */
-function getMaxPlanetPx(){
-  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--max-planet')) || 80;
-}
-function lonToSignIndex(lon){
-  const L = ((lon % 360) + 360) % 360;
-  return Math.floor(L / 30);
-}
-function degIntoSign(lon){
-  const L = ((lon % 360) + 360) % 360;
-  return L % 30; // 0..30
-}
-
-/* ------- Ephemeris: AstronomyAPI integration (optional) -------
-  - Service: https://www.astronomyapi.com/ (example)
-  - You must obtain APP_ID and APP_SECRET (or API_KEY) from provider.
-  - This code shows how to call that API; if you do not have keys,
-    the function will fallback to local approximate positions.
-  - Replace the placeholders below with your credentials.
-*/
-const ASTRO_API = {
-  enabled: false,       // set to true after you set credentials
-  appId: '',            // e.g., 'your_app_id_here'
-  appSecret: '',        // e.g., 'your_app_secret_here'
-  // Example endpoint (AstronomyAPI): /api/v2/bodies/positions?longitude=... not public here
-  // We implement calls conservatively, but you'll need to adapt to your chosen provider's docs.
-};
-
-/* Fallback simple mean-motion approximate positions (fast, client-side) */
-const PERIOD_DAYS = {
-  sun: 365.256, moon: 27.32166,
-  mercury: 87.969, venus: 224.701,
-  mars: 686.98, jupiter: 4332.589, saturn: 10759.22,
-  uranus: 30688.5, neptune: 60182, pluto: 90560
-};
-const BASE_OFFSETS = {
-  sun: 280.460, moon: 218.316,
-  mercury: 252.251, venus: 181.979, mars: 355.433,
-  jupiter: 34.404, saturn: 50.077, uranus: 314.055, neptune: 304.348, pluto: 238.929
-};
-const EPOCH = new Date('2000-01-01T12:00:00Z');
-function approxLongitude(bodyId, date){
-  const msPerDay = 1000 * 60 * 60 * 24;
-  const days = (date - EPOCH) / msPerDay;
-  const period = PERIOD_DAYS[bodyId] || 365.25;
-  const meanMotion = 360 / period; // deg/day
-  const lon = (BASE_OFFSETS[bodyId] + meanMotion * days) % 360;
-  return ((lon + 360) % 360);
-}
-
-/* Try to fetch precise positions using AstronomyAPI (or other provider)
-   If provider call fails or not configured, returns fallback approx positions.
-   NOTE: adapt this function to your chosen provider's endpoints and auth.
-*/
-async function fetchEphemeris(date = new Date()){
-  if (ASTRO_API.enabled && ASTRO_API.appId && ASTRO_API.appSecret){
-    try {
-      // Example: placeholder call structure — adapt per provider docs.
-      // This is intentionally generic; replace URL, headers, params by real provider spec.
-      const iso = date.toISOString();
-      const url = `https://api.astronomyapi.com/api/v2/bodies/positions`; // replace if different
-      const body = {
-        // provider-specific payload: many providers accept date/time + observer location
-        // astronomyapi requires nested payload; consult their docs and adapt.
-        // We do not attempt to craft a one-size-fits-all request here.
-        date: iso,
-        // optionally location: { latitude, longitude, elevation }
-      };
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + btoa(`${ASTRO_API.appId}:${ASTRO_API.appSecret}`)
-        },
-        body: JSON.stringify(body)
-      });
-      if (!res.ok) throw new Error('Ephemeris fetch failed');
-      const json = await res.json();
-      // parse provider response into { id: { lon } }
-      // This parsing depends on provider; below is illustrative and must be adapted.
-      const result = {};
-      for (const b of BODIES){
-        // illustrative path: json.data[b.id].longitude
-        const candidate = (json.data && json.data[b.id] && json.data[b.id].longitude) || null;
-        result[b.id] = { lon: candidate !== null ? Number(candidate) : approxLongitude(b.id, date) };
-      }
-      return result;
-    } catch (err) {
-      console.warn('Ephemeris fetch failed, using fallback approximation:', err);
+    function mostrarPlanetaDelDia() {
+      const hoy = new Date();
+      const dia = hoy.getDay(); // 0 = Domingo
+      document.querySelectorAll('.celestial').forEach(el => el.classList.remove('visible'));
+      const planetaHoy = document.getElementById(planetas[dia]);
+      if (planetaHoy) planetaHoy.classList.add('visible');
     }
-  }
-  // fallback: use local approximations
-  const fallback = {};
-  for (const b of BODIES){
-    fallback[b.id] = { lon: approxLongitude(b.id, date) };
-  }
-  return fallback;
-}
 
-/* Create planet DOM element */
-function createPlanetEl(body, lonDeg){
-  const maxPx = getMaxPlanetPx();
-  const size = Math.max(6, Math.round(maxPx * body.maxSizeFactor));
-  const el = document.createElement('div');
-  el.className = `planet ${body.cssClass}`;
-  el.style.width = el.style.height = `${size}px`;
-  el.setAttribute('data-body', body.id);
-  // tag label
-  const tag = document.createElement('div');
-  tag.className = 'tag';
-  tag.textContent = body.label;
-  el.appendChild(tag);
-  // attach metadata for debugging
-  el.dataset.lon = lonDeg.toFixed(2);
-  el.dataset.size = size;
-  return el;
-}
-
-/* Render planets into the 12-sign header */
-async function renderMap(date = new Date()){
-  const positions = await fetchEphemeris(date);
-  // clear existing planets
-  document.querySelectorAll('.sign').forEach(sign => {
-    Array.from(sign.children).forEach(child => {
-      if (child.classList && child.classList.contains('planet')) child.remove();
-    });
-  });
-  // place each body
-  for (const body of BODIES){
-    const pos = positions[body.id];
-    if (!pos) continue;
-    const signIdx = lonToSignIndex(pos.lon);
-    const signEl = document.querySelector(`.sign[data-index="${signIdx}"]`);
-    if (!signEl) continue;
-    const planetEl = createPlanetEl(body, pos.lon);
-    // horizontal placement within sign based on degrees into sign
-    const deg = degIntoSign(pos.lon);
-    const pct = (deg / 30) * 100; // 0..100%
-    // clamp a bit to avoid edges
-    const clampPct = Math.max(8, Math.min(92, pct));
-    planetEl.style.left = `calc(${clampPct}% )`;
-    planetEl.style.top = '50%';
-    planetEl.style.transform = 'translate(-50%,-50%)';
-    signEl.appendChild(planetEl);
-  }
-}
-
-/* Init and periodic update */
-(async function init(){
-  await renderMap(new Date());
-  // update every 60 seconds
-  setInterval(() => renderMap(new Date()), 60_000);
-})();
-
-</script>
-
+    mostrarPlanetaDelDia();
+    setInterval(mostrarPlanetaDelDia, 60000); // Actualiza cada minuto
+  </script>
 </body>
 </html>
