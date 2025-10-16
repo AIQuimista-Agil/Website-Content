@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mapa Planetario Semanal</title>
   <style>
-    body {
+    :root {
+      --grid-rows: 1;
+      --grid-cols: 7;
+    }
+
+    html, body {
+      height: 100%;
       margin: 0;
+    }
+
+    /* Fondo transparente */
+    body {
       background: transparent;
-      height: 100vh;
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(var(--grid-cols), 1fr);
+      grid-template-rows: repeat(var(--grid-rows), 1fr);
       align-items: center;
       justify-items: center;
       overflow: hidden;
@@ -19,11 +29,12 @@
     .celestial {
       position: relative;
       border-radius: 50%;
-      overflow: hidden;
-      transition: all 1s ease-in-out;
+      overflow: visible;
+      transition: opacity 600ms ease, transform 600ms ease;
       opacity: 0;
       transform: scale(0.8) rotate(0deg);
-      animation: rotar 60s linear infinite;
+      will-change: opacity, transform;
+      pointer-events: none;
     }
 
     .visible {
@@ -33,9 +44,10 @@
 
     @keyframes rotar {
       from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      to   { transform: rotate(360deg); }
     }
 
+    /* ☀️ SOL (domingo) */
     .sol {
       width: 80px;
       height: 80px;
@@ -43,14 +55,15 @@
       box-shadow:
         0 0 40px rgba(255, 200, 80, 0.9),
         0 0 120px rgba(255, 160, 30, 0.6),
-        0 0 200px rgba(255, 130, 0, 0.4);
+        0 0 200px rgba(255, 130, 0, 0.25);
       animation: solPulse 5s ease-in-out infinite, rotar 120s linear infinite;
     }
     @keyframes solPulse {
-      0%, 100% { filter: brightness(1.05); }
-      50% { filter: brightness(1.3) saturate(1.2); }
+      0%,100% { filter: brightness(1.05); }
+      50%     { filter: brightness(1.28) saturate(1.15); }
     }
 
+    /* 🌕 LUNA (lunes) */
     .luna {
       width: 60px;
       height: 60px;
@@ -58,54 +71,41 @@
         radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #999999 100%),
         radial-gradient(circle at 20% 40%, rgba(150,150,150,0.25) 2px, transparent 3px),
         radial-gradient(circle at 70% 60%, rgba(100,100,100,0.3) 1.5px, transparent 3px),
-        radial-gradient(circle at 50% 80%, rgba(80,80,80,0.2) 2px, transparent 4px);
+        radial-gradient(circle at 50% 80%, rgba(80,80,80,0.18) 2px, transparent 4px);
       background-blend-mode: overlay;
       box-shadow:
-        inset -8px -8px 15px rgba(0,0,0,0.4),
-        0 0 25px rgba(255, 255, 255, 0.7),
-        0 0 80px rgba(255, 255, 255, 0.3);
+        inset -8px -8px 15px rgba(0,0,0,0.38),
+        0 0 25px rgba(255,255,255,0.6);
     }
 
-    .mercurio {
-      width: 40px;
-      height: 40px;
-      background:
-        radial-gradient(circle at 30% 30%, #cfc4b2 0%, #a29b8a 40%, #5e564b 100%),
-        radial-gradient(circle at 50% 50%, rgba(50,50,50,0.3) 3px, transparent 5px),
-        radial-gradient(circle at 70% 40%, rgba(80,80,80,0.2) 2px, transparent 3px);
-      background-blend-mode: multiply;
-      box-shadow:
-        inset -4px -4px 8px rgba(0,0,0,0.5),
-        0 0 15px rgba(180, 150, 120, 0.4);
-    }
-
-    .venus {
-      width: 55px;
-      height: 55px;
-      background: 
-        linear-gradient(135deg, #f8eab0 0%, #f3c677 40%, #b77f30 100%);
-      background-blend-mode: soft-light;
-      box-shadow:
-        inset -6px -6px 10px rgba(0,0,0,0.4),
-        0 0 25px rgba(255, 210, 130, 0.5),
-        0 0 70px rgba(255, 200, 100, 0.2);
-      filter: brightness(1.1) contrast(1.05);
-    }
-
+    /* ♂ MARTE (martes) */
     .marte {
       width: 45px;
       height: 45px;
       background:
         radial-gradient(circle at 35% 35%, #ffb080 0%, #d84315 60%, #7f1d1d 100%),
-        radial-gradient(circle at 70% 60%, rgba(255,180,120,0.2) 2px, transparent 3px),
-        radial-gradient(circle at 20% 40%, rgba(150,70,30,0.25) 2px, transparent 3px);
+        radial-gradient(circle at 70% 60%, rgba(255,180,120,0.18) 2px, transparent 3px),
+        radial-gradient(circle at 20% 40%, rgba(150,70,30,0.22) 2px, transparent 3px);
       background-blend-mode: overlay;
       box-shadow:
-        inset -6px -6px 10px rgba(0,0,0,0.5),
-        0 0 20px rgba(255, 80, 50, 0.4),
-        0 0 40px rgba(255, 60, 0, 0.2);
+        inset -6px -6px 10px rgba(0,0,0,0.45),
+        0 0 18px rgba(255,80,50,0.35);
     }
 
+    /* ☿ MERCURIO (miércoles) */
+    .mercurio {
+      width: 40px;
+      height: 40px;
+      background:
+        radial-gradient(circle at 30% 30%, #cfc4b2 0%, #a29b8a 40%, #5e564b 100%),
+        radial-gradient(circle at 50% 50%, rgba(50,50,50,0.28) 3px, transparent 5px);
+      background-blend-mode: multiply;
+      box-shadow:
+        inset -4px -4px 8px rgba(0,0,0,0.5),
+        0 0 14px rgba(170,140,110,0.34);
+    }
+
+    /* ♃ JÚPITER (jueves) */
     .jupiter {
       width: 70px;
       height: 70px;
@@ -120,8 +120,7 @@
       border-radius: 50%;
       box-shadow:
         inset -8px -8px 14px rgba(0,0,0,0.4),
-        0 0 25px rgba(255, 210, 150, 0.4),
-        0 0 60px rgba(200, 160, 120, 0.2);
+        0 0 25px rgba(255,210,150,0.35);
       position: relative;
     }
     .jupiter::after {
@@ -133,18 +132,28 @@
       left: 22%;
       background: radial-gradient(circle at 40% 40%, #ff7640 0%, #b33515 70%, rgba(100,20,0,0.8) 100%);
       border-radius: 50% / 60%;
-      box-shadow:
-        0 0 4px rgba(255, 120, 60, 0.6),
-        0 0 10px rgba(255, 80, 20, 0.4);
+      box-shadow: 0 0 6px rgba(255,100,50,0.45);
     }
 
+    /* ♀ VENUS (viernes) */
+    .venus {
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, #f8eab0 0%, #f3c677 40%, #b77f30 100%);
+      box-shadow:
+        inset -6px -6px 10px rgba(0,0,0,0.38),
+        0 0 22px rgba(255,210,130,0.36);
+      filter: brightness(1.06) contrast(1.03);
+    }
+
+    /* ♄ SATURNO (sábado) */
     .saturno {
       width: 60px;
       height: 60px;
       background: radial-gradient(circle at 40% 40%, #f8e8b0 0%, #d6b25f 60%, #9b7b3a 100%);
       box-shadow:
-        inset -7px -7px 10px rgba(0,0,0,0.4),
-        0 0 25px rgba(255, 220, 150, 0.4);
+        inset -7px -7px 10px rgba(0,0,0,0.38),
+        0 0 20px rgba(255,220,150,0.28);
       position: relative;
     }
     .saturno::before {
@@ -157,24 +166,64 @@
         rgba(255,230,170,0.8) 0%,
         rgba(220,190,120,0.5) 10%,
         rgba(160,130,70,0.3) 25%,
-        rgba(255,230,170,0.15) 40%,
-        rgba(255,255,200,0.05) 60%
+        rgba(255,230,170,0.15) 40%
       );
       border-radius: 50%;
       top: 22px;
       left: -50px;
       transform: rotateX(65deg) rotateZ(25deg);
-      filter: blur(0.7px) brightness(1.1);
-      box-shadow: 0 0 20px rgba(255, 220, 180, 0.3);
+      filter: blur(0.7px) brightness(1.05);
       z-index: 0;
     }
 
+    /* Ajustes responsivos */
     @media (max-width: 768px) {
-      body { grid-template-columns: repeat(7, 1fr); }
-      .celestial { transform: scale(0.7); }
+      .sol { width: 64px; height: 64px; }
+      .luna { width: 52px; height: 52px; }
+      .jupiter { width: 58px; height: 58px; }
+      .venus { width: 48px; height: 48px; }
+      .marte { width: 40px; height: 40px; }
+      .mercurio { width: 36px; height: 36px; }
+      .saturno { width: 48px; height: 48px; }
     }
   </style>
 </head>
 <body>
-  <div class="celestial sol" id="domingo"></div>
-  <div class="celestial luna" id="lunes"></div>
+  <div class="celestial sol" id="domingo" aria-hidden="true"></div>
+  <div class="celestial luna" id="lunes" aria-hidden="true"></div>
+  <div class="celestial marte" id="martes" aria-hidden="true"></div>
+  <div class="celestial mercurio" id="miercoles" aria-hidden="true"></div>
+  <div class="celestial jupiter" id="jueves" aria-hidden="true"></div>
+  <div class="celestial venus" id="viernes" aria-hidden="true"></div>
+  <div class="celestial saturno" id="sabado" aria-hidden="true"></div>
+
+  <script>
+    const planetas = {
+      0: "domingo",
+      1: "lunes",
+      2: "martes",
+      3: "miercoles",
+      4: "jueves",
+      5: "viernes",
+      6: "sabado"
+    };
+
+    function mostrarPlanetaDelDia() {
+      const hoy = new Date();
+      const dia = hoy.getDay(); // 0 = domingo
+      document.querySelectorAll('.celestial').forEach(el => {
+        el.classList.remove('visible');
+        el.setAttribute('aria-hidden', 'true');
+      });
+      const planetaHoy = document.getElementById(planetas[dia]);
+      if (planetaHoy) {
+        planetaHoy.classList.add('visible');
+        planetaHoy.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    mostrarPlanetaDelDia();
+    setInterval(mostrarPlanetaDelDia, 60_000);
+  </script>
+</body>
+</html>
