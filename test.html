@@ -7,6 +7,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    background-blend-mode: overlay;
     background-size: cover;
     background-position: center;
     box-shadow:
@@ -14,8 +15,8 @@
       0 0 24px rgba(0, 200, 255, 0.3),
       inset 0 0 8px rgba(0, 100, 200, 0.2);
     filter: saturate(1.2) contrast(1.1);
-    z-index: 1;
-    background-image: radial-gradient(circle at 30% 30%, #a0d8ef 0%, #0077be 40%, #003366 80%);
+    z-index: 10;
+    transition: all 1s ease; /* 👈 suaviza el movimiento si cambia */
   }
 </style>
 
@@ -23,29 +24,44 @@
   function placeEarth() {
     const now = new Date();
     const year = now.getFullYear();
-    const isLeap = new Date(year, 1, 29).getDate() === 29;
-    let dayOfYear = Math.floor((now - new Date(year, 0, 0)) / 86400000);
 
-    // 🌒 Excepción para 29 de febrero
-    if (isLeap && now.getMonth() === 1 && now.getDate() === 29) {
-      dayOfYear = 59; // mismo que 28 de febrero
-    }
+    // ✅ Corrección: la comprobación de año bisiesto debe ser con paréntesis
+    const isLeap = new Date(year, 1, 29).getDate() === 29;
+
+    // ✅ Corrección: cálculo correcto del día del año (1–365)
+    const start = new Date(year, 0, 0);
+    const diff = now - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    let dayOfYear = Math.floor(diff / oneDay);
 
     // 🧹 Eliminar tierras previas
     document.querySelectorAll(".earth").forEach(el => el.remove());
 
-    // 🧮 Calcular celda correspondiente (365 espacios)
+    // 🧮 Calcular celda correspondiente (365 o 366)
+    const totalCells = isLeap ? 366 : 365;
+    const cellIndex = Math.min(dayOfYear - 1, totalCells - 1); // -1 para índice base 0
     const cells = document.querySelectorAll(".cell");
-    const cellIndex = Math.min(dayOfYear, cells.length - 1);
-    const targetCell = cells[cellIndex];
-    if (!targetCell) return;
 
-    // 🌍 Crear Tierra
+    // Si no hay celdas o la del día no existe, salir
+    if (!cells.length || !cells[cellIndex]) return;
+
+    const targetCell = cells[cellIndex];
+
+    // 🌍 Crear y aplicar la Tierra
     const earth = document.createElement("div");
     earth.className = "earth";
+    earth.style.backgroundImage = `
+      radial-gradient(circle at 30% 30%, #a0d8ef 0%, #0077be 40%, #003366 80%),
+      radial-gradient(circle at 70% 70%, #004d00 0%, #00cc44 30%, transparent 70%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 100%)
+    `;
+
     targetCell.appendChild(earth);
   }
 
-  placeEarth();
-  setInterval(placeEarth, 60 * 60 * 1000); // actualiza cada hora
+  // 🌍 Ejecutar al cargar
+  document.addEventListener("DOMContentLoaded", placeEarth);
+
+  // 🔁 Actualizar cada hora (por si la pestaña queda abierta)
+  setInterval(placeEarth, 60 * 60 * 1000);
 </script>
