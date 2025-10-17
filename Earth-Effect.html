@@ -22,21 +22,24 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg");
+    /* 🌍 Textura realista de la Tierra (NASA Blue Marble) */
+    background-image: 
+      url("https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg");
     background-size: cover;
     background-position: center;
     box-shadow:
-      0 0 20px rgba(100, 200, 255, 0.5),
-      0 0 40px rgba(0, 150, 255, 0.3),
-      0 0 60px rgba(0, 180, 255, 0.2);
-    filter: saturate(1.1);
+      0 0 12px rgba(100, 200, 255, 0.4),
+      0 0 24px rgba(0, 120, 255, 0.3),
+      inset -4px -4px 10px rgba(0, 0, 50, 0.6),
+      inset 4px 4px 12px rgba(255, 255, 255, 0.1);
+    filter: saturate(1.15) contrast(1.15);
     transition: left 1s ease-out;
     overflow: hidden;
 
-    /* 🧼 Recorte para eliminar contorno oscuro */
+    /* 🧼 Recorte para eliminar contorno negro */
     -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
     mask-image: radial-gradient(circle, black 60%, transparent 100%);
     -webkit-mask-size: cover;
@@ -46,6 +49,7 @@
     clip-path: circle(45% at 50% 50%);
   }
 
+  /* ☁️ Capa de nubes en movimiento suave */
   .earth::before {
     content: "";
     position: absolute;
@@ -59,18 +63,19 @@
     animation: driftClouds 120s linear infinite;
   }
 
+  /* ✨ Halo atmosférico */
   .earth::after {
     content: "";
     position: absolute;
-    inset: -20%;
+    inset: -10%;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, rgba(120, 200, 255, 0.5) 0%, rgba(120, 200, 255, 0.3) 40%, transparent 80%);
-    filter: blur(12px);
-    opacity: 0.8;
+    background: radial-gradient(circle at 50% 50%, rgba(120, 200, 255, 0.4) 0%, transparent 70%);
+    filter: blur(6px);
+    opacity: 0.6;
     z-index: -1;
-    pointer-events: none;
   }
 
+  /* 💡 Iluminación hemisférica */
   .light-overlay {
     position: absolute;
     inset: 0;
