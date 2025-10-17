@@ -7,7 +7,6 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-blend-mode: overlay;
     background-size: cover;
     background-position: center;
     box-shadow:
@@ -16,6 +15,7 @@
       inset 0 0 8px rgba(0, 100, 200, 0.2);
     filter: saturate(1.2) contrast(1.1);
     z-index: 1;
+    background-image: radial-gradient(circle at 30% 30%, #a0d8ef 0%, #0077be 40%, #003366 80%);
   }
 </style>
 
@@ -23,7 +23,7 @@
   function placeEarth() {
     const now = new Date();
     const year = now.getFullYear();
-    const isLeap = new Date(year, 1, 29).getDate === 29;
+    const isLeap = new Date(year, 1, 29).getDate() === 29;
     let dayOfYear = Math.floor((now - new Date(year, 0, 0)) / 86400000);
 
     // 🌒 Excepción para 29 de febrero
@@ -35,25 +35,17 @@
     document.querySelectorAll(".earth").forEach(el => el.remove());
 
     // 🧮 Calcular celda correspondiente (365 espacios)
-    const totalCells = 365;
-    const cellIndex = Math.min(dayOfYear, totalCells - 1);
     const cells = document.querySelectorAll(".cell");
+    const cellIndex = Math.min(dayOfYear, cells.length - 1);
     const targetCell = cells[cellIndex];
     if (!targetCell) return;
 
     // 🌍 Crear Tierra
     const earth = document.createElement("div");
     earth.className = "earth";
-    earth.style.backgroundImage = `
-      radial-gradient(circle at 30% 30%, #a0d8ef 0%, #0077be 40%, #003366 80%),
-      radial-gradient(circle at 70% 70%, #004d00 0%, #00cc44 30%, transparent 70%),
-      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 100%)
-    `;
-
     targetCell.appendChild(earth);
   }
 
-  // 🌍 Actualizar Tierra cada día
   placeEarth();
-  setInterval(placeEarth, 60 * 60 * 1000); // cada hora por si se deja abierto
+  setInterval(placeEarth, 60 * 60 * 1000); // actualiza cada hora
 </script>
