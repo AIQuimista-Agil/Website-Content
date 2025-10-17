@@ -22,8 +22,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     /* 🌍 Textura realista de la Tierra (NASA Blue Marble) */
     background-image: 
@@ -38,15 +38,6 @@
     filter: saturate(1.15) contrast(1.15);
     transition: left 1s ease-out;
     overflow: hidden;
-
-    /* 🧼 Recorte para eliminar contorno negro */
-    -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
-    mask-image: radial-gradient(circle, black 60%, transparent 100%);
-    -webkit-mask-size: cover;
-    mask-size: cover;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    clip-path: circle(45% at 50% 50%);
   }
 
   /* ☁️ Capa de nubes en movimiento suave */
