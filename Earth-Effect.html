@@ -17,24 +17,26 @@
     justify-content: center;
   }
 
-.earth {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-image: 
-    url("https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg");
-  background-size: cover;
-  background-position: center;
-  filter: saturate(1.15) contrast(1.15);
-  transition: left 1s ease-out;
-  overflow: hidden;
-}
+  .earth {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg");
+    background-size: cover;
+    background-position: center;
+    box-shadow:
+      0 0 12px rgba(100, 200, 255, 0.4),
+      0 0 24px rgba(0, 120, 255, 0.3),
+      inset 4px 4px 12px rgba(255, 255, 255, 0.1);
+    filter: saturate(1.15) contrast(1.15);
+    transition: left 1s ease-out;
+    overflow: hidden;
+  }
 
-  /* ☁️ Capa de nubes en movimiento suave */
   .earth::before {
     content: "";
     position: absolute;
@@ -48,7 +50,6 @@
     animation: driftClouds 120s linear infinite;
   }
 
-  /* ✨ Halo atmosférico */
   .earth::after {
     content: "";
     position: absolute;
@@ -60,16 +61,6 @@
     z-index: -1;
   }
 
-  /* 💡 Iluminación hemisférica */
-  .light-overlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, transparent 45%, rgba(255,255,255,0.25) 70%, rgba(255,255,255,0.1) 100%);
-    mix-blend-mode: overlay;
-    pointer-events: none;
-  }
-
   @keyframes driftClouds {
     0% { background-position: 0% 0%; }
     100% { background-position: 200% 0%; }
@@ -78,9 +69,7 @@
 </head>
 <body>
 
-<div class="earth" id="earth">
-  <div class="light-overlay"></div>
-</div>
+<div class="earth" id="earth"></div>
 
 <script>
   function moveEarth() {
@@ -105,5 +94,6 @@
     setInterval(moveEarth, 60 * 60 * 1000);
   });
 </script>
+
 </body>
 </html>
