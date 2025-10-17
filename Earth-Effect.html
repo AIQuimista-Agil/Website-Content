@@ -22,19 +22,17 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-image: url("https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg");
     background-size: cover;
     background-position: center;
     box-shadow:
-      0 0 25px rgba(120, 200, 255, 0.5),
-      0 0 50px rgba(0, 150, 255, 0.35),
-      0 0 90px rgba(0, 180, 255, 0.25),
-      inset -5px -5px 10px rgba(0, 0, 50, 0.5),
-      inset 5px 5px 15px rgba(255, 255, 255, 0.15);
-    filter: saturate(1.15) contrast(1.1);
+      0 0 20px rgba(100, 200, 255, 0.5),
+      0 0 40px rgba(0, 150, 255, 0.3),
+      0 0 60px rgba(0, 180, 255, 0.2);
+    filter: saturate(1.1);
     transition: left 1s ease-out;
     overflow: hidden;
 
@@ -64,13 +62,13 @@
   .earth::after {
     content: "";
     position: absolute;
-    inset: -25%;
+    inset: -20%;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, rgba(100, 200, 255, 0.6) 0%, rgba(0, 150, 255, 0.3) 40%, transparent 80%);
+    background: radial-gradient(circle at 50% 50%, rgba(120, 200, 255, 0.5) 0%, rgba(120, 200, 255, 0.3) 40%, transparent 80%);
     filter: blur(12px);
-    opacity: 0.75;
+    opacity: 0.8;
     z-index: -1;
-    animation: glowPulse 8s ease-in-out infinite alternate;
+    pointer-events: none;
   }
 
   .light-overlay {
@@ -85,11 +83,6 @@
   @keyframes driftClouds {
     0% { background-position: 0% 0%; }
     100% { background-position: 200% 0%; }
-  }
-
-  @keyframes glowPulse {
-    0% { opacity: 0.55; filter: blur(10px); }
-    100% { opacity: 0.85; filter: blur(14px); }
   }
 </style>
 </head>
