@@ -1,3 +1,91 @@
+<!--
+  🌌───────────────────────────────────────────────────────────────
+  ───────────────────────────────────────────────────────────────
+  AI.Quimista Ágil | CARLOS DAVID NAVARRO NAVARRO
+  17/OCTUBRE/2025 11:33 PM
+  🪐  MAPA PLANETARIO SEMANAL — EL SIMBOLISMO DE LOS 7 PLANETAS
+  ────────────────────────────────────────────────────────────────
+
+  🜚 EL NÚMERO 7 Y LA ESTRUCTURA DEL TIEMPO
+
+  El número 7 es símbolo de totalidad y ciclo completo en muchas tradiciones:
+  — 7 días de la Creación (Génesis): el proceso mediante el cual la Luz divina
+    organiza el caos en un orden perfecto.
+  — 7 notas musicales, 7 colores del espectro, 7 chakras, 7 virtudes.
+  — Representa la unión entre lo divino (3: trinidad celestial) y lo terrenal (4: los elementos),
+    resultando en la manifestación perfecta del orden cósmico.
+
+  Por ello, la semana —como microcosmos del universo— se divide en 7 días.
+  Cada uno regido por una de las 7 luminarias visibles a simple vista:
+  ☉ Sol, ☽ Luna, ♂ Marte, ☿ Mercurio, ♃ Júpiter, ♀ Venus, ♄ Saturno.
+
+  Estas correspondencias son tan antiguas que aparecen en Babilonia, Egipto,
+  Grecia y Roma, y se conservaron en los nombres de los días en casi todas las lenguas.
+
+  ────────────────────────────────────────────────────────────────
+  ☉ DOMINGO — EL SOL
+  Simboliza la luz divina, la conciencia, el centro del ser. En el cristianismo
+  se asocia con Cristo resucitado: el Sol de Justicia, el Fénix que renace.
+  El domingo es día de plenitud y renovación espiritual.
+
+  ☽ LUNES — LA LUNA
+  Representa el alma, la receptividad, los ciclos emocionales. Es el espejo del Sol,
+  símbolo de la Virgen María y del principio femenino. Su luz refleja, no genera;
+  enseña la importancia de la introspección y el ritmo interior.
+
+  ♂ MARTES — MARTE
+  El fuego del deseo, la acción y la fuerza vital. Marte rige la voluntad,
+  la capacidad de avanzar, de conquistar y de proteger. Es el impulso que,
+  si se domina, se convierte en coraje espiritual.
+
+  ☿ MIÉRCOLES — MERCURIO
+  El mensajero entre los mundos. Rige la mente, la palabra y la inteligencia.
+  Es el puente entre lo terrenal y lo divino, símbolo de la comunicación y del aprendizaje.
+
+  ♃ JUEVES — JÚPITER
+  El planeta de la expansión, la sabiduría y la justicia. Representa la ley divina,
+  la prosperidad y la benevolencia. Día ideal para meditar sobre el propósito
+  y el orden universal.
+
+  ♀ VIERNES — VENUS
+  El amor, la belleza y la armonía. Venus recuerda la unidad entre todos los seres
+  y la fuerza creadora del amor. Es el día de la unión y de la expresión artística.
+
+  ♄ SÁBADO — SATURNO
+  El guardián del tiempo y los límites. Simboliza la madurez, la responsabilidad
+  y el retorno a lo esencial. Día de descanso y reflexión: el ciclo se completa
+  y se prepara un nuevo inicio.
+
+  ────────────────────────────────────────────────────────────────
+  🧠 FUNCIONAMIENTO DEL CÓDIGO
+
+  Este mapa planetario divide la semana en 7 columnas invisibles (una por día).
+  — Cada planeta (div.celestial) está posicionado en su columna correspondiente.
+  — Solo el planeta del día actual aparece visible.
+  — Los demás permanecen ocultos (opacity: 0).
+
+  El script obtiene el día actual del sistema con Date().getDay()
+  (0 = domingo, 1 = lunes, ..., 6 = sábado)
+  y muestra el planeta correspondiente según la tradición astrológica y simbólica.
+
+  Los efectos visuales de cada planeta (color, textura, brillo, sombras)
+  están diseñados para evocar su carácter arquetípico:
+
+  ☉ Sol → brillo dorado, energía, expansión.
+  ☽ Luna → tonos plateados, suaves, texturas de cráteres.
+  ♂ Marte → rojos intensos, fuego interior.
+  ☿ Mercurio → metálico, gris ágil, cambiante.
+  ♃ Júpiter → bandas cálidas, mancha roja.
+  ♀ Venus → dorado perlado, belleza suave.
+  ♄ Saturno → tonos ocres y anillos majestuosos.
+
+  El código se actualiza cada minuto para asegurar sincronía continua.
+  Todo el fondo permanece transparente, ideal para usarse sobre headers
+  o fondos dinámicos, simbolizando el cielo que nunca se apaga.
+
+  ────────────────────────────────────────────────────────────────
+  -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -224,6 +312,63 @@
 
     mostrarPlanetaDelDia();
     setInterval(mostrarPlanetaDelDia, 60_000);
+
+console.log(`
+───────────────────────────────────────────────────────────────
+🪐 MAPA PLANETARIO SEMANAL — EL SIMBOLISMO DE LOS 7 PLANETAS
+───────────────────────────────────────────────────────────────
+
+🜚 EL NÚMERO 7 Y LA ESTRUCTURA DEL TIEMPO
+
+El número 7 representa totalidad y ciclo completo:
+• 7 días de la Creación (Génesis)
+• 7 notas musicales, colores, chakras, virtudes
+• Unión de lo divino (3) y lo terrenal (4)
+
+La semana es un microcosmos del universo,
+dividida en 7 días regidos por luminarias visibles:
+
+☉ Sol, ☽ Luna, ♂ Marte, ☿ Mercurio, ♃ Júpiter, ♀ Venus, ♄ Saturno
+
+Estas correspondencias aparecen en Babilonia, Egipto, Grecia y Roma,
+y persisten en los nombres de los días en muchas lenguas.
+
+───────────────────────────────────────────────────────────────
+🌞 SIMBOLISMO DE CADA DÍA
+
+☉ Domingo — Sol: conciencia, plenitud, renovación espiritual  
+☽ Lunes — Luna: introspección, receptividad, ritmo interior  
+♂ Martes — Marte: acción, voluntad, coraje espiritual  
+☿ Miércoles — Mercurio: mente, comunicación, aprendizaje  
+♃ Jueves — Júpiter: expansión, sabiduría, justicia  
+♀ Viernes — Venus: amor, belleza, armonía  
+♄ Sábado — Saturno: madurez, límites, reflexión
+
+───────────────────────────────────────────────────────────────
+🧠 FUNCIONAMIENTO DEL CÓDIGO
+
+• Divide la semana en 7 columnas invisibles (una por día)
+• Posiciona cada planeta en su día correspondiente
+• Solo el planeta del día actual es visible (opacity: 1)
+• Los demás permanecen ocultos
+
+• Usa Date().getDay() para obtener el día actual (0 = domingo, ..., 6 = sábado)
+
+• Cada planeta tiene efectos visuales únicos:
+  ☉ Sol → dorado, expansivo  
+  ☽ Luna → plateado, cráteres  
+  ♂ Marte → rojo, fuego  
+  ☿ Mercurio → metálico, ágil  
+  ♃ Júpiter → bandas cálidas, mancha roja  
+  ♀ Venus → perlado, suave  
+  ♄ Saturno → ocres, anillos majestuosos
+
+• El código se actualiza cada minuto para mantener sincronía
+• Fondo transparente: ideal para headers o fondos dinámicos
+  evocando el cielo que nunca se apaga
+
+───────────────────────────────────────────────────────────────
+`);
   </script>
 </body>
 </html>
