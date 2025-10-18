@@ -51,44 +51,76 @@
   </style>
 </head>
 <body>
-  <div class="neon-text">Inicio</div>
+  <div class="neon-text" id="zodiac-sign">♏︎</div>
 
   <script>
-    // --- Cálculo de fase lunar aproximada ---
     function getMoonPhase() {
       const now = new Date();
-      const synodicMonth = 29.53058867; // duración promedio del ciclo lunar
-      const knownNewMoon = new Date('2024-01-11T11:57:00Z'); // referencia
+      const synodicMonth = 29.53058867;
+      const knownNewMoon = new Date('2024-01-11T11:57:00Z');
       const diff = (now - knownNewMoon) / (1000 * 60 * 60 * 24);
       const phase = diff % synodicMonth;
-      return phase / synodicMonth; // valor entre 0 y 1
+      return phase / synodicMonth;
     }
 
-    // --- Determinar color según fase ---
     function getGlowColor(phase) {
-      if (phase < 0.125) return '#3366ff'; // Luna nueva - azul profundo
-      if (phase < 0.25) return '#00ffff';  // Creciente - cian
-      if (phase < 0.5) return '#ffffff';   // Llena - blanco puro
-      if (phase < 0.75) return '#ff8800';  // Menguante - ámbar
-      return '#ff3366';                    // Oscura - rojo-magenta
+      if (phase < 0.125) return '#3366ff';
+      if (phase < 0.25) return '#00ffff';
+      if (phase < 0.5) return '#ffffff';
+      if (phase < 0.75) return '#ff8800';
+      return '#ff3366';
     }
 
-    // --- Determinar intensidad (brillo) según fase ---
     function getGlowIntensity(phase) {
-      // La intensidad aumenta desde 0.4 (luna nueva) hasta 1.5 (luna llena)
-      const distanceToFull = Math.abs(0.5 - phase); // distancia desde la luna llena
-      const brightness = 1.5 - distanceToFull * 2.2; // escala inversa
+      const distanceToFull = Math.abs(0.5 - phase);
+      const brightness = 1.5 - distanceToFull * 2.2;
       return Math.max(0.4, Math.min(brightness, 1.5));
     }
 
-    // --- Aplicar color e intensidad ---
+    function getZodiacSymbol(date) {
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const zodiacSigns = [
+        { sign: '♑︎', from: [12, 22], to: [1, 19] },
+        { sign: '♒︎', from: [1, 20], to: [2, 18] },
+        { sign: '♓︎', from: [2, 19], to: [3, 20] },
+        { sign: '♈︎', from: [3, 21], to: [4, 19] },
+        { sign: '♉︎', from: [4, 20], to: [5, 20] },
+        { sign: '♊︎', from: [5, 21], to: [6, 20] },
+        { sign: '♋︎', from: [6, 21], to: [7, 22] },
+        { sign: '♌︎', from: [7, 23], to: [8, 22] },
+        { sign: '♍︎', from: [8, 23], to: [9, 22] },
+        { sign: '♎︎', from: [9, 23], to: [10, 22] },
+        { sign: '♏︎', from: [10, 23], to: [11, 21] },
+        { sign: '♐︎', from: [11, 22], to: [12, 21] }
+      ];
+
+      for (let i = 0; i < zodiacSigns.length; i++) {
+        const { sign, from, to } = zodiacSigns[i];
+        const fromDate = new Date(date.getFullYear(), from[0] - 1, from[1]);
+        const toDate = new Date(date.getFullYear(), to[0] - 1, to[1]);
+
+        if (from[0] > to[0]) {
+          // Sign spans year end
+          if (date >= fromDate || date <= toDate) return sign;
+        } else {
+          if (date >= fromDate && date <= toDate) return sign;
+        }
+      }
+      return '♈︎'; // fallback
+    }
+
+    const now = new Date();
     const phase = getMoonPhase();
     const color = getGlowColor(phase);
     const intensity = getGlowIntensity(phase);
+    const zodiac = getZodiacSymbol(now);
+
     document.documentElement.style.setProperty('--glow-color', color);
     document.documentElement.style.setProperty('--glow-intensity', intensity.toFixed(2));
+    document.getElementById('zodiac-sign').textContent = zodiac;
 
-    console.log(`🌙 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color}`);
+    console.log(`🌙 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color} | Signo: ${zodiac}`);
   </script>
 </body>
 </html>
