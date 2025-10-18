@@ -1,0 +1,188 @@
+<!--
+───────────────────────────────────────────────────────────────
+AI.Quimista Ágil | CARLOS DAVID NAVARRO NAVARRO
+17/OCTUBRE/2025 10:53 PM
+🌠 NOTA DEL CREADOR — PLANETA RITUAL
+───────────────────────────────────────────────────────────────
+
+Este módulo representa los **planetas trans-saturninos**: 
+Urano, Neptuno y Plutón.  
+En astrología, estos cuerpos celestes simbolizan fuerzas
+colectivas, cambios generacionales y procesos de transformación
+que van más allá del ámbito personal.  
+Se les llama *trans-saturninos* porque se encuentran más allá
+de la órbita de Saturno, el último planeta visible a simple vista.
+
+───────────────────────────────────────────────────────────────
+🔭 FUNCIONAMIENTO TÉCNICO
+───────────────────────────────────────────────────────────────
+
+El código genera una cuadrícula proporcional al número de días
+del mes actual.  
+Dependiendo del mes, aparece un planeta distinto en la celda
+correspondiente al día actual:
+
+• Meses de **31 días** → 🌊 *Neptuno*  
+  (símbolo de la espiritualidad, los sueños y lo inmaterial)
+
+• Meses de **30 días** → ⚡ *Urano*  
+  (símbolo de la innovación, la ruptura y el cambio súbito)
+
+• **Febrero** → 🔥 *Plutón*  
+  (símbolo de la transformación profunda, la muerte y el renacimiento)
+
+───────────────────────────────────────────────────────────────
+🌌 SIGNIFICADO SIMBÓLICO DE PLUTÓN EN FEBRERO
+───────────────────────────────────────────────────────────────
+
+Plutón aparece en febrero como representación del **cambio de era**.  
+Astrológicamente, este planeta marca el paso de *Plutón en Capricornio*
+a *Plutón en Acuario*, un tránsito que simboliza la transformación
+de estructuras rígidas hacia una conciencia más colectiva e innovadora.  
+Su aparición en el mes más corto del año alude al umbral entre ciclos:
+el final de un sistema y el nacimiento de otro.
+
+───────────────────────────────────────────────────────────────
+🪐 Propósito estético y conceptual:
+───────────────────────────────────────────────────────────────
+Recrear en el encabezado web una lectura simbólica del cielo moderno,
+donde cada planeta refleja la energía del tiempo que transitamos.
+───────────────────────────────────────────────────────────────
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planeta Ritual</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .tabla {
+      display: grid;
+      grid-template-columns: repeat(var(--dias), 1fr);
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .celda {
+      position: relative;
+    }
+
+    .celestial {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      animation: brillo 6s ease-in-out infinite;
+    }
+
+    @keyframes brillo {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.1); }
+    }
+
+    .urano {
+      width: 55px;
+      height: 55px;
+      background: radial-gradient(circle at 30% 30%, #a0e8f8 0%, #70c8e0 60%, #458ab0 100%);
+      box-shadow:
+        inset -6px -6px 10px rgba(0,0,0,0.4),
+        0 0 25px rgba(160, 220, 255, 0.5),
+        0 0 60px rgba(100, 200, 255, 0.3);
+    }
+
+    .neptuno {
+      width: 52px;
+      height: 52px;
+      background: radial-gradient(circle at 30% 30%, #4ab0ff 0%, #2850a0 60%, #1a237e 100%);
+      box-shadow:
+        inset -5px -5px 10px rgba(0,0,0,0.4),
+        0 0 25px rgba(100, 150, 255, 0.5),
+        0 0 60px rgba(60, 120, 255, 0.3);
+    }
+
+    .pluton {
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle at 30% 30%, #d9c9b0 0%, #a0886f 60%, #6b5a4a 100%);
+      box-shadow:
+        inset -4px -4px 6px rgba(0,0,0,0.4),
+        0 0 12px rgba(200, 170, 140, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="tabla" id="tabla"></div>
+
+  <script>
+    const fecha = new Date();
+    const mes = fecha.getMonth();
+    const dia = fecha.getDate();
+    const anio = fecha.getFullYear();
+    const tabla = document.getElementById("tabla");
+
+    let diasMes;
+    let planetaClase;
+
+    if ([0, 2, 4, 6, 7, 9, 11].includes(mes)) {
+      diasMes = 31;
+      planetaClase = "neptuno";
+    } else if ([3, 5, 8, 10].includes(mes)) {
+      diasMes = 30;
+      planetaClase = "urano";
+    } else if (mes === 1) {
+      const esBisiesto = (anio % 4 === 0 && anio % 100 !== 0) || (anio % 400 === 0);
+      diasMes = 28;
+      planetaClase = "pluton";
+    }
+
+    tabla.style.setProperty('--dias', diasMes);
+
+    for (let i = 1; i <= diasMes; i++) {
+      const celda = document.createElement("div");
+      celda.className = "celda";
+
+      if (i === (mes === 1 && dia === 29 ? 28 : dia)) {
+        const planeta = document.createElement("div");
+        planeta.className = `celestial ${planetaClase}`;
+        celda.appendChild(planeta);
+      }
+
+      tabla.appendChild(celda);
+    }
+
+    // 🌌 Mensaje secreto en consola
+    console.log(`
+───────────────────────────────────────────────────────────────
+🌠 NOTA DEL CREADOR — PLANETA RITUAL
+───────────────────────────────────────────────────────────────
+
+Este módulo representa los planetas trans-saturninos: Urano, Neptuno y Plutón.
+Simbolizan fuerzas colectivas, cambios generacionales y transformación profunda.
+
+🔭 FUNCIONAMIENTO:
+• Meses de 31 días → Neptuno (espiritualidad, sueños)
+• Meses de 30 días → Urano (innovación, ruptura)
+• Febrero → Plutón (renacimiento, cambio de era)
+
+🌌 PLUTÓN EN FEBRERO:
+Representa el tránsito de Plutón en Capricornio a Acuario.
+El mes más corto como umbral entre sistemas.
+
+🪐 PROPÓSITO:
+Recrear una lectura simbólica del cielo moderno en el encabezado web.
+───────────────────────────────────────────────────────────────
+`);
+  </script>
+</body>
+</html>
