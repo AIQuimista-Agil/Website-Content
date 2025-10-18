@@ -1,3 +1,84 @@
+<!--
+───────────────────────────────────────────────────────────────
+───────────────────────────────────────────────────────────────
+AI.Quimista Ágil | CARLOS DAVID NAVARRO NAVARRO
+17/OCTUBRE/2025 11:16 PM
+🌕 NOTA DEL CREADOR — LUNA SINCRONIZADA CON SU CICLO REAL
+───────────────────────────────────────────────────────────────
+
+Entre el misterio y el reflejo.
+
+En el lenguaje de la alquimia, la Luna representa el principio femenino,
+la receptividad, el reflejo de la conciencia y la mutabilidad del alma.
+Donde el Sol simboliza la chispa creadora, la Luna simboliza el espejo
+que devuelve su luz, como el inconsciente que transforma energía espiritual
+en intuición y sentimiento.
+
+En la tradición esotérica, la Luna gobierna los ritmos de las mareas,
+los ciclos de fertilidad y el flujo de las emociones humanas.
+Cada fase lunar representa una etapa del viaje interior:
+
+🌑 Luna nueva: el vacío fértil, el momento del renacimiento.  
+🌓 Creciente: la expansión de la intención.  
+🌕 Llena: la plenitud de la conciencia.  
+🌗 Menguante: la liberación, la muerte simbólica antes del nuevo ciclo.
+
+El misterio lunar también ha sido tema de antiguas creencias.
+Gurdjieff decía que la Luna “se alimenta” de las almas que no logran despertar,
+un símbolo profundo que sugiere que las conciencias dormidas quedan atrapadas
+en los ciclos mecánicos de la existencia.
+
+En el folclore europeo, la idea de que la Luna era de queso representa
+su naturaleza ilusoria —algo bello y apetecible, pero intangible.
+
+Y la famosa imagen cinematográfica de la bala clavada en el ojo de la Luna
+(Le Voyage dans la Lune, 1902) expresa la conquista del misterio,
+el deseo humano de penetrar lo desconocido, aunque sea con ingenuidad.
+
+───────────────────────────────────────────────────────────────
+✦ FUNCIONAMIENTO TÉCNICO
+───────────────────────────────────────────────────────────────
+
+Este código no solo representa la Luna visualmente, sino que sincroniza
+su fase real con el calendario astronómico:
+
+• Se calcula el número de días transcurridos desde una luna nueva conocida  
+  (2024-01-11T11:57:00Z) y se divide por la duración promedio del mes sinódico  
+  (29.53058867 días).
+
+• El resultado determina en qué punto del ciclo está la Luna:  
+  de 0 (nueva) a 1 (llena y regreso a nueva).
+
+• El espacio horizontal se divide en 28 columnas (como los días del ciclo lunar visible).
+
+• La Luna se coloca en la columna correspondiente a su fase actual.
+
+• La propiedad --mask-x modifica el gradiente interno que simula la parte iluminada
+  y la parte en sombra de la Luna.
+
+• El brillo varía según la hora local: más tenue de día, más resplandeciente de noche,
+  evocando la dualidad día/noche y la dependencia lunar del Sol.
+
+• Varios gradientes superpuestos crean la ilusión de cráteres y relieves lunares.
+
+• Un halo sutil de luz blanca da vida al resplandor atmosférico,
+  especialmente perceptible durante la luna llena.
+
+───────────────────────────────────────────────────────────────
+🌘 SIGNIFICADO INTEGRADOR
+───────────────────────────────────────────────────────────────
+
+La Luna, en este proyecto, es el puente entre el cielo y la Tierra.
+Representa lo que sentimos, soñamos y recordamos.
+Es el espejo del alma colectiva, marcando el ritmo interior
+del diseño del cosmos que estás construyendo.
+
+Cada fase visible no es solo un fenómeno astronómico,
+sino también un recordatorio del movimiento cíclico del ser:
+nacer, crecer, iluminar, soltar.
+───────────────────────────────────────────────────────────────
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -132,6 +213,46 @@
 
     // Actualiza cada minuto para mantener sincronía real
     setInterval(placeMoon, 60000);
+
+    console.log(`
+───────────────────────────────────────────────────────────────
+🌕 NOTA DEL CREADOR — LUNA SINCRONIZADA CON SU CICLO REAL
+───────────────────────────────────────────────────────────────
+
+Entre el misterio y el reflejo.
+
+En alquimia, la Luna representa el principio femenino, la receptividad
+y la mutabilidad del alma. Es el espejo del Sol, el inconsciente que
+transforma luz en intuición.
+
+Gobierna los ritmos de las mareas, los ciclos de fertilidad y el flujo
+emocional humano. Cada fase lunar es una etapa del viaje interior:
+
+🌑 Luna nueva: vacío fértil, renacimiento.  
+🌓 Creciente: expansión de la intención.  
+🌕 Llena: plenitud de la conciencia.  
+🌗 Menguante: liberación, muerte simbólica.
+
+Creencias antiguas la vinculan con el alma dormida (Gurdjieff), con
+ilusiones (el queso lunar), y con el misterio conquistado (la bala en
+el ojo — Le Voyage dans la Lune, 1902).
+
+✦ FUNCIONAMIENTO DEL CÓDIGO:
+• Calcula la fase lunar real desde una luna nueva conocida.
+• Divide el ciclo sinódico (29.53058867 días) para ubicar la fase.
+• Distribuye la Luna en una cuadrícula de 28 columnas.
+• Simula sombra dinámica con gradientes internos (--mask-x).
+• Ajusta el brillo según la hora local (día/noche).
+• Añade textura y halo para realismo atmosférico.
+
+🌘 SIGNIFICADO INTEGRADOR:
+La Luna es el puente entre cielo y Tierra.
+Refleja lo que sentimos, soñamos y recordamos.
+Cada fase es un recordatorio del ciclo del ser:
+nacer, crecer, iluminar, soltar.
+
+───────────────────────────────────────────────────────────────
+`); 
   </script>
 </body>
 </html>
