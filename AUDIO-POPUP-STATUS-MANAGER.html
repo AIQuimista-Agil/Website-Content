@@ -4,121 +4,28 @@
 <meta charset="utf-8">
 <title>Audio FX Manager</title>
 <style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    background: transparent;
-    font-family: 'Futura', sans-serif;
-    color: white;
-  }
-
-  #audioStatusBar {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 40px;
-    padding: 10px 20px;
-    backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 0 20px rgba(255,255,255,0.1);
-    transition: opacity 0.5s ease, transform 0.4s ease, background 0.3s ease;
-    opacity: 0.25;
-    animation: float 4s ease-in-out infinite;
-  }
-
-  #audioStatusBar:hover {
-    opacity: 1;
-  }
-
-  .speaker {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-
-  .speaker:hover {
-    transform: scale(1.1);
-  }
-
-  .mute-line {
-    position: absolute;
-    left: -2px;
-    top: 14px;
-    width: 34px;
-    height: 2px;
-    background: red;
-    transform: rotate(45deg);
-    box-shadow: 0 0 8px red;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .speaker.off .mute-line {
-    opacity: 1;
-  }
-
-  .led {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    transition: background 0.3s, box-shadow 0.3s;
-  }
-
-  .led.on {
-    background: #00ff66;
-    box-shadow: 0 0 8px #00ff66, 0 0 18px #00ff66;
-  }
-
-  .led.off {
-    background: #ff3333;
-    box-shadow: 0 0 8px #ff3333, 0 0 18px #ff3333;
-  }
-
-  #audioText {
-    font-size: 15px;
-    letter-spacing: 1px;
-    text-shadow: 0 0 8px rgba(255,255,255,0.3);
-  }
-
-  #volumeControl {
-    appearance: none;
-    width: 90px;
-    height: 6px;
-    border-radius: 6px;
-    background: rgba(255,255,255,0.3);
-    outline: none;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  #volumeControl::-webkit-slider-thumb {
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: white;
-    box-shadow: 0 0 10px white;
-    cursor: pointer;
-  }
-
-  #audioStatusBar:hover #volumeControl {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-    50% { transform: translate(-50%, -50%) translateY(-3px); }
-  }
+html, body {height:100%; margin:0; background:transparent; font-family:'Futura',sans-serif; color:white;}
+#audioStatusBar {
+  position: fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  z-index:9999; display:flex; align-items:center; gap:14px;
+  background: rgba(255,255,255,0.1); border-radius:40px; padding:10px 20px;
+  backdrop-filter: blur(16px) saturate(180%); border:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 0 20px rgba(255,255,255,0.1); transition:opacity 0.5s ease, transform 0.4s ease, background 0.3s ease;
+  opacity:0.25; animation: float 4s ease-in-out infinite;
+}
+#audioStatusBar:hover {opacity:1;}
+.speaker {position:relative; width:30px; height:30px; cursor:pointer; transition: transform 0.3s ease;}
+.speaker:hover {transform: scale(1.1);}
+.mute-line {position:absolute; left:-2px; top:14px; width:34px; height:2px; background:red; transform:rotate(45deg); box-shadow:0 0 8px red; opacity:0; transition:opacity 0.3s ease;}
+.speaker.off .mute-line {opacity:1;}
+.led {width:14px; height:14px; border-radius:50%; transition:background 0.3s, box-shadow 0.3s; box-shadow:0 0 8px rgba(0,0,0,0.6);}
+.led.on {background:#00ff66; box-shadow:0 0 8px #00ff66, 0 0 18px #00ff66;}
+.led.off {background:#ff3333; box-shadow:0 0 8px #ff3333, 0 0 18px #ff3333;}
+#audioText {font-size:15px; letter-spacing:1px; text-shadow:0 0 8px rgba(255,255,255,0.3);}
+#volumeControl {appearance:none; width:90px; height:6px; border-radius:6px; background:rgba(255,255,255,0.3); outline:none; opacity:0; pointer-events:none; transition:opacity 0.3s ease;}
+#volumeControl::-webkit-slider-thumb {appearance:none; width:12px; height:12px; border-radius:50%; background:white; box-shadow:0 0 10px white; cursor:pointer;}
+#audioStatusBar:hover #volumeControl {opacity:1; pointer-events:all;}
+@keyframes float {0%,100%{transform:translate(-50%,-50%) translateY(0);} 50%{transform:translate(-50%,-50%) translateY(-3px);}}
 </style>
 </head>
 <body>
@@ -138,13 +45,17 @@
 
 <script>
 (() => {
+  // Lista de sonidos
   const SOUND_URLS = {
     menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
     logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3",
+    // Puedes añadir más sonidos aquí
   };
 
   let audioCtx = null;
   const bufferCache = {};
+  let globalGainNode = null;
+
   const led = document.getElementById("audioLed");
   const text = document.getElementById("audioText");
   const speaker = document.getElementById("speakerIcon");
@@ -155,6 +66,9 @@
     if (!audioCtx) {
       const Ctx = window.AudioContext || window.webkitAudioContext;
       audioCtx = new Ctx();
+      globalGainNode = audioCtx.createGain();
+      globalGainNode.gain.value = parseFloat(volumeControl.value);
+      globalGainNode.connect(audioCtx.destination);
     }
     return audioCtx;
   }
@@ -183,16 +97,13 @@
       await ensureAudioContext();
       const buffer = await loadBuffer(key);
       const src = audioCtx.createBufferSource();
-      const gain = audioCtx.createGain();
-      gain.gain.value = volumeControl.value;
       src.buffer = buffer;
-      src.connect(gain);
-      gain.connect(audioCtx.destination);
+      src.connect(globalGainNode);
       src.start(0);
-      src.onended = () => { src.disconnect(); gain.disconnect(); };
+      src.onended = () => src.disconnect();
       return true;
-    } catch (err) {
-      console.warn('playSound err', err);
+    } catch(e) {
+      console.warn('playSound err', e);
       return false;
     }
   }
@@ -224,27 +135,32 @@
   async function initialize() {
     createAudioContext();
     updateAudioUI();
-    // precarga silenciosa
+    // precarga todos los buffers para que cualquier sonido se reproduzca inmediatamente
     await Promise.all(Object.keys(SOUND_URLS).map(k => loadBuffer(k).catch(()=>{})));
   }
 
+  // Click en barra para alternar audio
   document.getElementById("audioStatusBar").addEventListener("click", async () => {
     const newState = !isAudioEnabled();
     setAudioEnabled(newState);
     await ensureAudioContext();
-    if (newState) {
-      await playSound("menu");
-    }
+    // No reproducir un sonido específico, solo activa la reproducción
   });
 
+  // Control de volumen
   volumeControl.addEventListener("input", () => {
-    localStorage.setItem("volumeLevel", volumeControl.value);
+    const vol = parseFloat(volumeControl.value);
+    if (globalGainNode) globalGainNode.gain.value = vol;
+    localStorage.setItem("volumeLevel", vol);
   });
 
   const savedVol = localStorage.getItem("volumeLevel");
   if (savedVol !== null) volumeControl.value = savedVol;
 
   initialize();
+
+  // Exponer playSound para que eventos externos la puedan llamar
+  window.playSound = playSound;
 })();
 </script>
 </body>
