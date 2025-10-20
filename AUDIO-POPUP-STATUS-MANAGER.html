@@ -28,7 +28,7 @@
     border: 1px solid rgba(255,255,255,0.15);
     box-shadow: 0 0 20px rgba(255,255,255,0.1);
     transition: opacity 0.5s ease, transform 0.4s ease, background 0.3s ease;
-    opacity: 0.2;
+    opacity: 0.25;
     animation: float 4s ease-in-out infinite;
   }
 
@@ -70,7 +70,6 @@
     height: 14px;
     border-radius: 50%;
     transition: background 0.3s, box-shadow 0.3s;
-    box-shadow: 0 0 8px rgba(0,0,0,0.6);
   }
 
   .led.on {
@@ -142,9 +141,6 @@
   const SOUND_URLS = {
     menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
     logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3",
-    // 🔊 Aquí puedes agregar más sonidos personalizados:
-    // click: "https://tuusuario.github.io/Website-Content/FX/click.mp3",
-    // hover: "https://tuusuario.github.io/Website-Content/FX/hover.mp3",
   };
 
   let audioCtx = null;
@@ -176,7 +172,7 @@
     if (!url) throw new Error('No URL for ' + key);
     const resp = await fetch(url, { cache: "no-store" });
     const arrayBuffer = await resp.arrayBuffer();
-    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
     bufferCache[key] = audioBuffer;
     return audioBuffer;
   }
@@ -228,17 +224,16 @@
   async function initialize() {
     createAudioContext();
     updateAudioUI();
-    if (isAudioEnabled()) {
-      await ensureAudioContext();
-      await Promise.all(Object.keys(SOUND_URLS).map(k => loadBuffer(k).catch(()=>{})));
-    }
+    // precarga silenciosa
+    await Promise.all(Object.keys(SOUND_URLS).map(k => loadBuffer(k).catch(()=>{})));
   }
 
   document.getElementById("audioStatusBar").addEventListener("click", async () => {
     const newState = !isAudioEnabled();
     setAudioEnabled(newState);
-    if (newState && bufferCache["menu"]) {
-      playSound("menu");
+    await ensureAudioContext();
+    if (newState) {
+      await playSound("menu");
     }
   });
 
