@@ -12,7 +12,6 @@
     color: white;
   }
 
-  /* === CONTENEDOR PRINCIPAL === */
   #audioStatusBar {
     position: fixed;
     top: 50%;
@@ -30,14 +29,13 @@
     box-shadow: 0 0 20px rgba(255,255,255,0.1);
     transition: opacity 0.5s ease, transform 0.4s ease, background 0.3s ease;
     opacity: 0.2;
+    animation: float 4s ease-in-out infinite;
   }
 
-  /* Oculta barra dejando solo bocina */
   #audioStatusBar:hover {
     opacity: 1;
   }
 
-  /* === ICONO DE BOCINA === */
   .speaker {
     position: relative;
     width: 30px;
@@ -48,31 +46,6 @@
 
   .speaker:hover {
     transform: scale(1.1);
-  }
-
-  .speaker::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 7px;
-    width: 10px;
-    height: 16px;
-    border-radius: 2px;
-    background: white;
-    transition: background 0.3s;
-  }
-
-  .speaker::after {
-    content: '';
-    position: absolute;
-    left: 12px;
-    top: 10px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid white;
-    border-left: none;
-    transition: border-color 0.3s;
   }
 
   .mute-line {
@@ -92,7 +65,6 @@
     opacity: 1;
   }
 
-  /* === LED DE ESTADO === */
   .led {
     width: 14px;
     height: 14px;
@@ -111,14 +83,12 @@
     box-shadow: 0 0 8px #ff3333, 0 0 18px #ff3333;
   }
 
-  /* === TEXTO === */
   #audioText {
     font-size: 15px;
     letter-spacing: 1px;
     text-shadow: 0 0 8px rgba(255,255,255,0.3);
   }
 
-  /* === BARRA DE VOLUMEN === */
   #volumeControl {
     appearance: none;
     width: 90px;
@@ -146,23 +116,20 @@
     pointer-events: all;
   }
 
-  /* === EFECTO DE FLOTE === */
   @keyframes float {
     0%, 100% { transform: translate(-50%, -50%) translateY(0); }
     50% { transform: translate(-50%, -50%) translateY(-3px); }
   }
-
-  #audioStatusBar {
-    animation: float 4s ease-in-out infinite;
-  }
-
 </style>
 </head>
 <body>
 
-<!-- Barra de control de audio -->
 <div id="audioStatusBar">
   <div class="speaker off" id="speakerIcon">
+    <svg id="speakerSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="white">
+      <path d="M3 10v4h4l5 5V5L7 10H3z"/>
+      <path id="waves" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>
+    </svg>
     <div class="mute-line"></div>
   </div>
   <div class="led off" id="audioLed"></div>
@@ -175,8 +142,9 @@
   const SOUND_URLS = {
     menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
     logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3",
-    // Puedes agregar más sonidos aquí:
+    // 🔊 Aquí puedes agregar más sonidos personalizados:
     // click: "https://tuusuario.github.io/Website-Content/FX/click.mp3",
+    // hover: "https://tuusuario.github.io/Website-Content/FX/hover.mp3",
   };
 
   let audioCtx = null;
@@ -184,6 +152,7 @@
   const led = document.getElementById("audioLed");
   const text = document.getElementById("audioText");
   const speaker = document.getElementById("speakerIcon");
+  const speakerSVG = document.getElementById("speakerSVG");
   const volumeControl = document.getElementById("volumeControl");
 
   function createAudioContext() {
@@ -212,7 +181,7 @@
     return audioBuffer;
   }
 
-  async function playSound(key, options = {}) {
+  async function playSound(key) {
     if (!isAudioEnabled()) return false;
     try {
       await ensureAudioContext();
@@ -246,15 +215,18 @@
     if (enabled) {
       led.classList.remove("off"); led.classList.add("on");
       speaker.classList.remove("off");
+      speakerSVG.setAttribute("fill", "white");
       text.textContent = "On";
     } else {
       led.classList.remove("on"); led.classList.add("off");
       speaker.classList.add("off");
+      speakerSVG.setAttribute("fill", "#888");
       text.textContent = "Off";
     }
   }
 
   async function initialize() {
+    createAudioContext();
     updateAudioUI();
     if (isAudioEnabled()) {
       await ensureAudioContext();
@@ -262,22 +234,18 @@
     }
   }
 
-  // Toggle de audio
   document.getElementById("audioStatusBar").addEventListener("click", async () => {
     const newState = !isAudioEnabled();
     setAudioEnabled(newState);
-    if (newState) {
-      await ensureAudioContext();
+    if (newState && bufferCache["menu"]) {
       playSound("menu");
     }
   });
 
-  // Cambio de volumen
   volumeControl.addEventListener("input", () => {
     localStorage.setItem("volumeLevel", volumeControl.value);
   });
 
-  // Guardar volumen previo
   const savedVol = localStorage.getItem("volumeLevel");
   if (savedVol !== null) volumeControl.value = savedVol;
 
