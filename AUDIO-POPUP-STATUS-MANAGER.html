@@ -16,52 +16,51 @@
   /* === BARRA DE ESTADO === */
   #audioStatusBar {
     position: fixed;
-    top: 12px;
+    top: 14px;
     right: 20px;
     z-index: 9999;
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.15);
+    gap: 14px; /* más espacio entre icono, led y texto */
+    background: transparent; /* fondo 100% transparente */
     border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 22px;
-    padding: 6px 14px;
+    border-radius: 28px;
+    padding: 8px 16px;
     font-size: 14px;
     letter-spacing: 1px;
     color: white;
     cursor: pointer;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(6px);
     transition: all 0.3s ease;
   }
 
   #audioStatusBar:hover {
-    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    box-shadow: 0 0 10px rgba(255,255,255,0.25);
   }
 
   #speakerIcon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     background: url('https://cdn-icons-png.flaticon.com/512/727/727269.png') center/contain no-repeat;
     filter: invert(1);
     opacity: 0.9;
   }
 
   .led {
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0,0,0,0.8);
     transition: all 0.3s ease;
   }
 
   .led.on {
     background: #00ff66;
-    box-shadow: 0 0 12px #00ff66, 0 0 24px #00ff66, inset 0 0 6px #009944;
+    box-shadow: 0 0 8px #00ff66, 0 0 18px #00ff66, inset 0 0 6px #008833;
   }
 
   .led.off {
     background: #ff3333;
-    box-shadow: 0 0 12px #ff3333, 0 0 24px #ff3333, inset 0 0 6px #990000;
+    box-shadow: 0 0 8px #ff3333, 0 0 18px #ff3333, inset 0 0 6px #660000;
   }
 
   /* === POP-UP === */
@@ -110,7 +109,7 @@
   .pill {
     display: inline-block;
     margin: 10px;
-    padding: 14px 36px;
+    padding: 14px 38px;
     border-radius: 40px;
     font-size: 17px;
     color: white;
@@ -152,14 +151,12 @@
 </head>
 <body>
 
-<!-- Barra de estado -->
 <div id="audioStatusBar">
   <div id="speakerIcon"></div>
   <div class="led off" id="audioLed"></div>
   <span id="audioText">OFF</span>
 </div>
 
-<!-- Pop-up -->
 <div id="popup">
   <div id="popupContent">
     <h2>¿Deseas activar el sonido?</h2>
@@ -174,9 +171,7 @@
 (() => {
   const SOUND_URLS = {
     menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
-    logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3",
-    // 👉 Aquí podrás agregar más sonidos:
-    // click: "https://aiquimista-agil.github.io/Website-Content/FX/click.mp3",
+    logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3"
   };
 
   let audioCtx = null;
@@ -195,9 +190,7 @@
 
   async function ensureAudioContext() {
     createAudioContext();
-    if (audioCtx.state === 'suspended') {
-      try { await audioCtx.resume(); } catch(e){ console.warn('resume failed', e); }
-    }
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
   }
 
   async function loadBuffer(key) {
@@ -235,8 +228,7 @@
 
   function updateAudioUI() {
     const enabled = isAudioEnabled();
-    led.classList.toggle("on", enabled);
-    led.classList.toggle("off", !enabled);
+    led.className = `led ${enabled ? "on" : "off"}`;
     text.textContent = enabled ? "ON" : "OFF";
   }
 
