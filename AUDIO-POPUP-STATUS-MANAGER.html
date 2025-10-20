@@ -10,175 +10,152 @@
     background: transparent;
     font-family: 'Futura', sans-serif;
     color: white;
-    overflow: hidden;
   }
 
-  /* === BARRA DE ESTADO === */
+  /* === BARRA DE CONTROL DE AUDIO === */
   #audioStatusBar {
     position: fixed;
-    top: 14px;
-    right: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     z-index: 9999;
     display: flex;
     align-items: center;
-    gap: 14px; /* más espacio entre icono, led y texto */
-    background: transparent; /* fondo 100% transparente */
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 28px;
-    padding: 8px 16px;
-    font-size: 14px;
-    letter-spacing: 1px;
-    color: white;
+    gap: 14px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 30px;
+    padding: 10px 24px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
     cursor: pointer;
-    backdrop-filter: blur(6px);
-    transition: all 0.3s ease;
+    user-select: none;
+    transition: background 0.3s ease;
   }
 
   #audioStatusBar:hover {
-    box-shadow: 0 0 10px rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.25);
   }
 
-  #speakerIcon {
-    width: 20px;
-    height: 20px;
-    background: url('https://cdn-icons-png.flaticon.com/512/727/727269.png') center/contain no-repeat;
-    filter: invert(1);
-    opacity: 0.9;
+  /* === ICONO DE BOCINA === */
+  .speaker {
+    position: relative;
+    width: 26px;
+    height: 26px;
+    background: none;
   }
 
-  .led {
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
+  .speaker::before,
+  .speaker::after {
+    content: '';
+    position: absolute;
+    background: white;
     transition: all 0.3s ease;
   }
 
+  .speaker::before {
+    left: 0;
+    top: 7px;
+    width: 10px;
+    height: 12px;
+    border-radius: 2px;
+    background: white;
+  }
+
+  .speaker::after {
+    left: 10px;
+    top: 10px;
+    width: 8px;
+    height: 6px;
+    border-radius: 50%;
+    border: 2px solid white;
+    border-left: none;
+  }
+
+  /* === LÍNEA ROJA CUANDO ESTÁ EN OFF === */
+  .speaker.off::after {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .speaker.off::before {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .speaker.off::before {
+    box-shadow: 0 0 0 transparent;
+  }
+
+  .speaker.off::after {
+    position: relative;
+  }
+
+  .speaker.off::before {
+    transform: rotate(0);
+  }
+
+  .mute-line {
+    position: absolute;
+    left: -2px;
+    top: 12px;
+    width: 30px;
+    height: 2px;
+    background: red;
+    transform: rotate(45deg);
+    box-shadow: 0 0 6px red;
+    display: none;
+  }
+
+  .speaker.off .mute-line {
+    display: block;
+  }
+
+  /* === LED DE ESTADO === */
+  .led {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0,0,0,0.8);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
   .led.on {
-    background: #00ff66;
-    box-shadow: 0 0 8px #00ff66, 0 0 18px #00ff66, inset 0 0 6px #008833;
+    background: #00ff55;
+    box-shadow: 0 0 8px #00ff55, 0 0 15px #00ff55;
   }
 
   .led.off {
     background: #ff3333;
-    box-shadow: 0 0 8px #ff3333, 0 0 18px #ff3333, inset 0 0 6px #660000;
+    box-shadow: 0 0 8px #ff3333, 0 0 15px #ff3333;
   }
 
-  /* === POP-UP === */
-  #popup {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(12px);
-    z-index: 9998;
-    animation: fadeIn 0.8s ease;
-  }
-
-  #popupContent {
-    position: relative;
-    aspect-ratio: 23 / 9;
-    width: min(80vw, 600px);
-    max-width: 800px;
-    border-radius: 18px;
-    background: radial-gradient(circle at 30% 30%, rgba(20,20,20,0.9), rgba(0,0,0,0.8));
-    border: 1px solid rgba(255,255,255,0.15);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    padding-bottom: 15%;
-    text-align: center;
-    animation: popUpJump 0.8s ease-out;
-  }
-
-  #popup h2 {
-    position: absolute;
-    top: 25%;
-    width: 100%;
-    text-align: center;
-    font-weight: 300;
-    letter-spacing: 2px;
-    font-size: 18px;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
-  }
-
-  /* === PÍLDORAS === */
-  .pill {
-    display: inline-block;
-    margin: 10px;
-    padding: 14px 38px;
-    border-radius: 40px;
-    font-size: 17px;
-    color: white;
-    cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.25);
-    backdrop-filter: blur(8px);
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
-    box-shadow: inset 0 0 12px rgba(255,255,255,0.25),
-                0 0 18px rgba(255,255,255,0.15);
-    transition: transform 0.25s ease, box-shadow 0.3s ease;
-  }
-
-  .pill:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 18px rgba(255,255,255,0.4),
-                inset 0 0 8px rgba(255,255,255,0.3);
-  }
-
-  .pill.red {
-    background: radial-gradient(circle at 30% 30%, rgba(255,50,50,0.7), rgba(100,0,0,0.9));
-    box-shadow: 0 0 20px rgba(255,0,0,0.4);
-  }
-
-  .pill.blue {
-    background: radial-gradient(circle at 30% 30%, rgba(60,130,255,0.7), rgba(0,0,90,0.9));
-    box-shadow: 0 0 20px rgba(0,120,255,0.4);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; } to { opacity: 1; }
-  }
-
-  @keyframes popUpJump {
-    0% { transform: scale(0.8) translateY(30px); opacity: 0; }
-    60% { transform: scale(1.05) translateY(-8px); opacity: 1; }
-    100% { transform: scale(1) translateY(0); }
+  #audioText {
+    letter-spacing: 1px;
+    font-size: 15px;
   }
 </style>
 </head>
 <body>
 
+<!-- Barra de control de audio -->
 <div id="audioStatusBar">
-  <div id="speakerIcon"></div>
+  <div class="speaker off" id="speakerIcon">
+    <div class="mute-line"></div>
+  </div>
   <div class="led off" id="audioLed"></div>
   <span id="audioText">OFF</span>
-</div>
-
-<div id="popup">
-  <div id="popupContent">
-    <h2>¿Deseas activar el sonido?</h2>
-    <div>
-      <button class="pill red" id="btnActivate">Activar Sonido</button>
-      <button class="pill blue" id="btnSilence">Silencio</button>
-    </div>
-  </div>
 </div>
 
 <script>
 (() => {
   const SOUND_URLS = {
     menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
-    logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3"
+    logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3",
   };
 
   let audioCtx = null;
   const bufferCache = {};
   const led = document.getElementById("audioLed");
   const text = document.getElementById("audioText");
-  const popup = document.getElementById("popup");
+  const speaker = document.getElementById("speakerIcon");
 
   function createAudioContext() {
     if (!audioCtx) {
@@ -190,31 +167,40 @@
 
   async function ensureAudioContext() {
     createAudioContext();
-    if (audioCtx.state === 'suspended') await audioCtx.resume();
+    if (audioCtx.state === 'suspended') {
+      try { await audioCtx.resume(); } catch(e){ console.warn('resume failed', e); }
+    }
   }
 
   async function loadBuffer(key) {
     if (bufferCache[key]) return bufferCache[key];
     const url = SOUND_URLS[key];
-    const resp = await fetch(url);
+    if (!url) throw new Error('No URL for ' + key);
+    const resp = await fetch(url, { cache: "no-store" });
     const arrayBuffer = await resp.arrayBuffer();
-    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
     bufferCache[key] = audioBuffer;
     return audioBuffer;
   }
 
   async function playSound(key, options = {}) {
-    if (!isAudioEnabled()) return;
-    await ensureAudioContext();
-    const buffer = await loadBuffer(key);
-    const src = audioCtx.createBufferSource();
-    const gain = audioCtx.createGain();
-    src.buffer = buffer;
-    gain.gain.value = options.volume ?? 0.9;
-    src.connect(gain);
-    gain.connect(audioCtx.destination);
-    src.start(0);
-    src.onended = () => { src.disconnect(); gain.disconnect(); };
+    if (!isAudioEnabled()) return false;
+    try {
+      await ensureAudioContext();
+      const buffer = await loadBuffer(key);
+      const src = audioCtx.createBufferSource();
+      const gain = audioCtx.createGain();
+      gain.gain.value = options.volume ?? 0.9;
+      src.buffer = buffer;
+      src.connect(gain);
+      gain.connect(audioCtx.destination);
+      src.start(0);
+      src.onended = () => { src.disconnect(); gain.disconnect(); };
+      return true;
+    } catch (err) {
+      console.warn('playSound err', err);
+      return false;
+    }
   }
 
   function setAudioEnabled(enabled) {
@@ -228,33 +214,26 @@
 
   function updateAudioUI() {
     const enabled = isAudioEnabled();
-    led.className = `led ${enabled ? "on" : "off"}`;
-    text.textContent = enabled ? "ON" : "OFF";
+    if (enabled) {
+      led.classList.remove("off"); led.classList.add("on");
+      speaker.classList.remove("off");
+      text.textContent = "ON";
+    } else {
+      led.classList.remove("on"); led.classList.add("off");
+      speaker.classList.add("off");
+      text.textContent = "OFF";
+    }
   }
 
   async function initialize() {
     updateAudioUI();
-    if (localStorage.getItem("audioEnabled") !== null) {
-      popup.style.display = "none";
-      if (isAudioEnabled()) {
-        await ensureAudioContext();
-        await Promise.all(Object.keys(SOUND_URLS).map(k => loadBuffer(k).catch(()=>{})));
-      }
+    if (isAudioEnabled()) {
+      await ensureAudioContext();
+      await Promise.all(Object.keys(SOUND_URLS).map(k => loadBuffer(k).catch(()=>{})));
     }
   }
 
-  document.getElementById("btnActivate").addEventListener("click", async () => {
-    await ensureAudioContext();
-    setAudioEnabled(true);
-    popup.style.display = "none";
-    playSound("logo");
-  });
-
-  document.getElementById("btnSilence").addEventListener("click", () => {
-    setAudioEnabled(false);
-    popup.style.display = "none";
-  });
-
+  // Click en la barra para alternar sonido
   document.getElementById("audioStatusBar").addEventListener("click", async () => {
     const newState = !isAudioEnabled();
     setAudioEnabled(newState);
@@ -265,6 +244,14 @@
   });
 
   initialize();
+
+  // Permitir que Wix u otros iframes lo controlen
+  window.addEventListener("message", event => {
+    let data = event.data;
+    try { if (typeof data === "string") data = JSON.parse(data); } catch(e){}
+    if (!data || !data.type) return;
+    if (data.type === "play" && data.sound) playSound(data.sound, data.options || {});
+  });
 })();
 </script>
 </body>
