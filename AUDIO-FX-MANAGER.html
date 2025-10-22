@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Audio FX Manager</title>
+<style>
+  html,body{height:100%;margin:0;background:transparent}
+  #enableBtn{
+    position:fixed;
+    left:8px;
+    bottom:8px;
+    z-index:9999;
+    padding:6px 10px;
+    font-size:12px;
+    border-radius:6px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:rgba(0,0,0,0.45);
+    color:white;
+    cursor:pointer;
+  }
+  /* si no quieres ver nada, reduce opacity o mueve fuera de pantalla tras activar */
+</style>
+</head>
+<body>
+  <!-- Botón de activación (puedes ocultarlo después) -->
+  <button id="enableBtn">Activar sonido</button>
+
+<script>
+/*
+ Audio FX manager: recibe mensajes postMessage con:
+  { type: 'play', sound: 'menu' }  -> reproduce Light-Switch.mp3
+  { type: 'play', sound: 'logo' }  -> reproduce FX-Light.mp3
+  { type: 'resume' }               -> intenta reanudar AudioContext (llamar desde user gesture)
+*/
+
+(() => {
+  const SOUND_URLS = {
+    menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
+    logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3"
+  };
+
+  let audioCtx = null;
+  const bufferCache = {}; // caches decoded AudioBuffers
+
+  // Create or resume AudioContext (must be called by user gesture in many browsers)
+  async function ensureAudioContext() {
+    if (!audioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new Ctx();
+    }
+    if (audioCtx.state === 'suspended') {
+      try { await audioCtx.resume(); } catch(e){ console.warn('resume failed', e); }
+    }
+  }
+
+  // Fetch + decode and cache
+  async function loadBuffer(key) {
+    if (bufferCache[key]) return bufferCache[key];
+    const url = SOUND_URLS[key];
+    if (!url) throw new Error('No URL for ' + key);
+    const resp = await fetch(url, { cache: "no-store" });
+    if (!resp.ok) throw new Error('Fetch failed ' + resp.status);
+    const arrayBuffer = await resp.arrayBuffer();
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
+    bufferCache[key] = audioBuffer;
+    return audioBuffer;
+  }
+
+  // Play by creating a new source node -> allows superposition
+  async function playSound(key, options = {}) {
+    try {
+      await ensureAudioContext();
+      const buffer = await loadBuffer(key);
+      const src = audioCtx.createBufferSource();
+      src.buffer = buffer;
+
+      // gain node for volume control
+      const gain = audioCtx.createGain();
+      gain.gain.value = (typeof options.volume === 'number') ? options.volume : 0.9;
+
+      src.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (options.fadeIn) {
+        gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(gain.gain.value, audioCtx.currentTime + options.fadeIn);
+      }
+
+      src.start(0);
+      // auto disconnect
+      src.onended = () => {
+        try { src.disconnect(); gain.disconnect(); } catch(e){}
+      };
+      return true;
+    } catch (err) {
+      console.warn('playSound err', err);
+      return false;
+    }
+  }
+
+  // Message handler
+  window.addEventListener('message', event => {
+    // Optionally validate origin: if you host in same origin skip; otherwise check event.origin
+    const data = (typeof event.data === 'string') ? JSON.parse(event.data) : event.data;
+    if (!data || !data.type) return;
+    if (data.type === 'play' && data.sound) {
+      playSound(data.sound, data.options || {});
+    } else if (data.type === 'resume') {
+      // Called after a user gesture in parent; try to resume and preload buffers
+      ensureAudioContext().then(()=> {
+        // preload both buffers (optional)
+        Promise.all([loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
+      });
+    }
+  });
+
+  // The enable button calls resume directly inside the iframe (guaranteed user gesture)
+  const enableBtn = document.getElementById('enableBtn');
+  enableBtn.addEventListener('click', async () => {
+    await ensureAudioContext();
+    // preload buffers so first play is instant
+    await Promise.all([loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
+    // hide the button after enabling (move off screen to keep accessible if needed)
+    enableBtn.style.display = 'none';
+  });
+
+  // Optionally hide the button automatically after a short time if page already got gestic
+})();
+</script>
+</body>
+</html>
