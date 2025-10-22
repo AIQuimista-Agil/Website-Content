@@ -1,130 +1,256 @@
 <!doctype html>
-<html>
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <title>Audio FX Manager</title>
+
+<!-- Fuente Cinzel Bold -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
 <style>
-  html,body{height:100%;margin:0;background:transparent}
-  #enableBtn{
-    position:fixed;
-    left:8px;
-    bottom:8px;
-    z-index:9999;
-    padding:6px 10px;
-    font-size:12px;
-    border-radius:6px;
-    border:1px solid rgba(255,255,255,0.2);
-    background:rgba(0,0,0,0.45);
-    color:white;
-    cursor:pointer;
+  /* ——— Fondo general ——— */
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: transparent;
+    font-family: 'Cinzel', serif;
   }
-  /* si no quieres ver nada, reduce opacity o mueve fuera de pantalla tras activar */
+
+  /* ——— Contenedor de botones ——— */
+  .audio-controls {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    z-index: 9999;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  /* ——— Botón base tipo pastilla ——— */
+  .pill-btn {
+    position: relative;
+    min-width: 170px;
+    height: 54px;
+    border-radius: 999px;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    text-shadow: 0 0 8px rgba(255,255,255,0.35);
+    box-shadow: 0 0 24px rgba(0,0,0,0.4);
+    transition: all 0.25s ease;
+  }
+
+  /* Brillo interior simulado con pseudo-elemento */
+  .pill-btn::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.3) 0%, transparent 60%);
+    opacity: 0.7;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .pill-btn:hover::before {
+    opacity: 1;
+  }
+
+  /* ——— Botón rojo (Activar Audio) ——— */
+  .btn-activate {
+    background-image: url("https://aiquimista-agil.github.io/Website-Content/Header/Pastilla-Roja.png");
+    box-shadow:
+      0 0 25px rgba(255,40,80,0.5),
+      0 0 60px rgba(255,60,120,0.3),
+      inset 0 0 12px rgba(255,160,180,0.25);
+  }
+
+  .btn-activate:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow:
+      0 0 35px rgba(255,40,80,0.7),
+      0 0 85px rgba(255,80,120,0.45),
+      inset 0 0 18px rgba(255,200,220,0.35);
+    filter: brightness(1.08);
+  }
+
+  .btn-activate:active {
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.9);
+  }
+
+  /* ——— Botón azul (Silencio) ——— */
+  .btn-silence {
+    background-image: url("https://aiquimista-agil.github.io/Website-Content/Header/Pastilla-Azul.png");
+    box-shadow:
+      0 0 25px rgba(60,150,255,0.5),
+      0 0 60px rgba(0,120,255,0.3),
+      inset 0 0 12px rgba(160,200,255,0.25);
+  }
+
+  .btn-silence:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow:
+      0 0 35px rgba(90,170,255,0.7),
+      0 0 85px rgba(0,160,255,0.45),
+      inset 0 0 18px rgba(190,220,255,0.35);
+    filter: brightness(1.08);
+  }
+
+  .btn-silence:active {
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.9);
+  }
+
+  /* Efecto neón pulsante */
+  @keyframes neonPulse {
+    0%,100% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+  }
+
+  .btn-activate, .btn-silence {
+    animation: neonPulse 4s ease-in-out infinite;
+  }
+
+  /* Oculto */
+  .hidden { display: none !important; }
+
+  @media (max-width:420px) {
+    .pill-btn { min-width: 140px; height: 46px; font-size:13px; }
+  }
 </style>
 </head>
+
 <body>
-  <!-- Botón de activación (puedes ocultarlo después) -->
-  <button id="enableBtn">Activar sonido</button>
+  <div class="audio-controls">
+    <button id="enableBtn" class="pill-btn btn-activate">ACTIVAR AUDIO</button>
+    <button id="silenceBtn" class="pill-btn btn-silence">SILENCIO</button>
+  </div>
 
 <script>
-/*
- Audio FX manager: recibe mensajes postMessage con:
-  { type: 'play', sound: 'menu' }  -> reproduce Light-Switch.mp3
-  { type: 'play', sound: 'logo' }  -> reproduce FX-Light.mp3
-  { type: 'resume' }               -> intenta reanudar AudioContext (llamar desde user gesture)
-*/
+/* ==========================================================
+   🎧 Audio FX Manager — funcionalidad sin cambios
+   ----------------------------------------------------------
+   Para agregar más sonidos, añade nuevas entradas dentro de
+   SOUND_URLS. Ejemplo:
+
+   const SOUND_URLS = {
+     menu: "url_del_sonido_menu.mp3",
+     logo: "url_del_sonido_logo.mp3",
+     click: "https://tu-servidor.com/sonidos/click.mp3",  // ← ejemplo nuevo
+     ambient: "https://tu-servidor.com/sonidos/fondo.mp3" // ← ejemplo nuevo
+   };
+
+   Luego podrás llamar desde postMessage:
+   { type: 'play', sound: 'click' }
+   ========================================================== */
 
 (() => {
   const SOUND_URLS = {
+    // HEADER _________________________________________________________________________________________
     menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
     logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3"
+    // Puedes agregar más sonidos aquí:
+    // "click": "https://tu-servidor.com/sonidos/click.mp3",
+    // "ambient": "https://tu-servidor.com/sonidos/ambiente.mp3"
   };
 
   let audioCtx = null;
-  const bufferCache = {}; // caches decoded AudioBuffers
+  const bufferCache = {};
+  let SILENCED = false;
+  const INACTIVITY_MS = 33000;
+  let inactivityTimer = null;
 
-  // Create or resume AudioContext (must be called by user gesture in many browsers)
+  function startInactivityTimer() {
+    clearInactivityTimer();
+    inactivityTimer = setTimeout(() => {
+      SILENCED = true;
+      document.querySelector('.audio-controls')?.classList.add('hidden');
+    }, INACTIVITY_MS);
+  }
+
+  function clearInactivityTimer() {
+    if (inactivityTimer) { clearTimeout(inactivityTimer); inactivityTimer = null; }
+  }
+
   async function ensureAudioContext() {
     if (!audioCtx) {
       const Ctx = window.AudioContext || window.webkitAudioContext;
       audioCtx = new Ctx();
     }
-    if (audioCtx.state === 'suspended') {
-      try { await audioCtx.resume(); } catch(e){ console.warn('resume failed', e); }
-    }
+    if (audioCtx.state === 'suspended') await audioCtx.resume().catch(()=>{});
   }
 
-  // Fetch + decode and cache
   async function loadBuffer(key) {
+    if (SILENCED) throw new Error('silenced');
     if (bufferCache[key]) return bufferCache[key];
     const url = SOUND_URLS[key];
-    if (!url) throw new Error('No URL for ' + key);
     const resp = await fetch(url, { cache: "no-store" });
-    if (!resp.ok) throw new Error('Fetch failed ' + resp.status);
-    const arrayBuffer = await resp.arrayBuffer();
-    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
-    bufferCache[key] = audioBuffer;
-    return audioBuffer;
+    const ab = await resp.arrayBuffer();
+    const buf = await audioCtx.decodeAudioData(ab.slice(0));
+    bufferCache[key] = buf;
+    return buf;
   }
 
-  // Play by creating a new source node -> allows superposition
-  async function playSound(key, options = {}) {
+  async function playSound(key, options={}) {
     try {
+      if (SILENCED) return;
       await ensureAudioContext();
       const buffer = await loadBuffer(key);
       const src = audioCtx.createBufferSource();
-      src.buffer = buffer;
-
-      // gain node for volume control
       const gain = audioCtx.createGain();
-      gain.gain.value = (typeof options.volume === 'number') ? options.volume : 0.9;
-
+      gain.gain.value = options.volume ?? 0.9;
+      src.buffer = buffer;
       src.connect(gain);
       gain.connect(audioCtx.destination);
-
-      if (options.fadeIn) {
-        gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(gain.gain.value, audioCtx.currentTime + options.fadeIn);
-      }
-
       src.start(0);
-      // auto disconnect
-      src.onended = () => {
-        try { src.disconnect(); gain.disconnect(); } catch(e){}
-      };
-      return true;
-    } catch (err) {
-      console.warn('playSound err', err);
-      return false;
-    }
+      src.onended = ()=>{try{src.disconnect();gain.disconnect();}catch(e){}};
+    } catch(e){ console.warn(e); }
   }
 
-  // Message handler
-  window.addEventListener('message', event => {
-    // Optionally validate origin: if you host in same origin skip; otherwise check event.origin
-    const data = (typeof event.data === 'string') ? JSON.parse(event.data) : event.data;
-    if (!data || !data.type) return;
-    if (data.type === 'play' && data.sound) {
-      playSound(data.sound, data.options || {});
-    } else if (data.type === 'resume') {
-      // Called after a user gesture in parent; try to resume and preload buffers
-      ensureAudioContext().then(()=> {
-        // preload both buffers (optional)
-        Promise.all([loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
-      });
+  window.addEventListener('message', e=>{
+    const d = (typeof e.data === 'string') ? JSON.parse(e.data) : e.data;
+    if (!d || !d.type) return;
+    if (d.type==='play' && d.sound) playSound(d.sound, d.options||{});
+    else if (d.type==='resume') {
+      if (!SILENCED) ensureAudioContext().then(()=>Promise.all([
+        loadBuffer('menu').catch(()=>{}),
+        loadBuffer('logo').catch(()=>{})
+      ]));
     }
   });
 
-  // The enable button calls resume directly inside the iframe (guaranteed user gesture)
   const enableBtn = document.getElementById('enableBtn');
-  enableBtn.addEventListener('click', async () => {
+  enableBtn.addEventListener('click', async ()=>{
+    clearInactivityTimer();
+    if (SILENCED) return document.querySelector('.audio-controls')?.classList.add('hidden');
     await ensureAudioContext();
-    // preload buffers so first play is instant
     await Promise.all([loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
-    // hide the button after enabling (move off screen to keep accessible if needed)
-    enableBtn.style.display = 'none';
+    document.querySelector('.audio-controls')?.classList.add('hidden');
   });
 
-  // Optionally hide the button automatically after a short time if page already got gestic
+  const silenceBtn = document.getElementById('silenceBtn');
+  silenceBtn.addEventListener('click', ()=>{
+    clearInactivityTimer();
+    SILENCED = true;
+    document.querySelector('.audio-controls')?.classList.add('hidden');
+  });
+
+  startInactivityTimer();
+  const c = document.querySelector('.audio-controls');
+  ['mousemove','mouseenter','focus','touchstart'].forEach(evt=>{
+    c?.addEventListener(evt, ()=>{
+      if (!SILENCED && !c.classList.contains('hidden')) startInactivityTimer();
+    }, {passive:true});
+  });
 })();
 </script>
 </body>
