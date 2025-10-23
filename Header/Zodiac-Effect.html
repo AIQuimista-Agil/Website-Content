@@ -134,7 +134,7 @@ recordando que cada día es una nota en la sinfonía del alma universal.
   </style>
 </head>
 <body>
-  <div class="neon-text" id="zodiac-sign">♎︎</div>
+  <div class="neon-text" id="zodiac-sign"></div>
 
   <script>
     function getMoonPhase() {
@@ -190,7 +190,8 @@ recordando que cada día es una nota en la sinfonía del alma universal.
         }
       }
 
-      return '♈︎';
+      console.warn('No se encontró signo zodiacal para la fecha:', date.toISOString());
+      return '';
     }
 
     const now = new Date();
@@ -203,7 +204,7 @@ recordando que cada día es una nota en la sinfonía del alma universal.
     document.documentElement.style.setProperty('--glow-intensity', intensity.toFixed(2));
     document.getElementById('zodiac-sign').textContent = zodiac;
 
-    console.log(`🌙 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color} | Signo: ${zodiac}`);
+    console.log(`🌙 Fase lunar: ${(phase*100).toFixed(1)}% | Brillo: ${intensity.toFixed(2)} | Color: ${color} | Signo: ${zodiac || '[ninguno]'}`);
 
     console.log(`
 ───────────────────────────────────────────────────────────────
