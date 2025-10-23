@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Newsletter Flame Banner</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .flame-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center, rgba(255, 100, 0, 0.2) 0%, rgba(0, 0, 0, 0) 70%),
+                  repeating-conic-gradient(from 0deg, #ff3300 0deg, #ff6600 10deg, #ffcc00 20deg, #ff3300 30deg);
+      background-size: 200% 200%;
+      animation: flames 4s linear infinite;
+      z-index: 0;
+      filter: blur(40px);
+    }
+
+    @keyframes flames {
+      0% { transform: translate(-25%, -25%) rotate(0deg); }
+      100% { transform: translate(-25%, -25%) rotate(360deg); }
+    }
+
+    .newsletter-text {
+      position: relative;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: clamp(1rem, 3vw, 2rem);
+      text-align: center;
+      letter-spacing: 0.2em;
+      color: white;
+      z-index: 1;
+      text-shadow:
+        0 0 5px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 20px rgba(255, 255, 255, 0.4);
+    }
+
+    @media (max-width: 480px) {
+      .newsletter-text {
+        font-size: clamp(0.9rem, 4vw, 1.5rem);
+        letter-spacing: 0.15em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="flame-background"></div>
+  <div class="newsletter-text">
+    Suscríbete al Newsletter de AI.Quimista Ágil
+  </div>
+</body>
+</html>
