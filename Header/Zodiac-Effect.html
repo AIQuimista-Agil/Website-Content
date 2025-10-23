@@ -134,7 +134,7 @@ recordando que cada día es una nota en la sinfonía del alma universal.
   </style>
 </head>
 <body>
-  <div class="neon-text" id="zodiac-sign">♏︎</div>
+  <div class="neon-text" id="zodiac-sign">♎︎</div>
 
   <script>
     function getMoonPhase() {
@@ -163,34 +163,34 @@ recordando que cada día es una nota en la sinfonía del alma universal.
     function getZodiacSymbol(date) {
       const month = date.getMonth() + 1;
       const day = date.getDate();
-      const zodiacSigns = [
-        { sign: '♑︎', from: [12, 22], to: [1, 19] },
-        { sign: '♒︎', from: [1, 20], to: [2, 18] },
-        { sign: '♓︎', from: [2, 19], to: [3, 20] },
-        { sign: '♈︎', from: [3, 21], to: [4, 19] },
-        { sign: '♉︎', from: [4, 20], to: [5, 20] },
-        { sign: '♊︎', from: [5, 21], to: [6, 20] },
-        { sign: '♋︎', from: [6, 21], to: [7, 22] },
-        { sign: '♌︎', from: [7, 23], to: [8, 22] },
-        { sign: '♍︎', from: [8, 23], to: [9, 22] },
-        { sign: '♎︎', from: [9, 23], to: [10, 22] },
-        { sign: '♏︎', from: [10, 23], to: [11, 21] },
-        { sign: '♐︎', from: [11, 22], to: [12, 21] }
+      const mmdd = month * 100 + day;
+
+      const ranges = [
+        { sign: '♑︎', start: 1222, end: 119 },
+        { sign: '♒︎', start: 120, end: 218 },
+        { sign: '♓︎', start: 219, end: 320 },
+        { sign: '♈︎', start: 321, end: 419 },
+        { sign: '♉︎', start: 420, end: 520 },
+        { sign: '♊︎', start: 521, end: 620 },
+        { sign: '♋︎', start: 621, end: 722 },
+        { sign: '♌︎', start: 723, end: 822 },
+        { sign: '♍︎', start: 823, end: 922 },
+        { sign: '♎︎', start: 923, end: 1022 },
+        { sign: '♏︎', start: 1023, end: 1121 },
+        { sign: '♐︎', start: 1122, end: 1221 }
       ];
 
-      for (let i = 0; i < zodiacSigns.length; i++) {
-        const { sign, from, to } = zodiacSigns[i];
-        const fromDate = new Date(date.getFullYear(), from[0] - 1, from[1]);
-        const toDate = new Date(date.getFullYear(), to[0] - 1, to[1]);
-
-        if (from[0] > to[0]) {
-          // Sign spans year end
-          if (date >= fromDate || date <= toDate) return sign;
+      for (let i = 0; i < ranges.length; i++) {
+        const { sign, start, end } = ranges[i];
+        if (start <= end) {
+          if (mmdd >= start && mmdd <= end) return sign;
         } else {
-          if (date >= fromDate && date <= toDate) return sign;
+          // rango que cruza fin de año (ej. Capricornio)
+          if (mmdd >= start || mmdd <= end) return sign;
         }
       }
-      return '♈︎'; // fallback
+
+      return '♈︎';
     }
 
     const now = new Date();
