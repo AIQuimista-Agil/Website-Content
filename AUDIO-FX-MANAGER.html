@@ -227,6 +227,11 @@
     if (d.type==='play' && d.sound) playSound(d.sound, d.options||{});
     else if (d.type==='resume') {
       if (!SILENCED) ensureAudioContext().then(()=>Promise.all([
+        // FOOTER _________________________________________________________________________________________
+        loadBuffer('button').catch(()=>{}),
+        loadBuffer('phoenix').catch(()=>{}),
+        loadBuffer('submachine').catch(()=>{}),
+        // HEADER _________________________________________________________________________________________
         loadBuffer('menu').catch(()=>{}),
         loadBuffer('logo').catch(()=>{})
       ]));
@@ -238,7 +243,8 @@
     clearInactivityTimer();
     if (SILENCED) return document.querySelector('.audio-controls')?.classList.add('hidden');
     await ensureAudioContext();
-    await Promise.all([loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
+    // ____________________________________________________________________________________________________
+    await Promise.all([loadBuffer('button').catch(()=>{}), loadBuffer('phoenix').catch(()=>{}), loadBuffer('submachine').catch(()=>{}), loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
     document.querySelector('.audio-controls')?.classList.add('hidden');
   });
 
