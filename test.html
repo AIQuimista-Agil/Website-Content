@@ -1,67 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Audio FX Manager</title>
+
+<!-- Fuente Cinzel Bold -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
 <style>
-  .earth {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-blend-mode: overlay;
+  /* ——— Fondo general ——— */
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: transparent;
+    font-family: 'Cinzel', serif;
+  }
+
+  /* ——— Contenedor de botones ——— */
+  .audio-controls {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    z-index: 9999;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  /* ——— Botón base tipo pastilla ——— */
+  .pill-btn {
+    position: relative;
+    min-width: 170px;
+    height: 54px;
+    border-radius: 999px;
+    border: none;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    overflow: hidden;
     background-size: cover;
     background-position: center;
+    text-shadow: 0 0 8px rgba(255,255,255,0.35);
+    box-shadow: 0 0 24px rgba(0,0,0,0.4);
+    transition: all 0.25s ease;
+  }
+
+  /* Brillo interior simulado con pseudo-elemento */
+  .pill-btn::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.3) 0%, transparent 60%);
+    opacity: 0.7;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .pill-btn:hover::before {
+    opacity: 1;
+  }
+
+  /* ——— Botón rojo (Activar Audio) ——— */
+  .btn-activate {
+    background-image: url("https://aiquimista-agil.github.io/Website-Content/Header/Pastilla-Roja.png");
     box-shadow:
-      0 0 12px rgba(0, 150, 255, 0.4),
-      0 0 24px rgba(0, 200, 255, 0.3),
-      inset 0 0 8px rgba(0, 100, 200, 0.2);
-    filter: saturate(1.2) contrast(1.1);
-    z-index: 10;
-    transition: all 1s ease; /* 👈 suaviza el movimiento si cambia */
+      0 0 25px rgba(255,40,80,0.5),
+      0 0 60px rgba(255,60,120,0.3),
+      inset 0 0 12px rgba(255,160,180,0.25);
+  }
+
+  .btn-activate:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow:
+      0 0 35px rgba(255,40,80,0.7),
+      0 0 85px rgba(255,80,120,0.45),
+      inset 0 0 18px rgba(255,200,220,0.35);
+    filter: brightness(1.08);
+  }
+
+  .btn-activate:active {
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.9);
+  }
+
+  /* ——— Botón azul (Silencio) ——— */
+  .btn-silence {
+    background-image: url("https://aiquimista-agil.github.io/Website-Content/Header/Pastilla-Azul.png");
+    box-shadow:
+      0 0 25px rgba(60,150,255,0.5),
+      0 0 60px rgba(0,120,255,0.3),
+      inset 0 0 12px rgba(160,200,255,0.25);
+  }
+
+  .btn-silence:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow:
+      0 0 35px rgba(90,170,255,0.7),
+      0 0 85px rgba(0,160,255,0.45),
+      inset 0 0 18px rgba(190,220,255,0.35);
+    filter: brightness(1.08);
+  }
+
+  .btn-silence:active {
+    transform: translateY(1px) scale(0.98);
+    filter: brightness(0.9);
+  }
+
+  /* Efecto neón pulsante */
+  @keyframes neonPulse {
+    0%,100% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+  }
+
+  .btn-activate, .btn-silence {
+    animation: neonPulse 4s ease-in-out infinite;
+  }
+
+  /* Oculto */
+  .hidden { display: none !important; }
+
+  @media (max-width:420px) {
+    .pill-btn { min-width: 140px; height: 46px; font-size:13px; }
   }
 </style>
+</head>
+
+<body>
+  <div class="audio-controls">
+    <button id="enableBtn" class="pill-btn btn-activate">Activar Audio</button>
+    <button id="silenceBtn" class="pill-btn btn-silence">Silencio</button>
+  </div>
 
 <script>
-  function placeEarth() {
-    const now = new Date();
-    const year = now.getFullYear();
+/* ==========================================================
+   🎧 Audio FX Manager — funcionalidad sin cambios
+   ----------------------------------------------------------
+   Para agregar más sonidos, añade nuevas entradas dentro de
+   SOUND_URLS. Ejemplo:
 
-    // ✅ Corrección: la comprobación de año bisiesto debe ser con paréntesis
-    const isLeap = new Date(year, 1, 29).getDate() === 29;
+   const SOUND_URLS = {
+     menu: "url_del_sonido_menu.mp3",
+     logo: "url_del_sonido_logo.mp3",
+     click: "https://tu-servidor.com/sonidos/click.mp3",  // ← ejemplo nuevo
+     ambient: "https://tu-servidor.com/sonidos/fondo.mp3" // ← ejemplo nuevo
+   };
 
-    // ✅ Corrección: cálculo correcto del día del año (1–365)
-    const start = new Date(year, 0, 0);
-    const diff = now - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    let dayOfYear = Math.floor(diff / oneDay);
+   Luego podrás llamar desde postMessage:
+   { type: 'play', sound: 'click' }
+   ========================================================== */
 
-    // 🧹 Eliminar tierras previas
-    document.querySelectorAll(".earth").forEach(el => el.remove());
+(() => {
+  const SOUND_URLS = {
+    // HEADER _________________________________________________________________________________________
+    menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
+    logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3"
+    // Puedes agregar más sonidos aquí:
+    // "click": "https://tu-servidor.com/sonidos/click.mp3",
+    // "ambient": "https://tu-servidor.com/sonidos/ambiente.mp3"
+  };
 
-    // 🧮 Calcular celda correspondiente (365 o 366)
-    const totalCells = isLeap ? 366 : 365;
-    const cellIndex = Math.min(dayOfYear - 1, totalCells - 1); // -1 para índice base 0
-    const cells = document.querySelectorAll(".cell");
+  let audioCtx = null;
+  const bufferCache = {};
+  let SILENCED = false;
+  const INACTIVITY_MS = 33000;
+  let inactivityTimer = null;
 
-    // Si no hay celdas o la del día no existe, salir
-    if (!cells.length || !cells[cellIndex]) return;
-
-    const targetCell = cells[cellIndex];
-
-    // 🌍 Crear y aplicar la Tierra
-    const earth = document.createElement("div");
-    earth.className = "earth";
-    earth.style.backgroundImage = `
-      radial-gradient(circle at 30% 30%, #a0d8ef 0%, #0077be 40%, #003366 80%),
-      radial-gradient(circle at 70% 70%, #004d00 0%, #00cc44 30%, transparent 70%),
-      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 100%)
-    `;
-
-    targetCell.appendChild(earth);
+  function startInactivityTimer() {
+    clearInactivityTimer();
+    inactivityTimer = setTimeout(() => {
+      SILENCED = true;
+      document.querySelector('.audio-controls')?.classList.add('hidden');
+    }, INACTIVITY_MS);
   }
 
-  // 🌍 Ejecutar al cargar
-  document.addEventListener("DOMContentLoaded", placeEarth);
+  function clearInactivityTimer() {
+    if (inactivityTimer) { clearTimeout(inactivityTimer); inactivityTimer = null; }
+  }
 
-  // 🔁 Actualizar cada hora (por si la pestaña queda abierta)
-  setInterval(placeEarth, 60 * 60 * 1000);
+  async function ensureAudioContext() {
+    if (!audioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new Ctx();
+    }
+    if (audioCtx.state === 'suspended') await audioCtx.resume().catch(()=>{});
+  }
+
+  async function loadBuffer(key) {
+    if (SILENCED) throw new Error('silenced');
+    if (bufferCache[key]) return bufferCache[key];
+    const url = SOUND_URLS[key];
+    const resp = await fetch(url, { cache: "no-store" });
+    const ab = await resp.arrayBuffer();
+    const buf = await audioCtx.decodeAudioData(ab.slice(0));
+    bufferCache[key] = buf;
+    return buf;
+  }
+
+  async function playSound(key, options={}) {
+    try {
+      if (SILENCED) return;
+      await ensureAudioContext();
+      const buffer = await loadBuffer(key);
+      const src = audioCtx.createBufferSource();
+      const gain = audioCtx.createGain();
+      gain.gain.value = options.volume ?? 0.9;
+      src.buffer = buffer;
+      src.connect(gain);
+      gain.connect(audioCtx.destination);
+      src.start(0);
+      src.onended = ()=>{try{src.disconnect();gain.disconnect();}catch(e){}};
+    } catch(e){ console.warn(e); }
+  }
+
+  window.addEventListener('message', e=>{
+    const d = (typeof e.data === 'string') ? JSON.parse(e.data) : e.data;
+    if (!d || !d.type) return;
+    if (d.type==='play' && d.sound) playSound(d.sound, d.options||{});
+    else if (d.type==='resume') {
+      if (!SILENCED) ensureAudioContext().then(()=>Promise.all([
+        loadBuffer('menu').catch(()=>{}),
+        loadBuffer('logo').catch(()=>{})
+      ]));
+    }
+  });
+
+  const enableBtn = document.getElementById('enableBtn');
+  enableBtn.addEventListener('click', async ()=>{
+    clearInactivityTimer();
+    if (SILENCED) return document.querySelector('.audio-controls')?.classList.add('hidden');
+    await ensureAudioContext();
+    await Promise.all([loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
+    document.querySelector('.audio-controls')?.classList.add('hidden');
+  });
+
+  const silenceBtn = document.getElementById('silenceBtn');
+  silenceBtn.addEventListener('click', ()=>{
+    clearInactivityTimer();
+    SILENCED = true;
+    document.querySelector('.audio-controls')?.classList.add('hidden');
+  });
+
+  startInactivityTimer();
+  const c = document.querySelector('.audio-controls');
+  ['mousemove','mouseenter','focus','touchstart'].forEach(evt=>{
+    c?.addEventListener(evt, ()=>{
+      if (!SILENCED && !c.classList.contains('hidden')) startInactivityTimer();
+    }, {passive:true});
+  });
+})();
 </script>
+</body>
+</html>
