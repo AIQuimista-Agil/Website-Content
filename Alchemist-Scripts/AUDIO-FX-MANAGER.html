@@ -181,16 +181,26 @@
   const INACTIVITY_MS = 33000;
   let inactivityTimer = null;
 
+  const essentialSounds = ['menu','logo','button'];
+  const ambientSounds = ['egypt','flames','rain','space','travel','phoenix','submachine'];
+
+  // 🔸 Mapa de sonidos activos
+  const activeSources = new Map();
+
   function startInactivityTimer() {
     clearInactivityTimer();
     inactivityTimer = setTimeout(() => {
       SILENCED = true;
       document.querySelector('.audio-controls')?.classList.add('hidden');
+      stopAllSounds();
     }, INACTIVITY_MS);
   }
 
   function clearInactivityTimer() {
-    if (inactivityTimer) { clearTimeout(inactivityTimer); inactivityTimer = null; }
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = null;
+    }
   }
 
   async function ensureAudioContext() {
@@ -201,17 +211,32 @@
     if (audioCtx.state === 'suspended') await audioCtx.resume().catch(()=>{});
   }
 
+  function fetchArrayBufferWithTimeout(url, ms = 20000) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(()=>reject(new Error('fetch-timeout')), ms);
+      fetch(url, {cache: 'no-store'})
+        .then(r => {
+          clearTimeout(timer);
+          if (!r.ok) return reject(new Error('fetch-failed'));
+          return r.arrayBuffer();
+        })
+        .then(ab => resolve(ab))
+        .catch(err => { clearTimeout(timer); reject(err); });
+    });
+  }
+
   async function loadBuffer(key) {
     if (SILENCED) throw new Error('silenced');
     if (bufferCache[key]) return bufferCache[key];
     const url = SOUND_URLS[key];
-    const resp = await fetch(url, { cache: "no-store" });
-    const ab = await resp.arrayBuffer();
+    const ab = await fetchArrayBufferWithTimeout(url, 25000);
+    await ensureAudioContext();
     const buf = await audioCtx.decodeAudioData(ab.slice(0));
     bufferCache[key] = buf;
     return buf;
   }
 
+  // 🔊 Reproducir sonido único
   async function playSound(key, options={}) {
     try {
       if (SILENCED) return;
@@ -224,49 +249,109 @@
       src.connect(gain);
       gain.connect(audioCtx.destination);
       src.start(0);
-      src.onended = ()=>{try{src.disconnect();gain.disconnect();}catch(e){}};
-    } catch(e){ console.warn(e); }
+      src.onended = ()=>{ try{src.disconnect();gain.disconnect();}catch(e){} };
+    } catch(e){ console.warn('playSound', e); }
   }
 
+  // 🔁 Reproducir en loop y guardar referencia
+  async function startLoop(key, options={}) {
+    try {
+      if (SILENCED) return;
+      await ensureAudioContext();
+      stopSound(key); // detener si ya está sonando
+      const buffer = await loadBuffer(key);
+      const src = audioCtx.createBufferSource();
+      const gain = audioCtx.createGain();
+      gain.gain.value = options.volume ?? 0.9;
+      src.buffer = buffer;
+      src.loop = true;
+      src.connect(gain);
+      gain.connect(audioCtx.destination);
+      src.start(0);
+      activeSources.set(key, {src, gain});
+    } catch(e){ console.warn('startLoop', e); }
+  }
+
+  // ⛔ Detener sonido específico
+  function stopSound(key) {
+    const entry = activeSources.get(key);
+    if (entry) {
+      try {
+        entry.src.stop(0);
+        entry.src.disconnect();
+        entry.gain.disconnect();
+      } catch(e){}
+      activeSources.delete(key);
+    }
+  }
+
+  // 🚫 Detener todos los sonidos activos
+  function stopAllSounds() {
+    for (const key of activeSources.keys()) stopSound(key);
+  }
+
+  // Carga en background
+  function scheduleBackgroundLoad(keys) {
+    const runner = () => {
+      for (const k of keys) loadBuffer(k).catch(()=>{});
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(runner, {timeout: 30000});
+    } else {
+      setTimeout(runner, 1500);
+    }
+  }
+
+  // 📩 Escuchar mensajes desde Wix
   window.addEventListener('message', e=>{
-    const d = (typeof e.data === 'string') ? JSON.parse(e.data) : e.data;
+    let d;
+    try { d = (typeof e.data === 'string') ? JSON.parse(e.data) : e.data; } catch(_) { return; }
     if (!d || !d.type) return;
-    if (d.type==='play' && d.sound) playSound(d.sound, d.options||{});
-    else if (d.type==='resume') {
-      if (!SILENCED) ensureAudioContext().then(()=>Promise.all([
-        // ABOUT ME _______________________________________________________________________________________
-        loadBuffer('egypt').catch(()=>{}),
-        loadBuffer('flames').catch(()=>{}),
-        loadBuffer('rain').catch(()=>{}),
-        loadBuffer('space').catch(()=>{}),
-        loadBuffer('travel').catch(()=>{}),
-        // FOOTER _________________________________________________________________________________________
-        loadBuffer('button').catch(()=>{}),
-        loadBuffer('phoenix').catch(()=>{}),
-        loadBuffer('submachine').catch(()=>{}),
-        // HEADER _________________________________________________________________________________________
-        loadBuffer('menu').catch(()=>{}),
-        loadBuffer('logo').catch(()=>{})
-      ]));
+
+    switch (d.type) {
+      case 'play':
+        if (d.sound) playSound(d.sound, d.options||{});
+        break;
+      case 'startLoop':
+        if (d.sound) startLoop(d.sound, d.options||{});
+        break;
+      case 'stop':
+        if (d.sound) stopSound(d.sound);
+        break;
+      case 'stopAll':
+        stopAllSounds();
+        break;
+      case 'resume':
+        if (!SILENCED) {
+          ensureAudioContext().then(()=>{
+            Promise.all(essentialSounds.map(s=>loadBuffer(s).catch(()=>{})))
+              .then(()=> scheduleBackgroundLoad(ambientSounds));
+          }).catch(()=>{});
+        }
+        break;
     }
   });
 
+  // 🎚️ Botones
   const enableBtn = document.getElementById('enableBtn');
-  enableBtn.addEventListener('click', async ()=>{
+  enableBtn?.addEventListener('click', async ()=>{
     clearInactivityTimer();
-    if (SILENCED) return document.querySelector('.audio-controls')?.classList.add('hidden');
+    if (SILENCED) {
+      document.querySelector('.audio-controls')?.classList.add('hidden');
+      return;
+    }
     await ensureAudioContext();
-    // ____________________________________________________________________________________________________
-    await Promise.all([loadBuffer('egypt').catch(()=>{}), loadBuffer('flames').catch(()=>{}), loadBuffer('rain').catch(()=>{}), loadBuffer('space').catch(()=>{}), loadBuffer('travel').catch(()=>{}), 
-                       loadBuffer('button').catch(()=>{}), loadBuffer('phoenix').catch(()=>{}), loadBuffer('submachine').catch(()=>{}), loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
+    await Promise.all(essentialSounds.map(s => loadBuffer(s).catch(()=>{})));
     document.querySelector('.audio-controls')?.classList.add('hidden');
+    scheduleBackgroundLoad(ambientSounds);
   });
 
   const silenceBtn = document.getElementById('silenceBtn');
-  silenceBtn.addEventListener('click', ()=>{
+  silenceBtn?.addEventListener('click', ()=>{
     clearInactivityTimer();
     SILENCED = true;
     document.querySelector('.audio-controls')?.classList.add('hidden');
+    stopAllSounds();
   });
 
   startInactivityTimer();
