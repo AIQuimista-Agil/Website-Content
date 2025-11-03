@@ -155,6 +155,18 @@
 
 (() => {
   const SOUND_URLS = {
+    // ABOUT ME _______________________________________________________________________________________
+    egypt: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Egypt.mp3",
+    flames: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Fire-Sound.mp3",
+    rain: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Rain-Sound.mp3",
+    space: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Stars-Like-Dust.mp3",
+    travel: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Close-To-Heaven.mp3",
+    
+    // FOOTER _________________________________________________________________________________________
+    button: "https://aiquimista-agil.github.io/Website-Content/Footer/Click-Button.mp3",
+    phoenix: "https://aiquimista-agil.github.io/Website-Content/Footer/Phoenix-Cry.mp3",
+    submachine: "https://aiquimista-agil.github.io/Website-Content/Footer/Submachine-Sound.mp3",
+    
     // HEADER _________________________________________________________________________________________
     menu: "https://aiquimista-agil.github.io/Website-Content/Header/Light-Switch.mp3",
     logo: "https://aiquimista-agil.github.io/Website-Content/Header/FX-Light.mp3"
@@ -222,6 +234,17 @@
     if (d.type==='play' && d.sound) playSound(d.sound, d.options||{});
     else if (d.type==='resume') {
       if (!SILENCED) ensureAudioContext().then(()=>Promise.all([
+        // ABOUT ME _______________________________________________________________________________________
+        loadBuffer('egypt').catch(()=>{}),
+        loadBuffer('flames').catch(()=>{}),
+        loadBuffer('rain').catch(()=>{}),
+        loadBuffer('space').catch(()=>{}),
+        loadBuffer('travel').catch(()=>{}),
+        // FOOTER _________________________________________________________________________________________
+        loadBuffer('button').catch(()=>{}),
+        loadBuffer('phoenix').catch(()=>{}),
+        loadBuffer('submachine').catch(()=>{}),
+        // HEADER _________________________________________________________________________________________
         loadBuffer('menu').catch(()=>{}),
         loadBuffer('logo').catch(()=>{})
       ]));
@@ -233,7 +256,9 @@
     clearInactivityTimer();
     if (SILENCED) return document.querySelector('.audio-controls')?.classList.add('hidden');
     await ensureAudioContext();
-    await Promise.all([loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
+    // ____________________________________________________________________________________________________
+    await Promise.all([loadBuffer('egypt').catch(()=>{}), loadBuffer('flames').catch(()=>{}), loadBuffer('rain').catch(()=>{}), loadBuffer('space').catch(()=>{}), loadBuffer('travel').catch(()=>{}), 
+                       loadBuffer('button').catch(()=>{}), loadBuffer('phoenix').catch(()=>{}), loadBuffer('submachine').catch(()=>{}), loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
     document.querySelector('.audio-controls')?.classList.add('hidden');
   });
 
