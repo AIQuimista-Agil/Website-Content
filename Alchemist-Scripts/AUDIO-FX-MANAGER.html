@@ -257,7 +257,7 @@
     if (SILENCED) return document.querySelector('.audio-controls')?.classList.add('hidden');
     await ensureAudioContext();
     // ____________________________________________________________________________________________________
-    await Promise.all([loadBuffer('egypt').catch(()=>{}), loadBuffer('flames').catch(()=>{}), loadBuffer('rain').catch(()=>{}), loadBuffer('space').catch(()=>{}), loadBuffer('travel').catch(()=>{}), 
+    await Promise.all([//loadBuffer('egypt').catch(()=>{}), loadBuffer('flames').catch(()=>{}), loadBuffer('rain').catch(()=>{}), loadBuffer('space').catch(()=>{}), loadBuffer('travel').catch(()=>{}), 
                        loadBuffer('button').catch(()=>{}), loadBuffer('phoenix').catch(()=>{}), loadBuffer('submachine').catch(()=>{}), loadBuffer('menu').catch(()=>{}), loadBuffer('logo').catch(()=>{})]);
     document.querySelector('.audio-controls')?.classList.add('hidden');
   });
