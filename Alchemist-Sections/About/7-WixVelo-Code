@@ -1,0 +1,26 @@
+// Referencia de la API de Velo: https://www.wix.com/velo/reference/api-overview/introduction
+
+// ___________________________________________________________________________________________________
+// ACERCA DE | AI.QUIMISTA AGIL
+// _________________________________________________________________________
+
+$w.onReady(function () {
+
+// STOP ABOUT ME AUDIOS _________________________________________________
+  const IFRAME_ID = "#htmlAudioFX";
+  function postToAudioManager(message) {
+    try {
+      const $iframe = $w(IFRAME_ID);
+      if ($iframe) $iframe.postMessage(message);
+    } catch (e) {
+      // no hace falta loguear en producción
+    }
+  }
+
+  // Detener sólo los ambientes que mencionaste
+  const ambientKeys = ['rain','egypt','space','flames','travel'];
+  ambientKeys.forEach(k => postToAudioManager({ type: 'stop', sound: k }));
+
+  // Como respaldo, pedir stopAll breve
+  postToAudioManager({ type: 'stopAll' });
+});
