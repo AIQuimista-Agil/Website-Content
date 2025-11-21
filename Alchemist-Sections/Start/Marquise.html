@@ -3,98 +3,105 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Marquesina - Display Digital</title>
+  <title>Marquesina - Panel LED Stadium</title>
   <style>
-    /* -----------------------------
-       CONFIGURACIÓN RÁPIDA
-       Ajusta estas variables si quieres cambiar velocidad, tamaño o colores
-       ----------------------------- */
     :root{
-      --bg:#050306;                 /* fondo oscuro tipo display */
-      --track-height: 84px;         /* altura del display en escritorio */
-      --track-height-mobile: 56px;  /* altura en móviles */
-      --gap: 4rem;                  /* espacio entre repeticiones para loop */
-      --speed-desktop: 20s;         /* duración del ciclo (más = más lento) */
-      --speed-mobile: 12s;
-      --glow-color: #ffdd33;        /* base para el brillo */
-      --accent1: #ffd34d;          /* amarillo claro */
-      --accent2: #ffb347;          /* naranja */
-      --accent3: #ff8a33;          /* rojo-naranja para fuego */
-      --flicker-intensity: 0.12;    /* qué tanto fluctúa el brillo */
+      --bg-transparent: transparent;
+      --track-height-desktop: 110px;
+      --track-height-mobile: 72px;
+      --gap: 4rem;
+      --speed: 28s;              /* velocidad: mayor = más lento */
+      --led-size: 8px;          /* tamaño de cada "LED" en la rejilla */
+      --glow-color: #ffb44d;
+      --accent1: #fff1a8;
+      --accent2: #ffd24a;
+      --accent3: #ff9133;
+      --metal1: #555;           /* metal frame */
+      --metal2: #2b2b2b;
+      --panel-depth: 18px;
     }
 
-    /* Reset y contenedor */
+    /* Reset */
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background: transparent;font-family: "Lucida Console", Monaco, monospace;}
+    html,body{height:100%;margin:0;background:var(--bg-transparent);font-family: 'Orbitron', 'Audiowide', "Lucida Console", monospace;color:#fff}
 
+    /* Center everything full-screen */
     .marquee-wrap{
       width:100%;
       height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:0;
-      background: radial-gradient(circle at center, rgba(255,120,0,0.15), transparent 70%);
+      padding:0 20px;
+      background: radial-gradient(circle at center, rgba(255,120,0,0.03), transparent 60%);
     }
 
-    /* El "display" con bordes redondeados y efecto retro */
+    /* Outer metallic frame */
     .display{
-      width:clamp(320px, 90vw, 1400px);
-      border-radius:18px;
-      padding:10px;
-      background: #000;
-      border: 2px solid #3a3a3a;
+      width:100%;
+      max-width:100%;
+      border-radius:26px;
+      padding:18px;
+      background: linear-gradient(180deg, #0a0a0a 0%, #020202 100%);
+      border: 6px solid rgba(120,120,120,0.95);
       box-shadow:
-        0 0 25px rgba(0,0,0,0.9),
-        inset 0 0 12px rgba(255,255,255,0.06);
+        0 30px 80px rgba(0,0,0,0.85),
+        0 0 120px rgba(255,120,0,0.08),
+        inset 0 8px 30px rgba(0,0,0,0.9);
       position: relative;
-    }
-    .display::before{
-      content:"";
-      position:absolute;
-      top:0; left:0; right:0; height:35%;
-      background:linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0));
-      border-radius:18px;
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
-    .display::after{
-      content:"";
-      position:absolute;
-      top:-6px; left:-6px;
-      width:12px; height:12px;
-      background:#888;
-      border-radius:50%;
-      box-shadow:
-        calc(100% - 12px) 0 #888,
-        0 calc(100% - 12px) #888,
-        calc(100% - 12px) calc(100% - 12px) #888;
+      overflow: visible;
+      display:block;
     }
 
-    /* Pista de movimiento */
+    /* Brushed metal texture */
+    .display::before{
+      content: "";
+      position:absolute; inset:0; border-radius:22px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.00) 50%, rgba(255,255,255,0.02) 100%);
+      background-size: 6px 6px; pointer-events:none; mix-blend-mode:overlay; z-index:4;
+    }
+
+    /* Screws */
+    .display::after{ content:""; position:absolute; inset:8px; border-radius:18px; pointer-events:none; }
+    .screws{position:absolute; inset:0; pointer-events:none; z-index:6}
+    .screw{position:absolute;width:14px;height:14px;background:linear-gradient(180deg,#999,#666);border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.6);}
+    .screw:before{content:"";position:absolute;left:4px;right:4px;top:6px;height:2px;background:rgba(0,0,0,0.35);border-radius:2px}
+    .screw.tl{left:10px;top:10px}
+    .screw.tr{right:10px;top:10px}
+    .screw.bl{left:10px;bottom:10px}
+    .screw.br{right:10px;bottom:10px}
+
+    /* Inner track: panel profundo */
     .track{
       position:relative;
       overflow:hidden;
-      height:var(--track-height);
-      border-radius:12px;
-      background: #000;
-      box-shadow: inset 0 0 40px rgba(255,150,0,0.02);
+      height:var(--track-height-desktop);
+      border-radius:14px;
+      background: linear-gradient(180deg,#050505 0%, #000 100%);
+      box-shadow: inset 0 18px 40px rgba(0,0,0,0.9), inset 0 -6px 24px rgba(0,0,0,0.8), 0 10px 40px rgba(0,0,0,0.6);
       display:flex;
       align-items:center;
+      z-index:2;
+      padding: 10px 6px;
+      transform: translateZ(0);
     }
 
-    /* Efecto de plantilla LED / rejilla sutil */
+    /* LED grid overlay to simulate stadium panel (denser) */
     .track::before{
-      content:"";
-      position:absolute;left:0;top:0;right:0;bottom:0;
+      content:""; position:absolute; inset:0;border-radius:12px;
       background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 2px);
-      background-size: 8px 8px;
-      opacity:0.25;
-      pointer-events:none;
-      mix-blend-mode:overlay;
+      background-size: calc(var(--led-size) * 1px) calc(var(--led-size) * 1px);
+      opacity:0.55; mix-blend-mode:screen; pointer-events:none; z-index:3;
     }
 
-    /* El contenido en movimiento */
+    /* Ambient glow outside the panel */
+    .display .ambient{
+      position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); pointer-events:none; z-index:1;
+      height:120%; filter:blur(40px); opacity:0.22;
+      background: linear-gradient(90deg, rgba(255,160,60,0.35), rgba(255,80,0,0.12));
+    }
+
+    /* Ticker container (duplicated content for perfect loop) */
     .ticker{
       display:flex;
       align-items:center;
@@ -103,72 +110,103 @@
       position:relative;
       left:0;
       will-change: transform;
-      animation: scroll 20s linear infinite;
+      animation: scroll var(--speed) linear infinite;
+      z-index:5;
     }
 
-    /* El estilo del texto tipo display digital con gradiente sobre texto y brillo */
+    .group{display:flex;align-items:center;gap:var(--gap)}
+
+    /* Text style: simulate 16-segment / LED with strokes */
     .item{
-      font-size: clamp(18px, 3.2vw, 36px);
-      font-weight:700;
+      font-size: clamp(16px, 3.6vw, 44px);
+      font-weight:800;
       letter-spacing:2px;
       text-transform:uppercase;
-      padding:0 6px;
+      padding:0 4px;
       display:inline-block;
       line-height:1;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      background-clip: text;
       color: transparent;
-      text-shadow:
-        0 0 4px rgba(255,200,80,0.35),
-        0 0 9px rgba(255,120,20,0.25),
-        0 0 1px #000,
-        1px 0 0 rgba(255,80,0,0.4),
-        -1px 0 0 rgba(255,80,0,0.4),
-        0 1px 0 rgba(255,80,0,0.4),
-        0 -1px 0 rgba(255,80,0,0.4);
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.7));
+      background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+      -webkit-background-clip:text; background-clip:text;
+      text-shadow: 0 0 8px rgba(255,190,80,0.85), 0 0 22px rgba(255,120,20,0.45), 0 2px 0 rgba(0,0,0,0.7);
+      filter: drop-shadow(0 8px 20px rgba(255,120,0,0.35));
+      font-family: 'Orbitron', 'Audiowide', sans-serif;
       transform: translateZ(0);
-      font-family: 'Orbitron', 'Audiowide', "Lucida Console", monospace;
-      animation: flicker calc(var(--speed-desktop) / 4) infinite; animation-timing-function: steps(6, end);}
-
-    /* Movimiento horizontal: desde 0 -> -50% (porque duplicamos contenido) */
-    @keyframes scroll {
-      0%   { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-      100% { transform: translateX(-50%); }
+      z-index:6;
+      /* subtle 16-seg look using text-stroke fallback */
+      -webkit-text-stroke: 0.8px rgba(0,0,0,0.7);
     }
 
-    /* Ajustes para móviles: pista más baja, texto más pequeño y velocidad distinta */
+    .sep{opacity:0.95;padding:0 8px}
+
+    /* Flicker / fuego (encendido/apagado) */
+    @keyframes powerFlicker {
+      0% { opacity:0; filter:brightness(0.2) saturate(0.6); }
+      6% { opacity:1; filter:brightness(1.8) saturate(1.4); }
+      12% { opacity:0.6; filter:brightness(0.9); }
+      18% { opacity:1; filter:brightness(1.6); }
+      26% { opacity:0.78; }
+      40% { opacity:1; filter:brightness(1.2); }
+      100%{ opacity:1; }
+    }
+
+    /* Continuous subtle flicker overlay on items for glow realism */
+    @keyframes subtleFlicker {
+      0% { filter:brightness(1) saturate(1); }
+      30% { filter:brightness(1.18) saturate(1.12); }
+      60% { filter:brightness(0.95) saturate(0.95); }
+      100% { filter:brightness(1) saturate(1); }
+    }
+
+    .item{ animation: subtleFlicker 6s infinite ease-in-out; }
+
+    /* Animation for the on/off power sequence on load */
+    .power-on .item{ animation-name: powerFlicker, subtleFlicker; animation-duration: 3s, 6s; animation-fill-mode: both, none; animation-iteration-count: 1, infinite; }
+
+    /* Scroll: move left by 50% because content is duplicated */
+    @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* Make speed slower on mobile slightly */
     @media (max-width:720px){
-      :root{--track-height:var(--track-height-mobile)}
-      .item{font-size: clamp(14px, 4.2vw, 22px); animation-duration: calc(var(--speed-mobile) / 4)}
+      .track{ height: var(--track-height-mobile); }
+      :root{ --speed: 20s; }
+      .item{ font-size: clamp(14px, 4.6vw, 26px); }
     }
 
-    /* preferencia de reducir movimiento */
+    /* reduced motion */
     @media (prefers-reduced-motion: reduce){
-      .ticker { animation: none !important; }
-      .item { animation: none !important; }
+      .ticker{ animation: none !important; }
+      .item{ animation: none !important; }
     }
+
+    /* small 'depth' shadow inside to simulate deep cavity */
+    .panel-depth{ position:absolute; inset:10px; border-radius:12px; pointer-events:none; box-shadow: inset 0 30px 60px rgba(0,0,0,0.9); z-index:3 }
 
   </style>
 </head>
 <body>
 
-  <!--
-    Marquesina / Display Digital
-    - El texto se duplica para crear un loop continuo
-    - Cambia las variables en :root para ajustar color, velocidad y tamaño
-  -->
-
   <div class="marquee-wrap">
-    <div class="display" role="region" aria-label="Marquesina digital">
-      <div class="track" aria-hidden="false">
-        <!-- El contenido se envuelve en .ticker. Duplicamos .group para un loop perfecto -->
+    <div class="display power-on" role="region" aria-label="Marquesina LED tipo stadium">
+
+      <!-- ambient glow -->
+      <div class="ambient"></div>
+
+      <!-- screws -->
+      <div class="screws" aria-hidden="true">
+        <div class="screw tl"></div>
+        <div class="screw tr"></div>
+        <div class="screw bl"></div>
+        <div class="screw br"></div>
+      </div>
+
+      <!-- panel depth -->
+      <div class="panel-depth"></div>
+
+      <div class="track">
         <div class="ticker" id="ticker">
 
-          <div class="group" aria-hidden="false">
+          <div class="group">
             <span class="item">12 GRECO-ROMAN DEITIES</span>
             <span class="item sep">|</span>
             <span class="item">♈︎ ARES</span>
@@ -197,7 +235,7 @@
             <span class="item sep">|</span>
           </div>
 
-          <!-- copia exacta para loop continuo -->
+          <!-- duplicate for continuous loop -->
           <div class="group" aria-hidden="true">
             <span class="item">12 GRECO-ROMAN DEITIES</span>
             <span class="item sep">|</span>
@@ -229,50 +267,47 @@
 
         </div>
       </div>
+
     </div>
   </div>
 
   <script>
-    /* Script para aplicar la animación de desplazamiento con duración según el ancho de la pantalla
-       - No usa librerías externas
-       - Ajusta --speed-desktop / --speed-mobile en :root para cambiar velocidad global
-    */
+    // Ajustes JS: hacemos un encendido tipo fuego y nos aseguramos que el loop sea fluido
     (function(){
+      const display = document.querySelector('.display');
       const ticker = document.getElementById('ticker');
-      const root = document.documentElement;
 
-      function applyAnimation(){
-        // calculamos el ancho combinado del contenido para definir una duración proporcional
-        const group = ticker.querySelector('.group');
-        if(!group) return;
-        // ancho del contenido
-        const contentWidth = group.getBoundingClientRect().width + parseFloat(getComputedStyle(root).getPropertyValue('--gap'));
-
-        // definimos velocidad base en px/seg (aproxeticamente)
-        const isMobile = window.matchMedia('(max-width:720px)').matches;
-        const baseDuration = isMobile ? parseFloat(getComputedStyle(root).getPropertyValue('--speed-mobile')) : parseFloat(getComputedStyle(root).getPropertyValue('--speed-desktop'));
-
-        // Para que el movimiento se sienta estable y "normal" ajustamos duration en función del contenido
-        // cuanto mayor sea el contenido, más tarda en desplazarse (pero respetando la variable base)
-        const duration = baseDuration;
-
-        // aplicamos la animación CSS con la duración elegida
-        ticker.style.animation = `scroll ${duration} linear infinite`;
-
-        // Ajustamos también la animación flicker a una fracción de la duración
-        document.querySelectorAll('.item').forEach(it => {
-          it.style.animationDuration = `${Math.max(2, duration/4)}s`;
-        });
-      }
-
-      // reevaluar en resize
-      window.addEventListener('load', applyAnimation);
-      window.addEventListener('resize', () => { window.requestAnimationFrame(applyAnimation); });
-
-      // Pequeño hack: si el usuario prefiere reducir movimiento, anulamos la animación
+      // Si el usuario prefiere reducir movimiento lo respetamos
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         ticker.style.animation = 'none';
       }
+
+      // Power-on: clase .power-on ya presente; quitamos la clase tras la secuencia para dejar animaciones sutiles
+      setTimeout(()=>{
+        display.classList.remove('power-on');
+      }, 2800);
+
+      // Ajuste automático de velocidad según contenido (mantiene --speed pero evita saltos con textos largos)
+      function recompute(){
+        const groups = ticker.querySelectorAll('.group');
+        if(groups.length < 2) return;
+        const g0 = groups[0];
+        const width = g0.getBoundingClientRect().width;
+        // Queremos que el whole cycle (desplazamiento de una copia completa) dure aproximadamente var(--speed)
+        const cssSpeed = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--speed')) || 28;
+        // Aplicamos la animación con esa duración: (kept as var) but ensure ticker width enough
+        ticker.style.animationDuration = `var(--speed)`;
+      }
+
+      window.addEventListener('load', recompute);
+      window.addEventListener('resize', () => { window.requestAnimationFrame(recompute); });
+
+      // Accessibility: pause on focus/hover
+      ticker.addEventListener('mouseenter', ()=> ticker.style.animationPlayState = 'paused');
+      ticker.addEventListener('mouseleave', ()=> ticker.style.animationPlayState = 'running');
+      ticker.addEventListener('focusin', ()=> ticker.style.animationPlayState = 'paused');
+      ticker.addEventListener('focusout', ()=> ticker.style.animationPlayState = 'running');
+
     })();
   </script>
 
