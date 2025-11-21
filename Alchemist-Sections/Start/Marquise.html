@@ -42,9 +42,33 @@
       width:clamp(320px, 90vw, 1400px);
       border-radius:18px;
       padding:10px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 2px 10px rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.04);
+      background: #000;
+      border: 2px solid #3a3a3a;
+      box-shadow:
+        0 0 25px rgba(0,0,0,0.9),
+        inset 0 0 12px rgba(255,255,255,0.06);
+      position: relative;
+    }
+    .display::before{
+      content:"";
+      position:absolute;
+      top:0; left:0; right:0; height:35%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0));
+      border-radius:18px;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+    .display::after{
+      content:"";
+      position:absolute;
+      top:-6px; left:-6px;
+      width:12px; height:12px;
+      background:#888;
+      border-radius:50%;
+      box-shadow:
+        calc(100% - 12px) 0 #888,
+        0 calc(100% - 12px) #888,
+        calc(100% - 12px) calc(100% - 12px) #888;
     }
 
     /* Pista de movimiento */
@@ -63,9 +87,9 @@
     .track::before{
       content:"";
       position:absolute;left:0;top:0;right:0;bottom:0;
-      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.02) 1px, transparent 2px);
-      background-size: 12px 12px;
-      opacity:0.12;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 2px);
+      background-size: 8px 8px;
+      opacity:0.25;
       pointer-events:none;
       mix-blend-mode:overlay;
     }
@@ -78,15 +102,15 @@
       white-space:nowrap;
       position:relative;
       left:0;
-      /* animate: se reasigna en JS/CSS según pantalla */
       will-change: transform;
+      animation: scroll 20s linear infinite;
     }
 
     /* El estilo del texto tipo display digital con gradiente sobre texto y brillo */
     .item{
       font-size: clamp(18px, 3.2vw, 36px);
       font-weight:700;
-      letter-spacing:1px;
+      letter-spacing:2px;
       text-transform:uppercase;
       padding:0 6px;
       display:inline-block;
@@ -96,34 +120,17 @@
       background-clip: text;
       color: transparent;
       text-shadow:
-        0 0 6px rgba(255,200,80,0.25),
-        0 0 12px rgba(255,150,20,0.12);
-      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.6));
+        0 0 4px rgba(255,200,80,0.35),
+        0 0 9px rgba(255,120,20,0.25),
+        0 0 1px #000,
+        1px 0 0 rgba(255,80,0,0.4),
+        -1px 0 0 rgba(255,80,0,0.4),
+        0 1px 0 rgba(255,80,0,0.4),
+        0 -1px 0 rgba(255,80,0,0.4);
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.7));
       transform: translateZ(0);
       font-family: 'Orbitron', 'Audiowide', "Lucida Console", monospace;
-    }
-
-    /* Falso borde de segmentos («look digital») usando text-stroke para navegadores que lo soporten */
-    .item::selection{background:none}
-
-    /* Resaltar separadores verticales para que se vean como pipas del display */
-    .sep{opacity:0.92;padding:0 8px}
-
-    /* Duplicamos el mismo bloque para que parezca un loop continuo */
-    .ticker .group{display:flex;align-items:center;gap:var(--gap)}
-
-    /* Brillo/Parpadeo tipo fuego: pequeña animación que altera la opacidad y escala del texto */
-    @keyframes flicker {
-      0%   { opacity:1; transform:translateY(0) scale(1); filter:brightness(1); }
-      4%   { opacity:0.92; transform:translateY(-1px) scale(1.01); filter:brightness(1.06); }
-      10%  { opacity:0.98; transform:translateY(0) scale(1); filter:brightness(1.02); }
-      14%  { opacity:0.88; transform:translateY(1px) scale(0.995); filter:brightness(0.98); }
-      20%  { opacity:1; transform:translateY(0) scale(1); }
-      100% { opacity:1; }
-    }
-
-    /* aplicamos flicker al texto con intensidad variable */
-    .item{animation: flicker calc(var(--speed-desktop) / 4) infinite; animation-timing-function: steps(6, end);}
+      animation: flicker calc(var(--speed-desktop) / 4) infinite; animation-timing-function: steps(6, end);}
 
     /* Movimiento horizontal: desde 0 -> -50% (porque duplicamos contenido) */
     @keyframes scroll {
