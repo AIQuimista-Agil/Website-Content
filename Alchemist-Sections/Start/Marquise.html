@@ -25,14 +25,16 @@
 
     /* Reset y contenedor */
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:var(--bg);font-family: "Lucida Console", Monaco, monospace;}
+    html,body{height:100%;margin:0;background: transparent;font-family: "Lucida Console", Monaco, monospace;}
 
     .marquee-wrap{
       width:100%;
+      height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:2rem 1rem;
+      padding:0;
+      background:transparent;
     }
 
     /* El "display" con bordes redondeados y efecto retro */
@@ -51,7 +53,7 @@
       overflow:hidden;
       height:var(--track-height);
       border-radius:12px;
-      background: linear-gradient(180deg,#060407 0%, #091018 100%);
+      background: #000;
       box-shadow: inset 0 0 40px rgba(255,150,0,0.02);
       display:flex;
       align-items:center;
@@ -125,7 +127,9 @@
 
     /* Movimiento horizontal: desde 0 -> -50% (porque duplicamos contenido) */
     @keyframes scroll {
-      0%   { transform: translateX(0); }
+      0%   { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
       100% { transform: translateX(-50%); }
     }
 
@@ -264,5 +268,6 @@
       }
     })();
   </script>
+
 </body>
 </html>
