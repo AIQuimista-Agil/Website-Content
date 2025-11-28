@@ -180,6 +180,36 @@
       .section h2 { font-size: 18px; }
       button { font-size: 13px; padding: 10px 14px; }
     }
+    /*___________________________________________________________________________*/
+    /* Scrollbar Neón Verde personalizado */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 30, 15, 0.3);
+  border-radius: 10px;
+  box-shadow: inset 0 0 10px rgba(24, 255, 92, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #18ff5c;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #18ff5c, 0 0 20px #18ff5c;
+  transition: 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22ff77;
+  box-shadow: 0 0 15px #22ff77, 0 0 30px #22ff77;
+}
+
+/* Scrollbar para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #18ff5c rgba(0, 30, 15, 0.3);
+}
+    /*___________________________________________________________________________*/
   </style>
 </head>
 <body>
