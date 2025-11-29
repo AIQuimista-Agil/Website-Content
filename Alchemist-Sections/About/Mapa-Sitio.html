@@ -337,11 +337,19 @@
 
   <footer><p>© 2025 AI.Quimista Ágil | Carlos David Navarro Navarro</p></footer>
 
-  <script>
+ <script> 
     // Abre los enlaces en una nueva ventana separada
-    function abrirVentana(url) {
-      window.open(url, '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no,status=no');
+//    function abrirVentana(url) {
+//      window.open(url, '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no,status=no');
+//    }
+
+  // Abre la URL en una nueva pestaña del mismo navegador y enfoca esa pestaña
+  function abrirPestana(url) {
+    const nuevaPestana = window.open(url, '_blank');
+    if (nuevaPestana && typeof nuevaPestana.focus === 'function') {
+      nuevaPestana.focus();
     }
+  }
   </script>
 
 </body>
