@@ -5,190 +5,177 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Audio | Política de Privacidad</title>
 
-<!-- Fuente Avenir -->
 <style>
 @font-face {
   font-family: 'Avenir';
-  src: local('Avenir'), 
+  src: local('Avenir'),
        url('https://fonts.cdnfonts.com/s/15387/AvenirLTStd-Black.woff') format('woff');
   font-weight: bold;
 }
-</style>
 
-<style>
 :root{
-  --text: #FFFDE3;
-  --hover: #E81F27;
-  --wave1: #ff8a00;
-  --wave2: #ff4500;
-  --wave3: #ffb347;
-  --neon-green: rgba(0,255,120,0.90);
+  --txt: #d9faff;
+  --hover: #ff2d63;
+  --cyan: #00eaff;
+  --magenta: #ff2dfc;
+  --purple: #8a3aff;
 }
 
 html,body{
   height:100%;
   margin:0;
   background: transparent;
-  font-family: "Avenir", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+  font-family:"Avenir", sans-serif;
+  -webkit-font-smoothing:antialiased;
 
-.player-wrap{
-  width:min(420px, 92%);
-  padding:16px;
-  border-radius:20px;
-  background:rgba(255,255,255,0.04);
-  backdrop-filter: blur(8px) saturate(180%);
-  border:1px solid rgba(255,255,255,0.08);
-
-  /* efecto 3D */
-  box-shadow:
-     0 15px 35px rgba(0,0,0,0.55),
-     0 8px 16px rgba(0,0,0,0.35),
-     inset 0 1px 3px rgba(255,255,255,0.15);
-
-  display:flex;
-  gap:14px;
-  align-items:center;
-  transform: translateZ(0);
-}
-
-.cover{
-  width:72px;
-  height:72px;
-  flex:0 0 72px;
-  border-radius:14px;
-  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
-
-  /* halo verde neon */
-  box-shadow:
-    0 0 12px var(--neon-green),
-    0 0 25px var(--neon-green),
-    0 8px 18px rgba(0,0,0,0.55);
 }
-.cover img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  filter: drop-shadow(0 4px 8px rgba(0,255,120,0.35));
+
+.player{
+  width:min(390px,95%);
+  padding:18px 16px;
+  border-radius:18px;
+
+  /* CYBERPUNK */
+  background:rgba(12,14,20,0.55);
+  backdrop-filter: blur(10px) saturate(180%);
+  border:1px solid rgba(0,255,255,0.18);
+  box-shadow:
+     0 0 20px rgba(0,255,255,0.25),
+     0 0 35px rgba(255,0,255,0.15),
+     inset 0 0 18px rgba(0,255,255,0.08);
+
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.header-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
 .title{
-  margin:0 0 6px 0;
-  color:var(--text);
-  font-weight:bold;
+  color:var(--txt);
+  margin:0;
   font-size:15px;
-  text-shadow:0 0 6px rgba(255,255,255,0.15);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  font-weight:bold;
+  letter-spacing:0.5px;
+  text-shadow:0 0 6px rgba(0,255,255,0.25);
+}
+
+.time{
+  color:#c7eaff;
+  font-size:13px;
+  font-weight:bold;
+  opacity:.9;
 }
 
 .controls{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
+  width:100%;
 }
 
-button.playbtn{
-  width:44px;
-  height:44px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:rgba(255,255,255,0.03);
+.playbtn{
+  width:46px;
+  height:46px;
+  border-radius:14px;
   cursor:pointer;
-  color:var(--text);
+  border:1px solid rgba(0,255,255,0.25);
+
+  background:linear-gradient(140deg, rgba(0,255,255,0.15), rgba(255,0,255,0.1));
+  color:var(--txt);
+
   display:grid;
   place-items:center;
-  transition:0.2s ease;
+  transition:0.17s ease;
+
   box-shadow:
-    inset 0 0 10px rgba(255,255,255,0.06),
-    0 6px 14px rgba(0,0,0,0.45);
+     0 0 8px rgba(0,255,255,0.35),
+     inset 0 0 12px rgba(0,255,255,0.25);
 }
-button.playbtn:hover{
+
+.playbtn:hover{
+  transform:scale(1.08);
   color:var(--hover);
-  transform:scale(1.06) translateY(-2px);
+  box-shadow:
+     0 0 14px rgba(255,0,255,0.45),
+     inset 0 0 16px rgba(0,255,255,0.35);
 }
 
-.time{
-  font-size:13px;
-  color:rgba(255,255,255,0.85);
-  font-weight:bold;
-}
-
-/* canvas ondas */
-canvas.wave{
+canvas.waves{
   width:100%;
-  height:50px;
+  height:54px;
   border-radius:10px;
-  background:transparent;
-  margin-top:6px;
+
+  background:rgba(0,0,0,0.2);
+  border:1px solid rgba(0,255,255,0.18);
+
+  box-shadow:
+     inset 0 0 14px rgba(0,255,255,0.15),
+     0 0 22px rgba(255,0,255,0.25);
 }
 
-/* responsive */
+/* MOBILE REDUCTION */
 @media(max-width:420px){
-  .cover{width:60px;height:60px;flex:0 0 60px;}
-  button.playbtn{width:40px;height:40px;}
+  .playbtn{width:42px;height:42px;}
+  .title{font-size:14px;}
 }
 </style>
 </head>
 
 <body>
-<div class="player-wrap" id="player">
-  <div class="cover">
-    <img src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Images/AI%20Logo%20Esmeralda%20-%20Transparente.png">
+
+<div class="player" id="player">
+
+  <div class="header-line">
+    <h1 class="title">Audio | Política de Privacidad</h1>
+    <span class="time" id="time">0:00</span>
   </div>
 
-  <div class="meta">
-    <h1 class="title">Audio | Política de Privacidad</h1>
+  <div class="controls">
+    <button class="playbtn" id="playBtn">
+      <svg id="iconPlay" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z"/>
+      </svg>
+      <svg id="iconPause" width="22" height="22" fill="currentColor" style="display:none" viewBox="0 0 24 24">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+      </svg>
+    </button>
 
-    <div class="controls">
-      <button class="playbtn" id="playBtn" aria-label="Reproducir">
-        <svg id="iconPlay" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <svg id="iconPause" width="20" height="20" fill="currentColor" style="display:none" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-      </button>
-
-      <div style="flex:1;margin-left:6px;">
-        <canvas id="wave" class="wave"></canvas>
-        <div style="display:flex;justify-content:space-between;margin-top:6px;">
-          <span style="color:rgba(255,255,255,0.85);font-size:13px;">Política de Privacidad</span>
-          <span class="time" id="time">0:00</span>
-        </div>
-      </div>
-    </div>
+    <canvas class="waves" id="wave"></canvas>
   </div>
 </div>
 
 <script>
-/* AUDIO */
+/* ---------------- AUDIO ---------------- */
 const audioUrl = "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Records/Politica%20Privacidad.m4a";
 const audio = new Audio(audioUrl);
-audio.crossOrigin = "anonymous";
 audio.preload = "auto";
+audio.crossOrigin = "anonymous";
 
-/* botones */
 const playBtn = document.getElementById("playBtn");
 const iconPlay = document.getElementById("iconPlay");
 const iconPause = document.getElementById("iconPause");
 const timeEl = document.getElementById("time");
 
-/* visualizador */
+/* ----------- WEB AUDIO VISUALIZER ----------- */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const ctx = new AudioContext();
+
 const analyser = ctx.createAnalyser();
 analyser.fftSize = 2048;
 
-const source = ctx.createMediaElementSource(audio);
-source.connect(analyser);
+const src = ctx.createMediaElementSource(audio);
+src.connect(analyser);
 analyser.connect(ctx.destination);
 
-/* canvas */
+/* ----------- CANVAS FX ----------- */
 const canvas = document.getElementById("wave");
 const dpr = window.devicePixelRatio || 1;
 
@@ -196,7 +183,7 @@ canvas.width = canvas.clientWidth * dpr;
 canvas.height = canvas.clientHeight * dpr;
 
 const c = canvas.getContext("2d");
-c.scale(dpr, dpr);
+c.scale(dpr,dpr);
 
 function draw(){
   requestAnimationFrame(draw);
@@ -206,36 +193,34 @@ function draw(){
 
   c.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
 
-  /* fuego dinámico */
+  /* CYBERPUNK GRADIENT */
   const grad = c.createLinearGradient(0,0,canvas.clientWidth,0);
-  grad.addColorStop(0, "#ff8a00");
-  grad.addColorStop(0.5, "#ff4500");
-  grad.addColorStop(1, "#ffb347");
+  grad.addColorStop(0, "#00eaff");
+  grad.addColorStop(0.5, "#ff2dfc");
+  grad.addColorStop(1, "#8a3aff");
 
-  c.lineWidth = 3;
+  c.lineWidth = 2.6;
   c.strokeStyle = grad;
-
   c.beginPath();
+
   const slice = canvas.clientWidth / buffer.length;
-
   for(let i=0;i<buffer.length;i++){
-    const v = buffer[i] / 128.0;
+    const v = buffer[i] / 128;
     const y = (v * canvas.clientHeight/2);
-
     if(i===0) c.moveTo(0,y);
-    else c.lineTo(i * slice, y);
+    else c.lineTo(i*slice, y);
   }
   c.stroke();
 
-  /* brillo suave */
+  /* glow plasma */
   c.globalCompositeOperation = "lighter";
-  c.fillStyle = "rgba(255,120,0,0.06)";
+  c.fillStyle = "rgba(0,255,255,0.06)";
   c.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
   c.globalCompositeOperation = "source-over";
 }
 draw();
 
-/* PLAY / PAUSE */
+/* ----------- BOTÓN PLAY / PAUSE ----------- */
 playBtn.addEventListener("click", async ()=>{
   if(ctx.state === "suspended") await ctx.resume();
 
@@ -250,35 +235,36 @@ playBtn.addEventListener("click", async ()=>{
   }
 });
 
-/* tiempo */
+/* ----------- TIEMPO ----------- */
 audio.addEventListener("timeupdate", ()=>{
   const m = Math.floor(audio.currentTime / 60);
   const s = Math.floor(audio.currentTime % 60).toString().padStart(2,"0");
   timeEl.textContent = `${m}:${s}`;
 });
 
-/* STOP + RESET cuando no está visible */
+/* ----------- AUTOPAUSA + RESET SI NO ES VISIBLE ----------- */
 const player = document.getElementById("player");
 const io = new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(!entry.isIntersecting){
+  entries.forEach(e=>{
+    if(!e.isIntersecting){
       if(!audio.paused){
         audio.pause();
         audio.currentTime = 0;
-        iconPlay.style.display = "block";
-        iconPause.style.display = "none";
+        iconPlay.style.display="block";
+        iconPause.style.display="none";
       }
     }
   });
-},{threshold:0.5});
+},{threshold:0.45});
 io.observe(player);
 
-/* reset cuando termina */
+/* reset al terminar */
 audio.addEventListener("ended", ()=>{
   audio.currentTime = 0;
   iconPlay.style.display="block";
   iconPause.style.display="none";
 });
 </script>
+
 </body>
 </html>
