@@ -285,7 +285,7 @@
     <div class="section">
       <h2>Servicios</h2>
       <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Servicios</button>
+        <button onclick="abrirVentana('https://ai.quimista-agil.com/servicios')">Servicios</button>
       </div>
       <div class="sub-buttons">
         <button onclick="abrirVentana('https://www.test.com')">Profesional</button>
@@ -296,7 +296,7 @@
     <div class="section">
       <h2>Portafolio</h2>
       <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Portafolio</button>
+        <button onclick="abrirVentana('https://ai.quimista-agil.com/portafolio')">Portafolio</button>
       </div>
       <div class="sub-buttons">
         <button onclick="abrirVentana('https://www.test.com')">Profesional</button>
@@ -307,7 +307,7 @@
     <div class="section">
       <h2>Blog</h2>
       <div class="buttons">
-        <button onclick="abrirVentana('https://www.quimista-agil.com/blog')">Blog</button>
+        <button onclick="abrirVentana('https://ai.quimista-agil.com/blog')">Blog</button>
       </div>
       <div class="sub-buttons">
         <button onclick="abrirVentana('https://www.test.com')">Profesional</button>
@@ -318,14 +318,14 @@
     <div class="section">
       <h2>Contacto</h2>
       <div class="buttons">
-        <button onclick="abrirVentana('https://www.test.com')">Ir a Contacto</button>
+        <button onclick="abrirVentana('https://ai.quimista-agil.com/contacto')">Ir a Contacto</button>
       </div>
     </div>
 
     <div class="section">
       <h2>Acerca De</h2>
       <div class="buttons">
-        <button onclick="abrirVentana('https://www.quimista-agil.com/pol%C3%ADtica-de-privacidad')">Acerca de AI.Quimista Ágil</button>
+        <button onclick="abrirVentana('https://ai.quimista-agil.com/acerca-de')">Acerca de AI.Quimista Ágil</button>
       </div>
       <div class="sub-buttons">
         <button onclick="abrirVentana('https://ai.quimista-agil.com/acerca-de#politica-privacidad')">Política de Privacidad</button>
@@ -344,7 +344,7 @@
 //    }
 
   // Abre la URL en una nueva pestaña del mismo navegador y enfoca esa pestaña
-  function abrirPestana(url) {
+  function abrirVentana(url) {
     const nuevaPestana = window.open(url, '_blank');
     if (nuevaPestana && typeof nuevaPestana.focus === 'function') {
       nuevaPestana.focus();
