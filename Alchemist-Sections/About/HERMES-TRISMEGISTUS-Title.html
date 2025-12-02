@@ -85,28 +85,6 @@ body {
 }
 
 /* Estilos originales del texto del terminal */
-.sharetech {
-  font-family: 'Share Tech Mono', monospace;
-  color: var(--text);
-  letter-spacing: 0.40em;
-}
-
-@keyframes fireGlow {
-  0% {
-    text-shadow: 0 0 10px var(--green-1),
-                 0 0 20px #00ff88,
-                 0 0 30px #00ffaa,
-                 0 0 40px #00ff77;
-  }
-  100% {
-    text-shadow: 0 0 20px #00ff99,
-                 0 0 40px #00ff66,
-                 0 0 60px var(--green-1),
-                 0 0 80px #00ff44;
-  }
-}
-
-/* Terminal inferior */
 #terminal {
   width: 100%;
   max-width: 900px;
@@ -123,6 +101,21 @@ body {
   animation: none;
   color: var(--text);
   text-align: center;
+}
+
+@keyframes fireGlow {
+  0% {
+    text-shadow: 0 0 10px var(--green-1),
+                 0 0 20px #00ff88,
+                 0 0 30px #00ffaa,
+                 0 0 40px #00ff77;
+  }
+  100% {
+    text-shadow: 0 0 20px #00ff99,
+                 0 0 40px #00ff66,
+                 0 0 60px var(--green-1),
+                 0 0 80px #00ff44;
+  }
 }
 
 .half.top {
@@ -152,8 +145,8 @@ body {
   <div class="half top">
     <div class="marquee">
       <div class="marquee-content">
-        <span class="cinzel">HERMES TRISMEGISTUS — </span>
-        <span class="sharetech">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. — </span>
+        <span class="cinzel">HERMES TRISMEGISTUS | </span>
+        <span class="terminal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
       </div>
     </div>
   </div>
