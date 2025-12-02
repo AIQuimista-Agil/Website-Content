@@ -32,13 +32,12 @@
       min-height: 100vh;
     }
 
-    /* Contenedor principal que actúa como "tabla" con una fila y dos columnas */
+    /* Contenedor principal: una fila con dos columnas de 50% cada una */
     .title-grid {
       width: 100%;
       max-width: 1200px;
       display: grid;
-      grid-template-columns: 1fr 1fr; /* dos columnas iguales */
-      column-gap: 8vw; /* espacio en blanco en el centro */
+      grid-template-columns: 50% 50%; /* cada columna 50% del ancho */
       align-items: center; /* centra verticalmente el contenido de la fila */
       box-sizing: border-box;
     }
@@ -50,24 +49,13 @@
       font-size: clamp(28px, 6.5vw, 72px);
       text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
       animation: fireGlow 2.5s infinite alternate;
-      letter-spacing: 0.40em; /* espaciado aumentado */
+      letter-spacing: 0.40em;
       text-transform: uppercase;
       display: flex;
-      align-items: center;
-      height: 1em;
+      align-items: center;    /* centra verticalmente dentro de la celda */
+      justify-content: center;/* centra horizontalmente dentro de la celda */
       white-space: nowrap;
-    }
-
-    /* Alineación para que "HERMES" quede pegado al centro (lado derecho de su celda)
-       y "TRISMEGISTUS" pegado al centro (lado izquierdo de su celda) */
-    .left {
-      justify-content: flex-end; /* empuja el texto hacia el centro */
-      padding-right: 0.5rem;
-    }
-
-    .right {
-      justify-content: flex-start; /* empuja el texto hacia el centro */
-      padding-left: 0.5rem;
+      height: 1.2em;
     }
 
     @keyframes fireGlow {
@@ -87,7 +75,7 @@
       }
     }
 
-    /* Terminal / texto secundario (si lo necesitas) */
+    /* Terminal / texto secundario (opcional) */
     #terminal {
       width: 100%;
       max-width: 900px;
@@ -102,13 +90,11 @@
       text-align: center;
     }
 
-    /* Responsive: en pantallas pequeñas apilar las dos palabras verticalmente
-       manteniendo un espacio visual entre ellas */
+    /* Responsive: en pantallas pequeñas apilar las dos palabras verticalmente */
     @media screen and (max-width: 720px) {
       .title-grid {
         grid-template-columns: 1fr;
         row-gap: 0.6rem;
-        column-gap: 0;
       }
       .title-cell {
         justify-content: center;
@@ -127,12 +113,12 @@
 <body>
 
   <div class="title-grid" role="presentation" aria-hidden="true">
-    <div class="title-cell left">HERMES</div>
-    <div class="title-cell right">TRISMEGISTUS</div>
+    <div class="title-cell">HERMES</div>
+    <div class="title-cell">TRISMEGISTUS</div>
   </div>
 
   <div id="terminal" aria-hidden="true">
-    <!-- Texto secundario opcional; si no lo necesitas, puedes eliminar este div -->
+    <!-- Texto secundario opcional -->
   </div>
 
 </body>
