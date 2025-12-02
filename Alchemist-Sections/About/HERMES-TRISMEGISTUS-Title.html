@@ -13,7 +13,6 @@
   --green-1:#18ff5c;
   --green-2:#22ff77;
   --text:#aaffc3;
-  --marquee-duration: 18s; /* ajusta velocidad */
 }
 
 html,body{
@@ -30,50 +29,37 @@ body {
   overflow: hidden;
   text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
   display: flex;
-  align-items: center;
+  align-items: center;   /* ✔ CENTRADO VERTICAL */
   justify-content: center;
   min-height: 100vh;
 }
 
-/* Contenedor que centra verticalmente la marquesina */
-.half.top {
-  width: 100%;
-  display: flex;
-  align-items: center;    /* centra verticalmente */
-  justify-content: center;/* centra horizontalmente */
-  height: calc(100vh - 80px); /* ocupa pantalla menos padding del body */
-  box-sizing: border-box;
-}
-
-/* MARQUESINA CONTINUA SIN HUECOS
-   Usamos duplicado del contenido y animamos -50% para bucle perfecto */
+/* ================================
+   MARQUESINA CONTINUA SIN ESPACIOS
+   ================================ */
 .marquee {
   width: 100%;
   overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* pista que se mueve: contiene dos copias idénticas */
-.marquee-track {
-  display: inline-flex;
   white-space: nowrap;
-  will-change: transform;
-  align-items: center;
-  animation: marqueeMove linear infinite;
-  animation-duration: var(--marquee-duration);
+  position: relative;
 }
 
-/* cada bloque de texto dentro de la pista */
-.marquee-item {
+.marquee-content {
   display: inline-flex;
-  align-items: center;
-  gap: 1.2ch; /* pequeño espacio entre secciones */
+  animation: marqueeScroll 20s linear infinite;
 }
 
-/* Texto Cinzel */
+/* duplicamos contenido para evitar huecos */
+.marquee-content span {
+  margin-right: 2rem;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* mueve solo la mitad, porque hay contenido duplicado */
+}
+
+/* Estilos originales del texto Cinzel */
 .cinzel {
   font-family: 'Cinzel', serif;
   font-size: clamp(28px, 6.5vw, 48px);
@@ -82,102 +68,47 @@ body {
   text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
   animation: fireGlow 2.5s infinite alternate;
   text-transform: uppercase;
-  display: inline-block;
 }
 
-/* Texto secundario (terminal) */
+/* Estilos originales del texto Share Tech */
 #terminal {
-  font-size: clamp(18px, 2.6vw, 24px);
-  line-height: 1.2;
-  letter-spacing: 0.30em;
+  font-family: 'Share Tech Mono', monospace;
   color: var(--text);
-  display: inline-block;
+  letter-spacing: 0.40em;
+  font-size: clamp(20px, 3vw, 26px);
 }
 
-/* animación: desplaza exactamente la mitad (una copia) */
-@keyframes marqueeMove {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
+/* Efecto glow original */
 @keyframes fireGlow {
   0% {
-    text-shadow: 0 0 10px var(--green-1),
-                 0 0 20px #00ff88,
-                 0 0 30px #00ffaa,
-                 0 0 40px #00ff77;
+    text-shadow: 0 0 10px var(--green-1), 0 0 20px #00ff88, 0 0 30px #00ffaa, 0 0 40px #00ff77;
   }
   100% {
-    text-shadow: 0 0 20px #00ff99,
-                 0 0 40px #00ff66,
-                 0 0 60px var(--green-1),
-                 0 0 80px #00ff44;
+    text-shadow: 0 0 20px #00ff99, 0 0 40px #00ff66, 0 0 60px var(--green-1), 0 0 80px #00ff44;
   }
 }
 
-/* Responsive: en pantallas pequeñas reducimos tamaño y velocidad */
-@media screen and (max-width: 720px) {
-  :root { --marquee-duration: 12s; }
-  .cinzel { font-size: clamp(20px, 10vw, 36px); letter-spacing: 0.26em; }
-  #terminal { font-size: clamp(14px, 4.5vw, 18px); letter-spacing: 0.26em; }
-  .half.top { height: calc(100vh - 40px); padding: 10px; }
-}
 </style>
 </head>
+
 <body>
 
-  <div class="half top" aria-hidden="false">
-    <div class="marquee" role="marquee" aria-label="Marquesina HERMES TRISMEGISTUS">
-      <div class="marquee-track" id="marqueeTrack">
-        <!-- copia A -->
-        <div class="marquee-item">
-          <span class="cinzel">HERMES TRISMEGISTUS</span>
-          <span id="terminal">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-        </div>
-        <!-- copia B (idéntica) -->
-        <div class="marquee-item" aria-hidden="true">
-          <span class="cinzel">HERMES TRISMEGISTUS</span>
-          <span id="terminal-dup">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-        </div>
-      </div>
-    </div>
+<!-- ================================
+     MARQUESINA PERFECTA
+     ================================ -->
+<div class="marquee">
+  <div class="marquee-content">
+
+    <!-- CONTENIDO ORIGINAL 1 -->
+    <span class="cinzel">HERMES TRISMEGISTUS |</span>
+    <span id="terminal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
+
+    <!-- DUPLICADO PARA QUE NO HAYA ESPACIOS -->
+    <span class="cinzel">HERMES TRISMEGISTUS |</span>
+    <span id="terminal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
+
   </div>
-
-<script>
-/* Ajusta la duración de la animación en función del ancho real del contenido
-   para evitar huecos y mantener velocidad coherente */
-(function() {
-  const track = document.getElementById('marqueeTrack');
-  if (!track) return;
-
-  function updateDuration() {
-    // ancho total de la pista (dos copias)
-    const totalWidth = track.scrollWidth;
-    // ancho de una copia (mitad)
-    const singleWidth = totalWidth / 2;
-
-    // velocidad objetivo en px por segundo (ajusta para acelerar/ralentizar)
-    const pxPerSecond = Math.max(80, window.innerWidth * 0.12);
-
-    // duración necesaria para desplazar exactamente una copia
-    const duration = Math.max(6, Math.round(singleWidth / pxPerSecond));
-
-    track.style.animationDuration = duration + 's';
-  }
-
-  // recalcular al cargar y al redimensionar
-  window.addEventListener('load', updateDuration);
-  window.addEventListener('resize', () => {
-    // pequeña pausa para evitar cálculos excesivos durante resize
-    clearTimeout(window._marqueeResizeTimer);
-    window._marqueeResizeTimer = setTimeout(updateDuration, 120);
-  });
-  // también recalcular si las fuentes tardan en cargar
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(updateDuration).catch(()=>{});
-  }
-})();
-</script>
+</div>
 
 </body>
 </html>
