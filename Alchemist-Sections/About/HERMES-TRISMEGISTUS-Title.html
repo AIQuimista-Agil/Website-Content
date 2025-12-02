@@ -1,148 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>HERMES TRISMEGISTUS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg-start:#001a09;
-      --bg-end:#000;
-      --green-1:#18ff5c;
-      --green-2:#22ff77;
-      --text:#aaffc3;
-      --marquee-duration: 18s; /* ajusta la velocidad: menos = más rápido */
-    }
+<meta charset="UTF-8">
+<title>HERMES TRISMEGISTUS</title>
 
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
-    body {
-      background: radial-gradient(circle at center, var(--bg-start) 0%, var(--bg-end) 100%);
-      color: var(--green-1);
-      font-family: 'Share Tech Mono', monospace;
-      box-sizing: border-box;
-      padding: 40px;
-      overflow: hidden;
-      text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
+<style>
+:root{
+  --bg-start:#001a09;
+  --bg-end:#000;
+  --green-1:#18ff5c;
+  --green-2:#22ff77;
+  --text:#aaffc3;
+}
 
-    /* Contenedor principal */
-    .wrap {
-      width: 100%;
-      max-width: 1200px;
-      box-sizing: border-box;
-    }
+html,body{
+  height:100%;
+  margin:0;
+}
 
-    /* Marquesina: área visible */
-    .marquee {
-      width: 100%;
-      overflow: hidden;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      height: clamp(64px, 12vw, 120px); /* altura de la marquesina */
-      background: transparent;
-    }
+body {
+  background: radial-gradient(circle at center, var(--bg-start) 0%, var(--bg-end) 100%);
+  color: var(--green-1);
+  font-family: 'Share Tech Mono', monospace;
+  box-sizing: border-box;
+  padding: 40px;
+  overflow: hidden;
+  text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 100vh;
+}
 
-    /* Banda que se mueve: contiene dos copias del texto para bucle continuo */
-    .marquee-track {
-      display: inline-flex;
-      white-space: nowrap;
-      will-change: transform;
-      animation: marqueeMove linear infinite;
-      align-items: center;
-    }
+/* Contenedor que divide la pantalla en dos mitades */
+.split {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+}
 
-    /* Texto dentro de la marquesina (usa Cinzel como pediste) */
-    .marquee-item {
-      font-family: 'Cinzel', serif;
-      color: var(--green-2);
-      font-size: clamp(28px, 6.5vw, 72px);
-      letter-spacing: 0.40em; /* espaciado aumentado */
-      text-transform: uppercase;
-      text-shadow: 0 0 15px rgba(24,255,92,0.9), 0 0 30px rgba(24,255,92,0.4);
-      display: inline-block;
-      padding-right: 2ch; /* pequeño separador visual entre repeticiones */
-    }
+.half {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    /* Duplicado: dos copias seguidas sin hueco perceptible */
-    .marquee-track .marquee-item + .marquee-item {
-      margin-left: 0; /* sin margen extra entre ítems */
-    }
+/* ================================
+   MARQUESINA CONTINUA SUPERIOR
+   ================================ */
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
 
-    /* Animación: mueve la pista hacia la izquierda. 
-       El valor translateX(-50%) hace que la primera copia se desplace exactamente el ancho de una copia,
-       por eso duplicamos el contenido (copy A + copy A) para que el bucle sea continuo sin huecos. */
-    @keyframes marqueeMove {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
+.marquee-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marqueeScroll 20s linear infinite;
+}
 
-    /* Ajuste de duración dinámico: calculado en JS para que la animación use --marquee-duration */
-    /* Responsive */
-    @media screen and (max-width: 720px) {
-      .marquee { height: clamp(48px, 14vw, 80px); }
-      .marquee-item { font-size: clamp(20px, 10vw, 40px); letter-spacing: 0.30em; }
-    }
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
 
-    /* Mantener el resto del layout (texto secundario opcional) */
-    #terminal {
-      margin-top: 1.2rem;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: clamp(18px, 2.6vw, 26px);
-      line-height: 1.9;
-      letter-spacing: 0.40em;
-      color: var(--text);
-      text-align: center;
-    }
-  </style>
+/* Estilos originales del texto Cinzel */
+.cinzel {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 6.5vw, 48px);
+  color: var(--green-2);
+  letter-spacing: 0.30em;
+  text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
+  animation: fireGlow 2.5s infinite alternate;
+  text-transform: uppercase;
+}
+
+/* Estilos originales del texto del terminal */
+.sharetech {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--text);
+  letter-spacing: 0.40em;
+}
+
+@keyframes fireGlow {
+  0% {
+    text-shadow: 0 0 10px var(--green-1),
+                 0 0 20px #00ff88,
+                 0 0 30px #00ffaa,
+                 0 0 40px #00ff77;
+  }
+  100% {
+    text-shadow: 0 0 20px #00ff99,
+                 0 0 40px #00ff66,
+                 0 0 60px var(--green-1),
+                 0 0 80px #00ff44;
+  }
+}
+
+/* Terminal inferior */
+#terminal {
+  width: 100%;
+  max-width: 900px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: clamp(20px, 3vw, 26px);
+  line-height: 1.9;
+  letter-spacing: 0.40em;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  animation: none;
+  color: var(--text);
+  text-align: center;
+}
+
+.half.top {
+  border-bottom: 1px solid rgba(34,255,119,0.04);
+}
+
+@media screen and (max-width: 900px) {
+  body { padding: 20px; }
+  .split { height: calc(100vh - 40px); }
+  #terminal { font-size: clamp(16px, 4.5vw, 20px); letter-spacing: 0.26em; }
+}
+
+@media screen and (max-height: 600px) {
+  .split { height: auto; min-height: 100vh; }
+  body { overflow-y: auto; }
+}
+</style>
+
 </head>
 <body>
 
-  <div class="wrap" aria-hidden="false">
-    <!-- Marquesina visible -->
-    <div class="marquee" role="marquee" aria-label="Marquesina HERMES TRISMEGISTUS">
-      <div class="marquee-track" id="marqueeTrack">
-        <!-- Primera copia -->
-        <div class="marquee-item">HERMES TRISMEGISTUS</div>
-        <!-- Segunda copia (idéntica) para bucle continuo -->
-        <div class="marquee-item">HERMES TRISMEGISTUS</div>
+<div class="split">
+
+  <!-- ================================
+       MARQUESINA SUPERIOR CON AMBOS TEXTOS
+       ================================ -->
+  <div class="half top">
+    <div class="marquee">
+      <div class="marquee-content">
+        <span class="cinzel">HERMES TRISMEGISTUS — </span>
+        <span class="sharetech">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. — </span>
       </div>
     </div>
-
-    <!-- Texto secundario opcional -->
-    <div id="terminal" aria-hidden="true"></div>
   </div>
 
-  <script>
-    // Ajusta la duración de la animación en base al ancho real del contenido
-    (function() {
-      const track = document.getElementById('marqueeTrack');
-      if (!track) return;
+  <!-- MITAD INFERIOR: TEXTO ORIGINAL -->
+  <div class="half bottom">
+    <div id="terminal">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </div>
+  </div>
 
-      // Esperar a que las fuentes se carguen para medir correctamente
-      function setDuration() {
-        // ancho total de la pista (dos copias)
-        const totalWidth = track.scrollWidth;
-        // ancho de la mitad (una copia)
-        const singleWidth = totalWidth / 2;
+</div>
 
-        // velocidad base en px por segundo (ajusta este valor para cambiar velocidad)
-        const pxPerSecond =  (window.innerWidth > 0) ?  (singleWidth / 18) : 100; 
-        // Calcula duración para desplazar exactamente una copia (en segundos)
-        const duration = Math.max(6, Math.round(singleWidth / pxPerSecond));
-
-        // Aplicar duración CSS (en segundos)
-        track.style.animationDuration = duration + 's';
-      }
-
-      // Recalcular cuando cargan las fuentes y al redimensionar
-      window.addEventListener('load', setDuration);
+</body>
+</html>
