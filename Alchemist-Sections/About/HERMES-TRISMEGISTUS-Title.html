@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>HERMES TRISMEGISTUS</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -13,9 +13,9 @@
       --text:#aaffc3;
     }
 
-    html, body {
-      height: 100%;
-      margin: 0;
+    html,body{
+      height:100%;
+      margin:0;
     }
 
     body {
@@ -27,40 +27,47 @@
       overflow: hidden;
       text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       min-height: 100vh;
     }
 
-    /* Contenedor principal: una fila con dos columnas de 50% cada una */
-    .title-grid {
+    /* Contenedor que divide la pantalla en dos mitades horizontales */
+    .split {
       width: 100%;
       max-width: 1200px;
-      display: grid;
-      grid-template-columns: 50% 50%; /* cada columna 50% del ancho */
-      align-items: center; /* centra verticalmente el contenido de la fila */
+      display: flex;
+      flex-direction: column; /* apila las mitades verticalmente (dos horizontales) */
+      height: calc(100vh - 80px); /* resta el padding del body para ocupar toda la pantalla */
+    }
+
+    .half {
+      flex: 1 1 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
       box-sizing: border-box;
     }
 
-    /* Estilo compartido para ambas celdas del título */
-    .title-cell {
+    /* Mantener el estilo del título pero centrado en su mitad */
+    h1 {
       font-family: 'Cinzel', serif;
+      font-size: clamp(28px, 6.5vw, 48px);
       color: var(--green-2);
-      font-size: clamp(28px, 6.5vw, 72px);
+      margin: 0;
       text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
       animation: fireGlow 2.5s infinite alternate;
-      letter-spacing: 0.40em;
+      letter-spacing: 0.30em;
       text-transform: uppercase;
-      display: flex;
-      align-items: center;    /* centra verticalmente dentro de la celda */
-      justify-content: center;/* centra horizontalmente dentro de la celda */
-      white-space: nowrap;
-      height: 1.2em;
+      text-align: center;
+      width: 100%;
+      display: block;
     }
 
     @keyframes fireGlow {
       0% {
-        text-shadow:
+        text-shadow: 
           0 0 10px var(--green-1),
           0 0 20px #00ff88,
           0 0 30px #00ffaa,
@@ -75,50 +82,57 @@
       }
     }
 
-    /* Terminal / texto secundario (opcional) */
+    /* Terminal / texto centrado en su mitad */
     #terminal {
       width: 100%;
       max-width: 900px;
-      margin-top: 1.2rem;
       white-space: pre-wrap;
       word-wrap: break-word;
-      font-size: clamp(18px, 2.6vw, 26px);
+      font-size: clamp(20px, 3vw, 26px);
       line-height: 1.9;
-      letter-spacing: 0.40em;
+      letter-spacing: 0.40em; /* aún mayor espaciado entre letras */
       background: transparent;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      animation: none;
       color: var(--text);
       text-align: center;
     }
 
-    /* Responsive: en pantallas pequeñas apilar las dos palabras verticalmente */
-    @media screen and (max-width: 720px) {
-      .title-grid {
-        grid-template-columns: 1fr;
-        row-gap: 0.6rem;
-      }
-      .title-cell {
-        justify-content: center;
-        font-size: clamp(24px, 10vw, 48px);
-        letter-spacing: 0.28em;
-      }
-      #terminal { font-size: clamp(14px, 4.5vw, 18px); letter-spacing: 0.28em; }
+    /* Si quieres que cada mitad tenga un ligero separador visual opcional */
+    .half.top {
+      border-bottom: 1px solid rgba(34,255,119,0.04);
     }
 
-    @media screen and (max-height: 520px) {
+    @media screen and (max-width: 900px) {
       body { padding: 20px; }
-      .title-cell { font-size: clamp(20px, 6.5vw, 40px); }
+      .split { height: calc(100vh - 40px); }
+      h1 { font-size: clamp(22px, 8vw, 36px); letter-spacing: 0.26em; }
+      #terminal { font-size: clamp(16px, 4.5vw, 20px); letter-spacing: 0.26em; }
+    }
+
+    @media screen and (max-height: 600px) {
+      /* En pantallas muy bajas, permitir scroll interno */
+      .split { height: auto; min-height: 100vh; }
+      body { overflow-y: auto; }
     }
   </style>
 </head>
 <body>
 
-  <div class="title-grid" role="presentation" aria-hidden="true">
-    <div class="title-cell">HERMES</div>
-    <div class="title-cell">TRISMEGISTUS</div>
-  </div>
+  <div class="split">
+    <div class="half top">
+      <h1>HERMES TRISMEGISTUS</h1>
+    </div>
 
-  <div id="terminal" aria-hidden="true">
-    <!-- Texto secundario opcional -->
+    <div class="half bottom">
+      <div id="terminal">
+        <!-- Aquí puedes insertar el texto que quieras mostrar en la mitad inferior -->
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+    </div>
   </div>
 
 </body>
