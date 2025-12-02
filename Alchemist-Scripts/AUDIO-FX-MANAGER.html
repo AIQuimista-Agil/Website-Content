@@ -155,6 +155,10 @@
 
 (() => {
   const SOUND_URLS = {
+    // START __________________________________________________________________________________________
+    click: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/FX-Light.mp3",   // CAMBIAR A SONIDO CREADO EN ELEVENLAPS
+    neon: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/FX-Light.mp3",    // CAMBIAR A SONIDO CREADO EN ELEVENLAPS
+    
     // ABOUT ME _______________________________________________________________________________________
     egypt: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Egypt.mp3",
     flames: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Fire-Sound.mp3",
@@ -163,6 +167,7 @@
     travel: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Close-To-Heaven.mp3",
     
     // ABOUT __________________________________________________________________________________________
+    alchemy_2: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Alchemy_2.mp3",
     alchemy_3: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Alchemy_3.mp3",
     alchemy_4: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Alchemy_4.mp3",
     alchemy_5: "https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Sounds/Alchemy_5.mp3",
@@ -187,8 +192,8 @@
   const INACTIVITY_MS = 33000;
   let inactivityTimer = null;
 
-  const essentialSounds = ['menu','logo','button','shot'];
-  const ambientSounds = ['egypt','flames','rain','space','travel','phoenix','submachine','alchemy_3','alchemy_4','alchemy_5'];
+  const essentialSounds = ['click','neon','menu','logo','button','shot'];
+  const ambientSounds = ['egypt','flames','rain','space','travel','phoenix','submachine','alchemy_2','alchemy_3','alchemy_4','alchemy_5'];
 
   // 🔸 Mapa de sonidos activos
   const activeSources = new Map();
