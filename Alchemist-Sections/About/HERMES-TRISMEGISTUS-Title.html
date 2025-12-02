@@ -20,12 +20,16 @@
 
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: clamp(22px, 5vw, 32px);
+      font-size: clamp(28px, 6.5vw, 48px); /* aumentado */
       color: #22ff77;
-      text-align: center;
-      margin-bottom: 20px;
+      text-align: center; /* centrado */
+      margin: 0 0 20px 0;
       text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
       animation: fireGlow 2.5s infinite alternate;
+      letter-spacing: 0.18em; /* espaciado tipo inscripción romana */
+      text-transform: uppercase;
+      width: 100%;
+      display: block;
     }
 
     @keyframes fireGlow {
@@ -50,15 +54,16 @@
       width: 100%;
       white-space: pre-wrap;
       word-wrap: break-word;
-      font-size: clamp(15px, 2vw, 18px);
-      line-height: 1.7;
-      letter-spacing: 0.5px;
-      background: rgba(0, 20, 10, 0.25);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset, 0 0 40px rgba(24, 255, 92, 0.15);
-      border: 1px solid rgba(24, 255, 92, 0.2);
-      animation: greenFlame 3s infinite alternate;
+      font-size: clamp(18px, 2.6vw, 22px); /* aumentado */
+      line-height: 1.9;
+      letter-spacing: 0.18em; /* espaciado tipo inscripción romana */
+      background: transparent; /* elimina el cuadro */
+      padding: 0; /* elimina el padding */
+      border-radius: 0;
+      box-shadow: none; /* elimina sombras */
+      border: none; /* elimina borde */
+      animation: none; /* elimina animación del cuadro */
+      color: #aaffc3; /* mantiene legibilidad */
     }
 
     @keyframes greenFlame {
@@ -110,81 +115,82 @@
 
     @media screen and (max-width: 600px) {
       body { padding: 20px; }
-      #terminal { padding: 20px; }
+      #terminal { padding: 0; }
       .cursor { height: 20px; width: 10px; }
+      h1 { font-size: clamp(22px, 8vw, 34px); letter-spacing: 0.14em; }
     }
     /*___________________________________________________________________________*/
     /* === SCROLLBAR – FUEGO VERDE === */
 
-/* Área del scroll */
-::-webkit-scrollbar {
-  width: 12px;
-  background: #001a09; /* mismo fondo que tu página */
-}
+    /* Área del scroll */
+    ::-webkit-scrollbar {
+      width: 12px;
+      background: #001a09; /* mismo fondo que tu página */
+    }
 
-/* Pista del scroll (track) con glow */
-::-webkit-scrollbar-track {
-  background: #001a09;
-  border-radius: 10px;
-  box-shadow: inset 0 0 20px rgba(24, 255, 92, 0.12);
-}
+    /* Pista del scroll (track) con glow */
+    ::-webkit-scrollbar-track {
+      background: #001a09;
+      border-radius: 10px;
+      box-shadow: inset 0 0 20px rgba(24, 255, 92, 0.12);
+    }
 
-/* Pulgar (thumb) con efecto de fuego verde */
-::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: linear-gradient(
-    180deg,
-    #18ff5c 0%,
-    #22ff77 40%,
-    #18ff5c 80%,
-    #0aff4e 100%
-  );
-  position: relative;
-  overflow: hidden;
+    /* Pulgar (thumb) con efecto de fuego verde */
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: linear-gradient(
+        180deg,
+        #18ff5c 0%,
+        #22ff77 40%,
+        #18ff5c 80%,
+        #0aff4e 100%
+      );
+      position: relative;
+      overflow: hidden;
 
-  /* Glow verde */
-  box-shadow:
-    0 0 12px #18ff5c,
-    0 0 20px #18ff5c,
-    inset 0 0 10px rgba(24,255,92,0.7);
-}
+      /* Glow verde */
+      box-shadow:
+        0 0 12px #18ff5c,
+        0 0 20px #18ff5c,
+        inset 0 0 10px rgba(24,255,92,0.7);
+    }
 
-/* Llamas internas animadas */
-::-webkit-scrollbar-thumb::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    rgba(24,255,92,0.0) 0%,
-    rgba(24,255,92,0.5) 10%,
-    rgba(24,255,92,0.0) 20%
-  );
-  background-size: 100% 150%;
-  animation: greenFlames 1.3s linear infinite;
-  mix-blend-mode: screen;
-}
+    /* Llamas internas animadas */
+    ::-webkit-scrollbar-thumb::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(24,255,92,0.0) 0%,
+        rgba(24,255,92,0.5) 10%,
+        rgba(24,255,92,0.0) 20%
+      );
+      background-size: 100% 150%;
+      animation: greenFlames 1.3s linear infinite;
+      mix-blend-mode: screen;
+    }
 
-/* Animación del fuego vertical */
-@keyframes greenFlames {
-  0% { background-position: 0% 0%; opacity: 0.7; }
-  50% { background-position: 0% 120%; opacity: 1; }
-  100% { background-position: 0% 0%; opacity: 0.7; }
-}
+    /* Animación del fuego vertical */
+    @keyframes greenFlames {
+      0% { background-position: 0% 0%; opacity: 0.7; }
+      50% { background-position: 0% 120%; opacity: 1; }
+      100% { background-position: 0% 0%; opacity: 0.7; }
+    }
 
-/* Hover más brillante */
-::-webkit-scrollbar-thumb:hover {
-  box-shadow:
-    0 0 20px #22ff77,
-    0 0 40px #22ff77,
-    inset 0 0 14px rgba(24,255,92,1);
-}
+    /* Hover más brillante */
+    ::-webkit-scrollbar-thumb:hover {
+      box-shadow:
+        0 0 20px #22ff77,
+        0 0 40px #22ff77,
+        inset 0 0 14px rgba(24,255,92,1);
+    }
 
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #18ff5c #001a09;
-}
+    /* Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #18ff5c #001a09;
+    }
     /*___________________________________________________________________________*/
   </style>
 </head>
@@ -192,12 +198,6 @@
 
   <h1>HERMES TRISMEGISTUS</h1>
   <div id="terminal"></div><span class="cursor"></span>
-
-  <!-- Sonido de escritura -->
-  <audio id="typeSound" src="https://pixabay.com/es/sound-effects/keyboard-typing-sound-effect-335503/" preload="auto"></audio>
-
-  <!-- Sonido ambiental alquímico -->
-  <audio id="ambience" src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_1c1a9de9b1.mp3?filename=ambient-space-pad-6230.mp3" preload="auto" loop></audio>
 
 </body>
 </html>
