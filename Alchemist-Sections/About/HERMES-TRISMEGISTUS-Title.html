@@ -1,139 +1,141 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>HERMES TRISMEGISTUS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    :root{
-      --bg-start:#001a09;
-      --bg-end:#000;
-      --green-1:#18ff5c;
-      --green-2:#22ff77;
-      --text:#aaffc3;
-    }
-
-    html,body{
-      height:100%;
-      margin:0;
-    }
-
     body {
-      background: radial-gradient(circle at center, var(--bg-start) 0%, var(--bg-end) 100%);
-      color: var(--green-1);
-      font-family: 'Share Tech Mono', monospace;
-      box-sizing: border-box;
-      padding: 40px;
-      overflow: hidden;
-      text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at center, #001a09 0%, #000 100%);
       display: flex;
-      align-items: stretch;
       justify-content: center;
-      min-height: 100vh;
-    }
-
-    /* Contenedor que divide la pantalla en dos mitades horizontales */
-    .split {
-      width: 100%;
-      max-width: 1200px;
-      display: flex;
-      flex-direction: column; /* apila las mitades verticalmente (dos horizontales) */
-      height: calc(100vh - 80px); /* resta el padding del body para ocupar toda la pantalla */
-    }
-
-    .half {
-      flex: 1 1 50%;
-      display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
-      box-sizing: border-box;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    /* Mantener el estilo del título pero centrado en su mitad */
     h1 {
       font-family: 'Cinzel', serif;
-      font-size: clamp(28px, 6.5vw, 48px);
-      color: var(--green-2);
-      margin: 0;
-      text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
-      animation: fireGlow 2.5s infinite alternate;
-      letter-spacing: 0.30em;
-      text-transform: uppercase;
+      font-size: clamp(32px, 6vw, 90px);
+      color: #18ff5c;
       text-align: center;
-      width: 100%;
-      display: block;
+      letter-spacing: 4px;
+      text-shadow:
+        0 0 10px #ffb347,
+        0 0 20px #ff8c00,
+        0 0 40px #ff7a00,
+        0 0 70px #ff5500,
+        0 0 100px #ff3300;
+      animation: fireGlow 3s infinite alternate;
     }
 
     @keyframes fireGlow {
       0% {
-        text-shadow: 
-          0 0 10px var(--green-1),
-          0 0 20px #00ff88,
-          0 0 30px #00ffaa,
-          0 0 40px #00ff77;
+        text-shadow:
+          0 0 12px #ffcf70,
+          0 0 25px #ff9d33,
+          0 0 45px #ff6500,
+          0 0 70px #ff4000;
+        opacity: 0.9;
       }
       100% {
         text-shadow:
-          0 0 20px #00ff99,
-          0 0 40px #00ff66,
-          0 0 60px var(--green-1),
-          0 0 80px #00ff44;
+          0 0 20px #ffe0a6,
+          0 0 35px #ffb347,
+          0 0 60px #ff7a00,
+          0 0 110px #ff5500;
+        opacity: 1;
       }
     }
 
-    /* Terminal / texto centrado en su mitad */
-    #terminal {
-      width: 100%;
-      max-width: 900px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: clamp(20px, 3vw, 26px);
-      line-height: 1.9;
-      letter-spacing: 0.40em; /* aún mayor espaciado entre letras */
-      background: transparent;
-      padding: 0;
-      border-radius: 0;
-      box-shadow: none;
-      border: none;
-      animation: none;
-      color: var(--text);
-      text-align: center;
+    /* Scrollbar fuego naranja */
+    ::-webkit-scrollbar {
+      width: 12px;
+      background: #000;
     }
 
-    /* Si quieres que cada mitad tenga un ligero separador visual opcional */
-    .half.top {
-      border-bottom: 1px solid rgba(34,255,119,0.04);
+    ::-webkit-scrollbar-track {
+      background: #000;
+      box-shadow: inset 0 0 20px rgba(255,120,0,0.25);
+      border-radius: 10px;
     }
 
-    @media screen and (max-width: 900px) {
-      body { padding: 20px; }
-      .split { height: calc(100vh - 40px); }
-      h1 { font-size: clamp(22px, 8vw, 36px); letter-spacing: 0.26em; }
-      #terminal { font-size: clamp(16px, 4.5vw, 20px); letter-spacing: 0.26em; }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: linear-gradient(
+        180deg,
+        #ffb347 0%,
+        #ff8c00 40%,
+        #ff5500 80%,
+        #ff3300 100%
+      );
+      box-shadow:
+        0 0 12px #ff8c00,
+        0 0 25px #ff5500,
+        inset 0 0 10px rgba(255,120,0,0.6);
+      position: relative;
+      overflow: hidden;
     }
 
-    @media screen and (max-height: 600px) {
-      /* En pantallas muy bajas, permitir scroll interno */
-      .split { height: auto; min-height: 100vh; }
-      body { overflow-y: auto; }
+    ::-webkit-scrollbar-thumb::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(255,150,0,0.0) 0%,
+        rgba(255,150,0,0.5) 10%,
+        rgba(255,150,0,0.0) 20%
+      );
+      background-size: 100% 150%;
+      animation: orangeFlames 1.25s linear infinite;
+      mix-blend-mode: screen;
     }
-  </style>
+
+    @keyframes orangeFlames {
+      0% { background-position: 0% 0%; opacity: 0.7; }
+      50% { background-position: 0% 120%; opacity: 1; }
+      100% { background-position: 0% 0%; opacity: 0.7; }
+    }
+
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #ff8c00 #000;
+    }
+  .titulo-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.col-left, .col-right {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 6.5vw, 48px);
+  color: #22ff77;
+  letter-spacing: 0.30em;
+  text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
+  animation: fireGlow 2.5s infinite alternate;
+  flex: 1;
+}
+.col-left { text-align: right; padding-right: 2vw; }
+.col-right { text-align: left; padding-left: 2vw; }
+@media screen and (max-width: 600px) {
+  .col-left, .col-right {
+    font-size: clamp(22px, 8vw, 34px);
+    letter-spacing: 0.22em;
+  }
+}
+</style>
 </head>
 <body>
-
-  <div class="split">
-    <div class="half top">
-      <h1>HERMES TRISMEGISTUS</h1>
-    </div>
-
-    <div class="half bottom">
-      <div id="terminal">
-        <!-- Aquí puedes insertar el texto que quieras mostrar en la mitad inferior -->
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </div>
-    </div>
-  </div>
-
+  <div class="titulo-container">
+  <div class="col-left">HERMES</div>
+  <div class="col-right">TRISMEGISTUS</div>
+</div>
 </body>
 </html>
