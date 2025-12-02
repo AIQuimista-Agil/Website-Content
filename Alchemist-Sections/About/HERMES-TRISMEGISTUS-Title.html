@@ -1,7 +1,7 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>HERMES TRISMEGISTUS</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -11,11 +11,12 @@
       --green-1:#18ff5c;
       --green-2:#22ff77;
       --text:#aaffc3;
+      --marquee-duration: 18s; /* ajusta la velocidad: menos = más rápido */
     }
 
-    html,body{
-      height:100%;
-      margin:0;
+    html, body {
+      height: 100%;
+      margin: 0;
     }
 
     body {
@@ -27,113 +28,121 @@
       overflow: hidden;
       text-shadow: 0 0 8px rgba(24, 255, 92, 0.6);
       display: flex;
-      align-items: stretch;
+      align-items: center;
       justify-content: center;
       min-height: 100vh;
     }
 
-    /* Contenedor que divide la pantalla en dos mitades horizontales */
-    .split {
+    /* Contenedor principal */
+    .wrap {
       width: 100%;
       max-width: 1200px;
-      display: flex;
-      flex-direction: column; /* apila las mitades verticalmente (dos horizontales) */
-      height: calc(100vh - 80px); /* resta el padding del body para ocupar toda la pantalla */
-    }
-
-    .half {
-      flex: 1 1 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
       box-sizing: border-box;
     }
 
-    /* Mantener el estilo del título pero centrado en su mitad */
-    h1 {
+    /* Marquesina: área visible */
+    .marquee {
+      width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      height: clamp(64px, 12vw, 120px); /* altura de la marquesina */
+      background: transparent;
+    }
+
+    /* Banda que se mueve: contiene dos copias del texto para bucle continuo */
+    .marquee-track {
+      display: inline-flex;
+      white-space: nowrap;
+      will-change: transform;
+      animation: marqueeMove linear infinite;
+      align-items: center;
+    }
+
+    /* Texto dentro de la marquesina (usa Cinzel como pediste) */
+    .marquee-item {
       font-family: 'Cinzel', serif;
-      font-size: clamp(28px, 6.5vw, 48px);
       color: var(--green-2);
-      margin: 0;
-      text-shadow: 0 0 15px rgba(24, 255, 92, 0.9), 0 0 30px rgba(24, 255, 92, 0.4);
-      animation: fireGlow 2.5s infinite alternate;
-      letter-spacing: 0.30em;
+      font-size: clamp(28px, 6.5vw, 72px);
+      letter-spacing: 0.40em; /* espaciado aumentado */
       text-transform: uppercase;
-      text-align: center;
-      width: 100%;
-      display: block;
+      text-shadow: 0 0 15px rgba(24,255,92,0.9), 0 0 30px rgba(24,255,92,0.4);
+      display: inline-block;
+      padding-right: 2ch; /* pequeño separador visual entre repeticiones */
     }
 
-    @keyframes fireGlow {
-      0% {
-        text-shadow: 
-          0 0 10px var(--green-1),
-          0 0 20px #00ff88,
-          0 0 30px #00ffaa,
-          0 0 40px #00ff77;
-      }
-      100% {
-        text-shadow:
-          0 0 20px #00ff99,
-          0 0 40px #00ff66,
-          0 0 60px var(--green-1),
-          0 0 80px #00ff44;
-      }
+    /* Duplicado: dos copias seguidas sin hueco perceptible */
+    .marquee-track .marquee-item + .marquee-item {
+      margin-left: 0; /* sin margen extra entre ítems */
     }
 
-    /* Terminal / texto centrado en su mitad */
+    /* Animación: mueve la pista hacia la izquierda. 
+       El valor translateX(-50%) hace que la primera copia se desplace exactamente el ancho de una copia,
+       por eso duplicamos el contenido (copy A + copy A) para que el bucle sea continuo sin huecos. */
+    @keyframes marqueeMove {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Ajuste de duración dinámico: calculado en JS para que la animación use --marquee-duration */
+    /* Responsive */
+    @media screen and (max-width: 720px) {
+      .marquee { height: clamp(48px, 14vw, 80px); }
+      .marquee-item { font-size: clamp(20px, 10vw, 40px); letter-spacing: 0.30em; }
+    }
+
+    /* Mantener el resto del layout (texto secundario opcional) */
     #terminal {
-      width: 100%;
-      max-width: 900px;
+      margin-top: 1.2rem;
       white-space: pre-wrap;
       word-wrap: break-word;
-      font-size: clamp(20px, 3vw, 26px);
+      font-size: clamp(18px, 2.6vw, 26px);
       line-height: 1.9;
-      letter-spacing: 0.40em; /* aún mayor espaciado entre letras */
-      background: transparent;
-      padding: 0;
-      border-radius: 0;
-      box-shadow: none;
-      border: none;
-      animation: none;
+      letter-spacing: 0.40em;
       color: var(--text);
       text-align: center;
-    }
-
-    /* Si quieres que cada mitad tenga un ligero separador visual opcional */
-    .half.top {
-      border-bottom: 1px solid rgba(34,255,119,0.04);
-    }
-
-    @media screen and (max-width: 900px) {
-      body { padding: 20px; }
-      .split { height: calc(100vh - 40px); }
-      h1 { font-size: clamp(22px, 8vw, 36px); letter-spacing: 0.26em; }
-      #terminal { font-size: clamp(16px, 4.5vw, 20px); letter-spacing: 0.26em; }
-    }
-
-    @media screen and (max-height: 600px) {
-      /* En pantallas muy bajas, permitir scroll interno */
-      .split { height: auto; min-height: 100vh; }
-      body { overflow-y: auto; }
     }
   </style>
 </head>
 <body>
 
-  <div class="split">
-    <div class="half top">
-      <h1>HERMES TRISMEGISTUS</h1>
-    </div>
-
-    <div class="half bottom">
-      <div id="terminal">
-        <!-- Aquí puedes insertar el texto que quieras mostrar en la mitad inferior -->
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  <div class="wrap" aria-hidden="false">
+    <!-- Marquesina visible -->
+    <div class="marquee" role="marquee" aria-label="Marquesina HERMES TRISMEGISTUS">
+      <div class="marquee-track" id="marqueeTrack">
+        <!-- Primera copia -->
+        <div class="marquee-item">HERMES TRISMEGISTUS</div>
+        <!-- Segunda copia (idéntica) para bucle continuo -->
+        <div class="marquee-item">HERMES TRISMEGISTUS</div>
       </div>
     </div>
+
+    <!-- Texto secundario opcional -->
+    <div id="terminal" aria-hidden="true"></div>
   </div>
 
-</body>
-</html>
+  <script>
+    // Ajusta la duración de la animación en base al ancho real del contenido
+    (function() {
+      const track = document.getElementById('marqueeTrack');
+      if (!track) return;
+
+      // Esperar a que las fuentes se carguen para medir correctamente
+      function setDuration() {
+        // ancho total de la pista (dos copias)
+        const totalWidth = track.scrollWidth;
+        // ancho de la mitad (una copia)
+        const singleWidth = totalWidth / 2;
+
+        // velocidad base en px por segundo (ajusta este valor para cambiar velocidad)
+        const pxPerSecond =  (window.innerWidth > 0) ?  (singleWidth / 18) : 100; 
+        // Calcula duración para desplazar exactamente una copia (en segundos)
+        const duration = Math.max(6, Math.round(singleWidth / pxPerSecond));
+
+        // Aplicar duración CSS (en segundos)
+        track.style.animationDuration = duration + 's';
+      }
+
+      // Recalcular cuando cargan las fuentes y al redimensionar
+      window.addEventListener('load', setDuration);
