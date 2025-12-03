@@ -112,6 +112,75 @@ $w.onReady(function () {
 });
 
 // ___________________________________________________________________________________________________
+// MASTERPAGE.JS | AI.QUIMISTA AGIL | ALL PAGES
+// _________________________________________________________________________
+// MasterPage.js
+import { session } from 'wix-storage';
+
+$w.onReady(function () {
+  const IFRAME_ID = "#htmlAudioFX"; // ID del HTML iframe en tu header
+  const SOUND_NAME = "neon";       // nombre de la variable de sonido en tu HTML
+
+  // Tiempo mínimo entre reproducciones por botón (ms)
+  const BUTTON_COOLDOWN_MS = 250;
+
+  // Mapa para controlar cooldown por botón
+  const lastPlayed = {};
+
+  // Obtiene todos los botones de la página y filtra por id que empiece con "buttonLed"
+  const allButtons = $w('Button');
+  const ledButtons = allButtons.filter(btn => btn.id && btn.id.startsWith('buttonLed'));
+
+  // Si no hay botones encontrados, no hacer nada
+  if (!ledButtons.length) {
+    console.log('No se encontraron botones con raíz "buttonLed" en esta página.');
+    return;
+  }
+
+  // Función para enviar mensaje al iframe HTML para reproducir sonido
+  function playSound(soundName) {
+    const iframe = $w(IFRAME_ID);
+    if (!iframe) {
+      console.warn('Iframe de audio no encontrado:', IFRAME_ID);
+      return;
+    }
+
+    // Enviar mensaje al HTML component (el HTML debe escuchar postMessage)
+    try {
+      iframe.postMessage({ type: 'play', sound: soundName });
+    } catch (err) {
+      console.error('Error enviando postMessage al iframe:', err);
+    }
+  }
+
+  // Asignar eventos a cada botón filtrado
+  ledButtons.forEach(btn => {
+    // onMouseIn se dispara al pasar el cursor
+    btn.onMouseIn(() => {
+      const now = Date.now();
+      const id = btn.id;
+
+      // cooldown por botón
+      if (lastPlayed[id] && (now - lastPlayed[id] < BUTTON_COOLDOWN_MS)) {
+        return;
+      }
+      lastPlayed[id] = now;
+
+      playSound(SOUND_NAME);
+    });
+
+    // Opcional: si quieres reproducir también al hacer click
+    btn.onClick(() => {
+      playSound(SOUND_NAME);
+    });
+  });
+
+  // Exportar arreglo de botones por si lo necesitas en otras funciones
+  // (no es obligatorio, pero útil para debugging)
+  session.setItem('ledButtonsIds', JSON.stringify(ledButtons.map(b => b.id)));
+});
+
+// ___________________________________________________________________________________________________
 // MASTERPAGE.JS | AI.QUIMISTA AGIL | FOOTER
 // _________________________________________________________________________
 
