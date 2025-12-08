@@ -44,23 +44,7 @@
           0 0 80px #00ff44;
       }
     }
-
-    #terminal {
-      max-width: 900px;
-      width: 100%;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: clamp(15px, 2vw, 18px);
-      line-height: 1.7;
-      letter-spacing: 0.5px;
-      background: rgba(0, 20, 10, 0.25);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(24, 255, 92, 0.1) inset, 0 0 40px rgba(24, 255, 92, 0.15);
-      border: 1px solid rgba(24, 255, 92, 0.2);
-      animation: greenFlame 3s infinite alternate;
-    }
-
+    
     @keyframes greenFlame {
       0% {
         box-shadow: 0 0 15px rgba(24, 255, 92, 0.1) inset, 0 0 25px rgba(24, 255, 92, 0.2);
@@ -69,32 +53,7 @@
         box-shadow: 0 0 30px rgba(24, 255, 92, 0.3) inset, 0 0 50px rgba(24, 255, 92, 0.5);
       }
     }
-
-    h2 {
-      font-family: 'Cinzel', serif;
-      color: #22ff77;
-      text-shadow: 0 0 12px rgba(24, 255, 92, 0.8);
-      margin-top: 25px;
-      margin-bottom: 10px;
-      font-size: 20px;
-    }
-
-    p {
-      margin: 6px 0;
-      color: #aaffc3;
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 12px;
-      height: 24px;
-      background-color: #18ff5c;
-      animation: blink 1s step-end infinite, cursorFlame 2s infinite alternate;
-      vertical-align: bottom;
-      margin-left: 4px;
-      box-shadow: 0 0 8px rgba(24, 255, 92, 0.9);
-    }
-
+    
     @keyframes blink {
       50% { opacity: 0; }
     }
@@ -118,7 +77,6 @@
 <body>
 
   <h1>Resultados de la Búsqueda | AI.Quimista Ágil</h1>
-  <div id="terminal"></div><span class="cursor"></span>
-  
+
 </body>
 </html>
