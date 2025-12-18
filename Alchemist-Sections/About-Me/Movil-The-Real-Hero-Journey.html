@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Marquee | The Real Hero's Journey</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --font-size:16px;
+  --base-color:#FF6F00;
+  --highlight-color:#FFB74D;
+  --shadow:0 2px 6px rgba(0,0,0,.6);
+}
+
+html,body{
+  margin:0;
+  height:100%;
+  background:transparent;
+  overflow:hidden;
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
+
+.video-container{
+  position:relative;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+}
+
+video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* ===== MARQUESINA ===== */
+.marquee-wrapper{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:24px;
+  height:120px;
+  overflow:hidden;
+}
+
+.marquee-track{
+  position:absolute;
+  white-space:nowrap;
+  will-change:transform;
+  visibility:hidden;
+}
+
+.marquee-item{
+  font-size:var(--font-size);
+  font-weight:600;
+  line-height:1.45;
+  color:var(--base-color);
+  text-shadow:var(--shadow);
+
+  /* gradiente vertical sutil */
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.25),
+    rgba(255,255,255,0)
+  );
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+
+/* micro-contraste solo al inicio */
+.marquee-item .lead{
+  color: #9C2007;
+}
+
+@media (max-width:480px){
+  :root{ --font-size:16px; }
+  .marquee-wrapper{ height:100px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="video-container" id="videoContainer">
+
+<video
+  id="bgVideo"
+  src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Videos/Frame-Fenix.mp4"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto">
+</video>
+
+<div class="marquee-wrapper">
+  <div id="marqueeTrack" class="marquee-track">
+    <div class="marquee-item" id="marqueeText">
+      <strong>
+        <span class="lead">The Real Hero's Journey</span>
+        We are born twice, the first time after birth, descending to this world from heaven like falling rain, and the second time when we dare to leave hell, Plato's cave, that world of shadows and illusions that appear to be the truth.
+        We must cross the threshold of ancestral knowledge, such as that of Egypt, Greece, and Rome, reaching even the deepest confines of Space, to discover that our fire is like the Phoenix that is reborn, illuminates, and was always within us.
+        n the end, we return not as the same people, but having been transformed. The adventure of your life awaits you now. Are you ready to begin the journey?
+      </strong>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+(() => {
+
+const container = document.getElementById("videoContainer");
+const track = document.getElementById("marqueeTrack");
+const textEl = document.getElementById("marqueeText");
+const video = document.getElementById("bgVideo");
+
+const START_DELAY = 7000; // 7s
+
+let marqueeAnim = null;
+let startTimeout = null;        // timeout id for scheduled start
+let startTimeoutStart = 0;      // timestamp when timeout was set
+let remainingDelay = START_DELAY; // remaining ms to wait before starting
+let isVisible = false;
+let pausedAnimTime = 0;         // currentTime of animation when paused
+
+/* ===== MÉTRICAS ===== */
+function compute(){
+  const textW = textEl.getBoundingClientRect().width;
+  const contW = container.getBoundingClientRect().width;
+  const words = textEl.textContent.trim().split(/\s+/).length;
+  const duration = Math.max(10, (words / 150) * 60 * 1.15) * 1000;
+  // startX: fuera a la derecha; endX: fuera completamente a la izquierda
+  const startX = Math.ceil(contW);
+  const endX = -Math.ceil(textW);
+  return { startX, endX, duration };
+}
+
+/* ===== REINICIO PROGRAMADO ===== */
+function scheduleStart(delayMs = remainingDelay){
+  // limpia cualquier timeout previo
+  clearStartTimeout();
+
+  remainingDelay = Math.max(0, delayMs);
+  startTimeoutStart = Date.now();
+  startTimeout = setTimeout(() => {
+    startTimeout = null;
+    remainingDelay = START_DELAY; // reset para el siguiente ciclo
+    playMarquee();
+  }, remainingDelay);
+}
+
+/* limpia timeout y actualiza remainingDelay si estaba corriendo */
+function clearStartTimeout(){
+  if (startTimeout) {
+    // calcular tiempo transcurrido desde que se programó
+    const elapsed = Date.now() - startTimeoutStart;
+    remainingDelay = Math.max(0, remainingDelay - elapsed);
+    clearTimeout(startTimeout);
+    startTimeout = null;
+  }
+}
+
+/* ===== INICIO / REANUDACIÓN ===== */
+function playMarquee(fromTime = 0){
+  // si ya hay una animación en curso, no iniciar otra
+  if (marqueeAnim) return;
+
+  const { startX, endX, duration } = compute();
+
+  // asegurar que el track esté visible justo antes de iniciar
+  track.style.visibility = "visible";
+
+  // crear animación de un solo pase (desde fuera a la derecha hasta fuera a la izquierda)
+  marqueeAnim = track.animate(
+    [
+      { transform:`translateX(${startX}px)` },
+      { transform:`translateX(${endX}px)` }
+    ],
+    {
+      duration,
+      easing:"linear",
+      fill:"forwards"
+    }
+  );
+
+  // si venimos reanudando desde pausa, ajustar currentTime
+  try {
+    marqueeAnim.currentTime = fromTime;
+  } catch (e) {
+    // algunos navegadores no permiten setear currentTime antes de que la animación comience; ignorar si falla
+  }
+
+  marqueeAnim.onfinish = () => {
+    marqueeAnim = null;
+    // ocultar inmediatamente al terminar la pasada
+    track.style.visibility = "hidden";
+    // programar el reinicio tras START_DELAY solo si sigue visible
+    if (isVisible) {
+      remainingDelay = START_DELAY;
+      scheduleStart(remainingDelay);
+    }
+  };
+}
+
+/* ===== CICLO =====
+   startMarquee: si no hay animación ni timeout y el contenedor es visible,
+   programar el inicio con el delay restante.
+*/
+function startMarquee(){
+  if (!isVisible) return;
+  if (marqueeAnim) return;
+  if (startTimeout) return;
+  // asegurar que el track esté oculto durante la espera
+  track.style.visibility = "hidden";
+  // programar con remainingDelay (puede haber sido ajustado por pausas)
+  scheduleStart(remainingDelay);
+}
+
+/* ===== PAUSA / REANUDACIÓN por visibilidad ===== */
+function pauseAll(){
+  // pausar video
+  try { video.pause(); } catch(e){}
+
+  // pausar animación y guardar tiempo
+  if (marqueeAnim) {
+    try {
+      pausedAnimTime = marqueeAnim.currentTime || 0;
+      marqueeAnim.pause();
+    } catch(e){}
+  }
+
+  // si había un timeout programado, actualizar remainingDelay y cancelarlo
+  clearStartTimeout();
+}
+
+function resumeAll(){
+  // reanudar video
+  video.play().catch(()=>{});
+
+  // si había una animación pausada, reanudarla desde pausedAnimTime
+  if (marqueeAnim) {
+    try {
+      marqueeAnim.play();
+      return;
+    } catch(e){}
+  }
+
+  if (pausedAnimTime > 0) {
+    // reanudar la animación desde donde quedó
+    playMarquee(pausedAnimTime);
+    pausedAnimTime = 0;
+    return;
+  }
+
+  // si hay un timeout pendiente (startTimeout), reprogramarlo con remainingDelay
+  if (startTimeout) {
+    // ya está programado; nada que hacer
+    return;
+  }
+
+  // si no hay animación ni timeout, iniciar el ciclo (con delay)
+  startMarquee();
+}
+
+/* ===== OBSERVER DE VISIBILIDAD ===== */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if (e.target !== container) return;
+    if (e.isIntersecting && e.intersectionRatio > 0) {
+      // visible
+      isVisible = true;
+      resumeAll();
+    } else {
+      // no visible
+      isVisible = false;
+      pauseAll();
+    }
+  });
+}, { threshold: [0.01] });
+
+observer.observe(container);
+
+/* ===== INICIALIZACIÓN ===== */
+function init(){
+  // ocultar marquesina inicialmente y preparar delay completo
+  track.style.visibility = "hidden";
+  remainingDelay = START_DELAY;
+  pausedAnimTime = 0;
+
+  // intentar reproducir video (muted permite autoplay en la mayoría de navegadores)
+  video.play().catch(()=>{});
+
+  // si el contenedor ya está visible al cargar, arrancar el ciclo
+  const rect = container.getBoundingClientRect();
+  const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+  if (inViewport) {
+    isVisible = true;
+    startMarquee();
+  } else {
+    isVisible = false;
+  }
+}
+
+// recalcular parámetros y reiniciar ciclo si corresponde al redimensionar
+window.addEventListener('resize', () => {
+  // debounce simple
+  clearTimeout(window._marqueeResizeTimer);
+  window._marqueeResizeTimer = setTimeout(() => {
+    // si hay animación en curso, la dejamos continuar.
+    // si no hay animación ni timeout y el contenedor es visible, reiniciamos el ciclo con delay completo.
+    if (!marqueeAnim && !startTimeout && isVisible) {
+      remainingDelay = START_DELAY;
+      startMarquee();
+    }
+  }, 150);
+});
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(init).catch(init);
+} else {
+  window.addEventListener('load', init);
+  setTimeout(init, 500);
+}
+
+})();
+</script>
+
+</body>
+</html>
