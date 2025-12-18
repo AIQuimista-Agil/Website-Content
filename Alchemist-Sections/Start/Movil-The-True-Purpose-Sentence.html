@@ -1,215 +1,336 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Marquise | The True Purpose Sentense</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Marquee | Purpose</title>
 
-  <!-- Inter desde Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --font-size: 16px;
-      --text-color: #FF6F00;
-      --text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-      --gap: 48px; /* espacio entre repeticiones del texto */
-      --duration: 30s; /* valor por defecto, será sobrescrito por JS */
-    }
-    
-    body {
-      overflow: hidden; /* ocultar scrollbar */
-    }
-    
-    html,body{
-      height:100%;
-      margin:0;
-      background: transparent;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
+<style>
+:root{
+  --font-size:16px;
+  --base-color:#FF6F00;
+  --highlight-color:#FFB74D;
+  --shadow:0 2px 6px rgba(0,0,0,.6);
+}
 
-    /* contenedor del video y la marquesina (la marquesina solo dentro del área del video) */
-    .video-container{
-      position: relative;
-      width: 100%;
-      height: 100vh; /* ocupa toda la ventana, ajusta si necesitas otro tamaño */
-      overflow: hidden;
-      background: #000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+html,body{
+  margin:0;
+  height:100%;
+  background:transparent;
+  overflow:hidden;
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
 
-    .video-container video{
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* cubrir el contenedor */
-      display:block;
-    }
+.video-container{
+  position:relative;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+}
 
-    /* contenedor que centra verticalmente (ahora será overlay dentro del video) */
-    .marquee-wrapper{
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 24px; /* un poco de espacio respecto al borde inferior del video */
-      margin: 0 16px;
-      display:flex;
-      align-items:center; /* centra verticalmente dentro de su propia altura */
-      justify-content:flex-start;
-      height:120px; /* ajusta la altura según necesites */
-      overflow:hidden;
-      background: transparent;
-      box-sizing:border-box;
-      pointer-events: auto; /* permitir hover para pausar */
-    }
+video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
 
-    /* pista de desplazamiento */
-    .marquee-track{
-      display:flex;
-      align-items:center;
-      gap: var(--gap);
-      white-space:nowrap;
-      will-change:transform;
-      /* animación horizontal: se mueve de 0% a -100% del ancho del bloque repetido */
-      animation: marquee linear infinite;
-      animation-duration: var(--duration);
-      animation-play-state: running;
-    }
+/* ===== MARQUESINA ===== */
+.marquee-wrapper{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:24px;
+  height:120px;
+  overflow:hidden;
+}
 
-    /* elemento de texto */
-    .marquee-item{
-      font-size: var(--font-size);
-      color: var(--text-color);
-      text-shadow: var(--text-shadow);
-      line-height:1.4;
-      font-weight: 600; /* negrita visual adicional para consistencia */
-    }
+.marquee-track{
+  position:absolute;
+  white-space:nowrap;
+  will-change:transform;
+  visibility:hidden;
+}
 
-    /* pausa al pasar el ratón */
-    .marquee-wrapper:hover .marquee-track{
-      animation-play-state: paused;
-    }
+.marquee-item{
+  font-size:var(--font-size);
+  font-weight:600;
+  line-height:1.45;
+  color:var(--base-color);
+  text-shadow:var(--shadow);
 
-    /* respeta preferencia de reducir movimiento */
-    @media (prefers-reduced-motion: reduce){
-      .marquee-track{
-        animation: none;
-      }
-    }
+  /* gradiente vertical sutil */
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.25),
+    rgba(255,255,255,0)
+  );
+  -webkit-background-clip:text;
+  background-clip:text;
+}
 
-    /* keyframes: desplazamiento hacia la izquierda */
-    @keyframes marquee{
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); } /* -50% porque duplicamos el contenido para loop suave */
-    }
+/* micro-contraste solo al inicio */
+.marquee-item .lead{
+  color:var(--highlight-color);
+}
 
-    /* Ajustes responsivos opcionales */
-    @media (max-width:480px){
-      .marquee-wrapper{ height:100px; }
-      :root{ --font-size: 15px; }
-    }
-  </style>
+@media (max-width:480px){
+  :root{ --font-size:15px; }
+  .marquee-wrapper{ height:100px; }
+}
+</style>
 </head>
+
 <body>
 
-  <div class="video-container" aria-label="Contenedor de video con marquesina">
-    <!-- Reproductor de video: autoplay, muted, loop, sin controles -->
-    <video
-      id="bgVideo"
-      src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Videos/Frame-Fenix.mp4"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
-      aria-hidden="false"
-    ></video>
+<div class="video-container" id="videoContainer">
 
-    <!-- marquesina dentro del área del video, posicionada cerca del borde inferior pero con espacio -->
-    <div class="marquee-wrapper" aria-label="Marquesina de texto" role="region">
-      <div id="marqueeTrack" class="marquee-track" aria-hidden="false">
-        <div class="marquee-item" id="marqueeText">
-<strong>Inside each of us there is a powerful Sun, a star capable of giving light and heat, which first illuminates and warms the interior and then reveals itself to the exterior; which goes through stages, and, like the phoenix, each trial and challenge does not extinguish it, but rather rebirths it, burning and illuminating with greater vehemence. I am talking about Purpose. 
-In Christ Jesus, we see the greatest example not only of the person who has lived his purpose the most, but also of how this has changed and transformed the world and humanity. Beyond dogmas and beliefs, his teaching is universal.  Here and Now… My Purpose is to fully live the mission I have come to fulfill in this time and space… You can do it too…</strong>
-        </div>
+<video
+  id="bgVideo"
+  src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Videos/Frame-Fenix.mp4"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto">
+</video>
 
-        <!-- duplicado para loop suave -->
-        <div class="marquee-item" id="marqueeTextClone" aria-hidden="true"></div>
-      </div>
+<div class="marquee-wrapper">
+  <div id="marqueeTrack" class="marquee-track">
+    <div class="marquee-item" id="marqueeText">
+      <strong>
+        <span class="lead">Inside each of us there is a powerful Sun,</span>
+        a star capable of giving light and heat, which first illuminates and warms the interior and then reveals itself to the exterior; which goes through stages, and, like the phoenix, each trial and challenge does not extinguish it, but rather rebirths it, burning and illuminating with greater vehemence. I am talking about Purpose.
+        In Christ Jesus, we see the greatest example not only of the person who has lived his purpose the most, but also of how this has changed and transformed the world and humanity. Beyond dogmas and beliefs, his teaching is universal.
+        Here and Now… My Purpose is to fully live the mission I have come to fulfill in this time and space… You can do it too…
+      </strong>
     </div>
   </div>
+</div>
 
-  <script>
-    (function(){
-      const track = document.getElementById('marqueeTrack');
-      const textEl = document.getElementById('marqueeText');
-      const cloneEl = document.getElementById('marqueeTextClone');
+</div>
 
-      // Copiamos el HTML (para preservar la negrita) al clon para crear un loop continuo
-      cloneEl.innerHTML = textEl.innerHTML;
+<script>
+(() => {
 
-      // Parámetros de lectura
-      const words = textEl.textContent.trim().split(/\s+/).length;
-      const wordsPerMinute = 150; // velocidad de lectura normal
-      const readingSeconds = (words / wordsPerMinute) * 60; // tiempo estimado de lectura en segundos
+const container = document.getElementById("videoContainer");
+const track = document.getElementById("marqueeTrack");
+const textEl = document.getElementById("marqueeText");
+const video = document.getElementById("bgVideo");
 
-      // Medimos anchos reales después de renderizar
-      function computeDuration(){
-        // ancho total a desplazar = ancho del contenido repetido (texto + gap)
-        const trackRect = track.getBoundingClientRect();
-        const textRect = textEl.getBoundingClientRect();
+const START_DELAY = 7000; // 7s
 
-        // Si no se puede medir, usar un valor por defecto
-        if (!textRect.width || !trackRect.width) {
-          document.documentElement.style.setProperty('--duration', Math.max(20, readingSeconds) + 's');
-          return;
-        }
+let marqueeAnim = null;
+let startTimeout = null;        // timeout id for scheduled start
+let startTimeoutStart = 0;      // timestamp when timeout was set
+let remainingDelay = START_DELAY; // remaining ms to wait before starting
+let isVisible = false;
+let pausedAnimTime = 0;         // currentTime of animation when paused
 
-        // Distancia a desplazar: ancho del texto + gap (duplicado por el loop)
-        const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gap')) || 48;
-        const distance = textRect.width + gap;
+/* ===== MÉTRICAS ===== */
+function compute(){
+  const textW = textEl.getBoundingClientRect().width;
+  const contW = container.getBoundingClientRect().width;
+  const words = textEl.textContent.trim().split(/\s+/).length;
+  const duration = Math.max(10, (words / 150) * 60 * 1.15) * 1000;
+  // startX: fuera a la derecha; endX: fuera completamente a la izquierda
+  const startX = Math.ceil(contW);
+  const endX = -Math.ceil(textW);
+  return { startX, endX, duration };
+}
 
-        // Queremos que el usuario tenga tiempo de leer el texto completo una vez.
-        // Ajuste: multiplicador para dar un poco de margen visual
-        const marginFactor = 1.15;
+/* ===== REINICIO PROGRAMADO ===== */
+function scheduleStart(delayMs = remainingDelay){
+  // limpia cualquier timeout previo
+  clearStartTimeout();
 
-        // Duración en segundos: basada en lectura estimada y margen
-        let durationSec = Math.max(8, readingSeconds * marginFactor);
+  remainingDelay = Math.max(0, delayMs);
+  startTimeoutStart = Date.now();
+  startTimeout = setTimeout(() => {
+    startTimeout = null;
+    remainingDelay = START_DELAY; // reset para el siguiente ciclo
+    playMarquee();
+  }, remainingDelay);
+}
 
-        // Si el texto es muy corto, reducir duración proporcionalmente a su ancho
-        // pero nunca menos de 8s
-        if (textRect.width < trackRect.width) {
-          // si cabe en pantalla, hacemos que se desplace más despacio para que sea legible
-          durationSec = Math.max(durationSec, 12);
-        }
+/* limpia timeout y actualiza remainingDelay si estaba corriendo */
+function clearStartTimeout(){
+  if (startTimeout) {
+    // calcular tiempo transcurrido desde que se programó
+    const elapsed = Date.now() - startTimeoutStart;
+    remainingDelay = Math.max(0, remainingDelay - elapsed);
+    clearTimeout(startTimeout);
+    startTimeout = null;
+  }
+}
 
-        // Aplicar la duración final
-        document.documentElement.style.setProperty('--duration', durationSec + 's');
-      }
+/* ===== INICIO / REANUDACIÓN ===== */
+function playMarquee(fromTime = 0){
+  // si ya hay una animación en curso, no iniciar otra
+  if (marqueeAnim) return;
 
-      // Ejecutar después de que fuentes y layout estén listos
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(computeDuration).catch(computeDuration);
-      } else {
-        window.addEventListener('load', computeDuration);
-        setTimeout(computeDuration, 500);
-      }
+  const { startX, endX, duration } = compute();
 
-      // Recalcular al redimensionar
-      window.addEventListener('resize', () => {
-        // debounce simple
-        clearTimeout(window._marqueeResizeTimer);
-        window._marqueeResizeTimer = setTimeout(computeDuration, 150);
-      });
+  // asegurar que el track esté visible justo antes de iniciar
+  track.style.visibility = "visible";
 
-      // Asegurar que el video intente reproducirse en autoplay (muted ya está)
-      const video = document.getElementById('bgVideo');
-      // Intentar reproducir en navegadores que requieren interacción previa
-      video.play().catch(() => {
-        // si falla, no hacemos nada; el atributo autoplay + muted ayuda en la mayoría de casos
-      });
-    })();
-  </script>
+  // crear animación de un solo pase (desde fuera a la derecha hasta fuera a la izquierda)
+  marqueeAnim = track.animate(
+    [
+      { transform:`translateX(${startX}px)` },
+      { transform:`translateX(${endX}px)` }
+    ],
+    {
+      duration,
+      easing:"linear",
+      fill:"forwards"
+    }
+  );
+
+  // si venimos reanudando desde pausa, ajustar currentTime
+  try {
+    marqueeAnim.currentTime = fromTime;
+  } catch (e) {
+    // algunos navegadores no permiten setear currentTime antes de que la animación comience; ignorar si falla
+  }
+
+  marqueeAnim.onfinish = () => {
+    marqueeAnim = null;
+    // ocultar inmediatamente al terminar la pasada
+    track.style.visibility = "hidden";
+    // programar el reinicio tras START_DELAY solo si sigue visible
+    if (isVisible) {
+      remainingDelay = START_DELAY;
+      scheduleStart(remainingDelay);
+    }
+  };
+}
+
+/* ===== CICLO =====
+   startMarquee: si no hay animación ni timeout y el contenedor es visible,
+   programar el inicio con el delay restante.
+*/
+function startMarquee(){
+  if (!isVisible) return;
+  if (marqueeAnim) return;
+  if (startTimeout) return;
+  // asegurar que el track esté oculto durante la espera
+  track.style.visibility = "hidden";
+  // programar con remainingDelay (puede haber sido ajustado por pausas)
+  scheduleStart(remainingDelay);
+}
+
+/* ===== PAUSA / REANUDACIÓN por visibilidad ===== */
+function pauseAll(){
+  // pausar video
+  try { video.pause(); } catch(e){}
+
+  // pausar animación y guardar tiempo
+  if (marqueeAnim) {
+    try {
+      pausedAnimTime = marqueeAnim.currentTime || 0;
+      marqueeAnim.pause();
+    } catch(e){}
+  }
+
+  // si había un timeout programado, actualizar remainingDelay y cancelarlo
+  clearStartTimeout();
+}
+
+function resumeAll(){
+  // reanudar video
+  video.play().catch(()=>{});
+
+  // si había una animación pausada, reanudarla desde pausedAnimTime
+  if (marqueeAnim) {
+    try {
+      marqueeAnim.play();
+      return;
+    } catch(e){}
+  }
+
+  if (pausedAnimTime > 0) {
+    // reanudar la animación desde donde quedó
+    playMarquee(pausedAnimTime);
+    pausedAnimTime = 0;
+    return;
+  }
+
+  // si hay un timeout pendiente (startTimeout), reprogramarlo con remainingDelay
+  if (startTimeout) {
+    // ya está programado; nada que hacer
+    return;
+  }
+
+  // si no hay animación ni timeout, iniciar el ciclo (con delay)
+  startMarquee();
+}
+
+/* ===== OBSERVER DE VISIBILIDAD ===== */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if (e.target !== container) return;
+    if (e.isIntersecting && e.intersectionRatio > 0) {
+      // visible
+      isVisible = true;
+      resumeAll();
+    } else {
+      // no visible
+      isVisible = false;
+      pauseAll();
+    }
+  });
+}, { threshold: [0.01] });
+
+observer.observe(container);
+
+/* ===== INICIALIZACIÓN ===== */
+function init(){
+  // ocultar marquesina inicialmente y preparar delay completo
+  track.style.visibility = "hidden";
+  remainingDelay = START_DELAY;
+  pausedAnimTime = 0;
+
+  // intentar reproducir video (muted permite autoplay en la mayoría de navegadores)
+  video.play().catch(()=>{});
+
+  // si el contenedor ya está visible al cargar, arrancar el ciclo
+  const rect = container.getBoundingClientRect();
+  const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+  if (inViewport) {
+    isVisible = true;
+    startMarquee();
+  } else {
+    isVisible = false;
+  }
+}
+
+// recalcular parámetros y reiniciar ciclo si corresponde al redimensionar
+window.addEventListener('resize', () => {
+  // debounce simple
+  clearTimeout(window._marqueeResizeTimer);
+  window._marqueeResizeTimer = setTimeout(() => {
+    // si hay animación en curso, la dejamos continuar.
+    // si no hay animación ni timeout y el contenedor es visible, reiniciamos el ciclo con delay completo.
+    if (!marqueeAnim && !startTimeout && isVisible) {
+      remainingDelay = START_DELAY;
+      startMarquee();
+    }
+  }, 150);
+});
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(init).catch(init);
+} else {
+  window.addEventListener('load', init);
+  setTimeout(init, 500);
+}
+
+})();
+</script>
+
 </body>
 </html>
