@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Frame Fenix</title>
+<title>Movil | About Video</title>
 
 <style>
 html, body {
@@ -38,11 +38,10 @@ html, body {
   <video
     id="heroVideo"
     src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Videos/Frame-Fenix.mp4"
-    autoplay
-    muted
-    loop
+    preload="auto"
     playsinline
-    preload="auto">
+    crossorigin="anonymous"
+    loop>
   </video>
 
 </div>
@@ -54,6 +53,19 @@ const containerEl = document.getElementById("videoObserverContainer");
 const videoEl = document.getElementById("heroVideo");
 
 let isVideoVisible = false;
+let userInteracted = false;
+
+/* ===== INTENTO DE PLAY SEGURO ===== */
+function safePlayVideo() {
+  if (videoEl.readyState < 2) return;
+
+  const playPromise = videoEl.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // Autoplay con sonido bloqueado → esperar interacción
+    });
+  }
+}
 
 /* ===== PAUSA ===== */
 function pauseVideoOnHide() {
@@ -64,7 +76,7 @@ function pauseVideoOnHide() {
 
 /* ===== REANUDAR ===== */
 function resumeVideoOnShow() {
-  videoEl.play().catch(() => {});
+  safePlayVideo();
 }
 
 /* ===== OBSERVADOR DE VISIBILIDAD ===== */
@@ -84,16 +96,31 @@ const videoVisibilityObserver = new IntersectionObserver(entries => {
 
 videoVisibilityObserver.observe(containerEl);
 
+/* ===== INTERACCIÓN USUARIO (habilita audio) ===== */
+function enableAudioByInteraction() {
+  userInteracted = true;
+  safePlayVideo();
+  window.removeEventListener("click", enableAudioByInteraction);
+  window.removeEventListener("touchstart", enableAudioByInteraction);
+}
+
+window.addEventListener("click", enableAudioByInteraction, { once: true });
+window.addEventListener("touchstart", enableAudioByInteraction, { once: true });
+
 /* ===== INICIALIZACIÓN ===== */
 function initVideoObserver() {
-  // Intentar autoplay inicial
-  videoEl.play().catch(() => {});
+  videoEl.playsInline = true;
+  videoEl.playbackRate = 1.0;
 
-  // Comprobar visibilidad inicial
+  // Forzar precarga temprana
+  videoEl.load();
+
   const rect = containerEl.getBoundingClientRect();
   const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
 
-  if (!inViewport) {
+  if (inViewport) {
+    safePlayVideo();
+  } else {
     pauseVideoOnHide();
   }
 }
