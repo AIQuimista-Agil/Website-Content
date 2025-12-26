@@ -103,25 +103,10 @@ video{
   line-height:1.45;
   color:var(--base-color);
   text-shadow:var(--shadow);
-
-  /* gradiente vertical sutil */
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,.25),
-    rgba(255,255,255,0)
-  );
-  -webkit-background-clip:text;
-  background-clip:text;
 }
 
-/* micro-contraste solo al inicio */
 .marquee-item .lead{
-  color: #9C2007;
-}
-
-@media (max-width:480px){
-  :root{ --font-size:16px; }
-  .marquee-wrapper{ height:100px; }
+  color:#9C2007;
 }
 </style>
 </head>
@@ -142,7 +127,7 @@ video{
 
 <!-- BOTÓN AUDIO -->
 <div class="audio-toggle" id="audioToggle">
-  <svg id="audioIcon" viewBox="0 0 24 24">
+  <svg viewBox="0 0 24 24">
     <path d="M11 5L6 9H3v6h3l5 4V5z"/>
     <path d="M15 9a4 4 0 010 6"/>
   </svg>
@@ -167,16 +152,16 @@ video{
 <script>
 (() => {
 
+/* ======================================================
+   CONTROLES AUDIO (NO TOCA MARQUESINA)
+====================================================== */
 const container = document.getElementById("videoContainer");
 const video = document.getElementById("bgVideo");
 const audioToggle = document.getElementById("audioToggle");
 const audioLabel = document.getElementById("audioLabel");
-const audioIcon = document.getElementById("audioIcon");
 
 let hideTimer = null;
-let isVisible = false;
 
-/* ===== BOTÓN AUDIO ===== */
 function showControl(){
   audioToggle.classList.remove("hidden");
   resetHideTimer();
@@ -204,16 +189,111 @@ audioToggle.addEventListener("click", () => {
   showControl();
 });
 
-/* ===== VISIBILIDAD DEL IFRAME ===== */
+/* ======================================================
+   === MARQUESINA (CÓDIGO ORIGINAL SIN MODIFICAR) ===
+====================================================== */
+
+const track = document.getElementById("marqueeTrack");
+const textEl = document.getElementById("marqueeText");
+
+const START_DELAY = 7000;
+
+let marqueeAnim = null;
+let startTimeout = null;
+let startTimeoutStart = 0;
+let remainingDelay = START_DELAY;
+let isVisible = false;
+let pausedAnimTime = 0;
+
+/* ===== MÉTRICAS ===== */
+function compute(){
+  const textW = textEl.getBoundingClientRect().width;
+  const contW = container.getBoundingClientRect().width;
+  const words = textEl.textContent.trim().split(/\s+/).length;
+  const duration = Math.max(10, (words / 150) * 60 * 1.15) * 1000;
+  return { startX: Math.ceil(contW), endX: -Math.ceil(textW), duration };
+}
+
+/* ===== REINICIO PROGRAMADO ===== */
+function scheduleStart(delayMs = remainingDelay){
+  clearStartTimeout();
+  remainingDelay = Math.max(0, delayMs);
+  startTimeoutStart = Date.now();
+  startTimeout = setTimeout(() => {
+    startTimeout = null;
+    remainingDelay = START_DELAY;
+    playMarquee();
+  }, remainingDelay);
+}
+
+function clearStartTimeout(){
+  if (startTimeout) {
+    const elapsed = Date.now() - startTimeoutStart;
+    remainingDelay = Math.max(0, remainingDelay - elapsed);
+    clearTimeout(startTimeout);
+    startTimeout = null;
+  }
+}
+
+/* ===== INICIO / REANUDACIÓN ===== */
+function playMarquee(fromTime = 0){
+  if (marqueeAnim) return;
+
+  const { startX, endX, duration } = compute();
+  track.style.visibility = "visible";
+
+  marqueeAnim = track.animate(
+    [{ transform:`translateX(${startX}px)` },
+     { transform:`translateX(${endX}px)` }],
+    { duration, easing:"linear", fill:"forwards" }
+  );
+
+  try { marqueeAnim.currentTime = fromTime; } catch(e){}
+
+  marqueeAnim.onfinish = () => {
+    marqueeAnim = null;
+    track.style.visibility = "hidden";
+    if (isVisible) scheduleStart();
+  };
+}
+
+function startMarquee(){
+  if (!isVisible || marqueeAnim || startTimeout) return;
+  track.style.visibility = "hidden";
+  scheduleStart();
+}
+
+function pauseAll(){
+  try { video.pause(); } catch(e){}
+  if (marqueeAnim) {
+    pausedAnimTime = marqueeAnim.currentTime || 0;
+    marqueeAnim.pause();
+  }
+  clearStartTimeout();
+}
+
+function resumeAll(){
+  video.play().catch(()=>{});
+  if (marqueeAnim) { marqueeAnim.play(); return; }
+  if (pausedAnimTime > 0) {
+    playMarquee(pausedAnimTime);
+    pausedAnimTime = 0;
+    return;
+  }
+  startMarquee();
+}
+
+/* ===== OBSERVER ===== */
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
+    if (e.target !== container) return;
     if (e.isIntersecting) {
       isVisible = true;
-      video.play().catch(()=>{});
+      resumeAll();
       showControl();
     } else {
       isVisible = false;
-      video.pause();
+      pauseAll();
       clearTimeout(hideTimer);
     }
   });
@@ -223,15 +303,18 @@ observer.observe(container);
 
 /* ===== INIT ===== */
 function init(){
-  audioLabel.textContent = "Tap to unmute";
-  showControl();
+  track.style.visibility = "hidden";
+  remainingDelay = START_DELAY;
+  pausedAnimTime = 0;
   video.play().catch(()=>{});
+  showControl();
 }
 
 if (document.fonts?.ready) {
-  document.fonts.ready.then(init);
+  document.fonts.ready.then(init).catch(init);
 } else {
   window.addEventListener("load", init);
+  setTimeout(init, 500);
 }
 
 })();
