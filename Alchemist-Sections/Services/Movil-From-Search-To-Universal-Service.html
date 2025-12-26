@@ -11,7 +11,6 @@
 :root{
   --font-size:16px;
   --base-color:#FF6F00;
-  --highlight-color:#FFB74D;
   --shadow:0 2px 6px rgba(0,0,0,.6);
 }
 
@@ -38,8 +37,8 @@ video{
   display:block;
 }
 
-/* ===== ICONO TAP TO UNMUTE ===== */
-.tap-unmute{
+/* ===== BOTÓN AUDIO ===== */
+.audio-toggle{
   position:absolute;
   top:14px;
   right:14px;
@@ -59,20 +58,26 @@ video{
   color:#fff;
   font-size:13px;
   font-weight:500;
-  letter-spacing:.3px;
 
   cursor:pointer;
   user-select:none;
 
   box-shadow:0 4px 12px rgba(0,0,0,.35);
+  opacity:1;
+  transition:opacity .35s ease;
 }
 
-.tap-unmute svg{
+.audio-toggle.hidden{
+  opacity:0;
+  pointer-events:none;
+}
+
+.audio-toggle svg{
   width:16px;
   height:16px;
-  fill:none;
   stroke:#fff;
   stroke-width:1.8;
+  fill:none;
 }
 
 /* ===== MARQUESINA ===== */
@@ -98,23 +103,10 @@ video{
   line-height:1.45;
   color:var(--base-color);
   text-shadow:var(--shadow);
-
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,.25),
-    rgba(255,255,255,0)
-  );
-  -webkit-background-clip:text;
-  background-clip:text;
 }
 
 .marquee-item .lead{
   color:#9C2007;
-}
-
-@media (max-width:480px){
-  :root{ --font-size:16px; }
-  .marquee-wrapper{ height:100px; }
 }
 </style>
 </head>
@@ -133,13 +125,13 @@ video{
   preload="auto">
 </video>
 
-<!-- ICONO TAP TO UNMUTE -->
-<div class="tap-unmute" id="tapUnmute">
-  <svg viewBox="0 0 24 24">
+<!-- BOTÓN AUDIO -->
+<div class="audio-toggle" id="audioToggle">
+  <svg id="audioIcon" viewBox="0 0 24 24">
     <path d="M11 5L6 9H3v6h3l5 4V5z"/>
     <path d="M15 9a4 4 0 010 6"/>
   </svg>
-  Tap to unmute
+  <span id="audioLabel">Tap to unmute</span>
 </div>
 
 <div class="marquee-wrapper">
@@ -161,125 +153,53 @@ video{
 (() => {
 
 const container = document.getElementById("videoContainer");
-const track = document.getElementById("marqueeTrack");
-const textEl = document.getElementById("marqueeText");
 const video = document.getElementById("bgVideo");
-const tapUnmute = document.getElementById("tapUnmute");
+const audioToggle = document.getElementById("audioToggle");
+const audioLabel = document.getElementById("audioLabel");
+const audioIcon = document.getElementById("audioIcon");
 
-const START_DELAY = 7000;
-
-let marqueeAnim = null;
-let startTimeout = null;
-let startTimeoutStart = 0;
-let remainingDelay = START_DELAY;
+let hideTimer = null;
 let isVisible = false;
-let pausedAnimTime = 0;
-let audioUnlocked = false;
 
-/* ===== ACTIVAR AUDIO ===== */
-function unlockAudio(){
-  if (audioUnlocked) return;
-
-  video.muted = false;
-  video.volume = 1;
-  video.play().catch(()=>{});
-
-  tapUnmute.style.display = "none";
-  audioUnlocked = true;
-
-  container.removeEventListener("touchstart", unlockAudio);
-  container.removeEventListener("click", unlockAudio);
+/* ===== BOTÓN AUDIO ===== */
+function showControl(){
+  audioToggle.classList.remove("hidden");
+  resetHideTimer();
 }
 
-container.addEventListener("touchstart", unlockAudio, { passive:true });
-container.addEventListener("click", unlockAudio);
-
-/* ===== MÉTRICAS ===== */
-function compute(){
-  const textW = textEl.getBoundingClientRect().width;
-  const contW = container.getBoundingClientRect().width;
-  const words = textEl.textContent.trim().split(/\s+/).length;
-  const duration = Math.max(10, (words / 150) * 60 * 1.15) * 1000;
-  return { startX: Math.ceil(contW), endX: -Math.ceil(textW), duration };
+function hideControl(){
+  audioToggle.classList.add("hidden");
 }
 
-/* ===== REINICIO PROGRAMADO ===== */
-function scheduleStart(delayMs = remainingDelay){
-  clearStartTimeout();
-  remainingDelay = Math.max(0, delayMs);
-  startTimeoutStart = Date.now();
-  startTimeout = setTimeout(() => {
-    startTimeout = null;
-    remainingDelay = START_DELAY;
-    playMarquee();
-  }, remainingDelay);
+function resetHideTimer(){
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(hideControl, 7000);
 }
 
-function clearStartTimeout(){
-  if (startTimeout) {
-    const elapsed = Date.now() - startTimeoutStart;
-    remainingDelay = Math.max(0, remainingDelay - elapsed);
-    clearTimeout(startTimeout);
-    startTimeout = null;
+audioToggle.addEventListener("click", () => {
+  if (video.muted) {
+    video.muted = false;
+    video.volume = 1;
+    video.play().catch(()=>{});
+    audioLabel.textContent = "Tap to mute";
+  } else {
+    video.muted = true;
+    audioLabel.textContent = "Tap to unmute";
   }
-}
+  showControl();
+});
 
-/* ===== MARQUESINA ===== */
-function playMarquee(fromTime = 0){
-  if (marqueeAnim) return;
-  const { startX, endX, duration } = compute();
-  track.style.visibility = "visible";
-
-  marqueeAnim = track.animate(
-    [{ transform:`translateX(${startX}px)` },
-     { transform:`translateX(${endX}px)` }],
-    { duration, easing:"linear", fill:"forwards" }
-  );
-
-  try { marqueeAnim.currentTime = fromTime; } catch(e){}
-
-  marqueeAnim.onfinish = () => {
-    marqueeAnim = null;
-    track.style.visibility = "hidden";
-    if (isVisible) scheduleStart();
-  };
-}
-
-function startMarquee(){
-  if (!isVisible || marqueeAnim || startTimeout) return;
-  track.style.visibility = "hidden";
-  scheduleStart();
-}
-
-function pauseAll(){
-  try { video.pause(); } catch(e){}
-  if (marqueeAnim) {
-    pausedAnimTime = marqueeAnim.currentTime || 0;
-    marqueeAnim.pause();
-  }
-  clearStartTimeout();
-}
-
-function resumeAll(){
-  video.play().catch(()=>{});
-  if (marqueeAnim) { marqueeAnim.play(); return; }
-  if (pausedAnimTime > 0) {
-    playMarquee(pausedAnimTime);
-    pausedAnimTime = 0;
-    return;
-  }
-  startMarquee();
-}
-
-/* ===== OBSERVER ===== */
+/* ===== VISIBILIDAD DEL IFRAME ===== */
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if (e.isIntersecting) {
       isVisible = true;
-      resumeAll();
+      video.play().catch(()=>{});
+      showControl();
     } else {
       isVisible = false;
-      pauseAll();
+      video.pause();
+      clearTimeout(hideTimer);
     }
   });
 },{ threshold:[0.01] });
@@ -288,8 +208,8 @@ observer.observe(container);
 
 /* ===== INIT ===== */
 function init(){
-  track.style.visibility = "hidden";
-  remainingDelay = START_DELAY;
+  audioLabel.textContent = "Tap to unmute";
+  showControl();
   video.play().catch(()=>{});
 }
 
