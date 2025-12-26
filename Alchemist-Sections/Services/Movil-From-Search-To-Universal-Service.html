@@ -38,6 +38,43 @@ video{
   display:block;
 }
 
+/* ===== ICONO TAP TO UNMUTE ===== */
+.tap-unmute{
+  position:absolute;
+  top:14px;
+  right:14px;
+  z-index:20;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:8px 12px;
+  border-radius:999px;
+
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+
+  color:#fff;
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:.3px;
+
+  cursor:pointer;
+  user-select:none;
+
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+}
+
+.tap-unmute svg{
+  width:16px;
+  height:16px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:1.8;
+}
+
 /* ===== MARQUESINA ===== */
 .marquee-wrapper{
   position:absolute;
@@ -62,7 +99,6 @@ video{
   color:var(--base-color);
   text-shadow:var(--shadow);
 
-  /* gradiente vertical sutil */
   background:linear-gradient(
     to bottom,
     rgba(255,255,255,.25),
@@ -72,9 +108,8 @@ video{
   background-clip:text;
 }
 
-/* micro-contraste solo al inicio */
 .marquee-item .lead{
-  color: #9C2007;
+  color:#9C2007;
 }
 
 @media (max-width:480px){
@@ -93,9 +128,19 @@ video{
   src="https://www.dropbox.com/scl/fi/abw72nzyof8r9vbzn1fs3/Movil-End-Services.mp4?rlkey=g3yv4afvjd5ij5cp3ygxviv0f&st=iuxkgdtl&raw=1"
   autoplay
   loop
+  muted
   playsinline
   preload="auto">
 </video>
+
+<!-- ICONO TAP TO UNMUTE -->
+<div class="tap-unmute" id="tapUnmute">
+  <svg viewBox="0 0 24 24">
+    <path d="M11 5L6 9H3v6h3l5 4V5z"/>
+    <path d="M15 9a4 4 0 010 6"/>
+  </svg>
+  Tap to unmute
+</div>
 
 <div class="marquee-wrapper">
   <div id="marqueeTrack" class="marquee-track">
@@ -119,15 +164,35 @@ const container = document.getElementById("videoContainer");
 const track = document.getElementById("marqueeTrack");
 const textEl = document.getElementById("marqueeText");
 const video = document.getElementById("bgVideo");
+const tapUnmute = document.getElementById("tapUnmute");
 
-const START_DELAY = 7000; // 7s
+const START_DELAY = 7000;
 
 let marqueeAnim = null;
-let startTimeout = null;        // timeout id for scheduled start
-let startTimeoutStart = 0;      // timestamp when timeout was set
-let remainingDelay = START_DELAY; // remaining ms to wait before starting
+let startTimeout = null;
+let startTimeoutStart = 0;
+let remainingDelay = START_DELAY;
 let isVisible = false;
-let pausedAnimTime = 0;         // currentTime of animation when paused
+let pausedAnimTime = 0;
+let audioUnlocked = false;
+
+/* ===== ACTIVAR AUDIO ===== */
+function unlockAudio(){
+  if (audioUnlocked) return;
+
+  video.muted = false;
+  video.volume = 1;
+  video.play().catch(()=>{});
+
+  tapUnmute.style.display = "none";
+  audioUnlocked = true;
+
+  container.removeEventListener("touchstart", unlockAudio);
+  container.removeEventListener("click", unlockAudio);
+}
+
+container.addEventListener("touchstart", unlockAudio, { passive:true });
+container.addEventListener("click", unlockAudio);
 
 /* ===== MÉTRICAS ===== */
 function compute(){
@@ -135,30 +200,23 @@ function compute(){
   const contW = container.getBoundingClientRect().width;
   const words = textEl.textContent.trim().split(/\s+/).length;
   const duration = Math.max(10, (words / 150) * 60 * 1.15) * 1000;
-  // startX: fuera a la derecha; endX: fuera completamente a la izquierda
-  const startX = Math.ceil(contW);
-  const endX = -Math.ceil(textW);
-  return { startX, endX, duration };
+  return { startX: Math.ceil(contW), endX: -Math.ceil(textW), duration };
 }
 
 /* ===== REINICIO PROGRAMADO ===== */
 function scheduleStart(delayMs = remainingDelay){
-  // limpia cualquier timeout previo
   clearStartTimeout();
-
   remainingDelay = Math.max(0, delayMs);
   startTimeoutStart = Date.now();
   startTimeout = setTimeout(() => {
     startTimeout = null;
-    remainingDelay = START_DELAY; // reset para el siguiente ciclo
+    remainingDelay = START_DELAY;
     playMarquee();
   }, remainingDelay);
 }
 
-/* limpia timeout y actualiza remainingDelay si estaba corriendo */
 function clearStartTimeout(){
   if (startTimeout) {
-    // calcular tiempo transcurrido desde que se programó
     const elapsed = Date.now() - startTimeoutStart;
     remainingDelay = Math.max(0, remainingDelay - elapsed);
     clearTimeout(startTimeout);
@@ -166,166 +224,79 @@ function clearStartTimeout(){
   }
 }
 
-/* ===== INICIO / REANUDACIÓN ===== */
+/* ===== MARQUESINA ===== */
 function playMarquee(fromTime = 0){
-  // si ya hay una animación en curso, no iniciar otra
   if (marqueeAnim) return;
-
   const { startX, endX, duration } = compute();
-
-  // asegurar que el track esté visible justo antes de iniciar
   track.style.visibility = "visible";
 
-  // crear animación de un solo pase (desde fuera a la derecha hasta fuera a la izquierda)
   marqueeAnim = track.animate(
-    [
-      { transform:`translateX(${startX}px)` },
-      { transform:`translateX(${endX}px)` }
-    ],
-    {
-      duration,
-      easing:"linear",
-      fill:"forwards"
-    }
+    [{ transform:`translateX(${startX}px)` },
+     { transform:`translateX(${endX}px)` }],
+    { duration, easing:"linear", fill:"forwards" }
   );
 
-  // si venimos reanudando desde pausa, ajustar currentTime
-  try {
-    marqueeAnim.currentTime = fromTime;
-  } catch (e) {
-    // algunos navegadores no permiten setear currentTime antes de que la animación comience; ignorar si falla
-  }
+  try { marqueeAnim.currentTime = fromTime; } catch(e){}
 
   marqueeAnim.onfinish = () => {
     marqueeAnim = null;
-    // ocultar inmediatamente al terminar la pasada
     track.style.visibility = "hidden";
-    // programar el reinicio tras START_DELAY solo si sigue visible
-    if (isVisible) {
-      remainingDelay = START_DELAY;
-      scheduleStart(remainingDelay);
-    }
+    if (isVisible) scheduleStart();
   };
 }
 
-/* ===== CICLO =====
-   startMarquee: si no hay animación ni timeout y el contenedor es visible,
-   programar el inicio con el delay restante.
-*/
 function startMarquee(){
-  if (!isVisible) return;
-  if (marqueeAnim) return;
-  if (startTimeout) return;
-  // asegurar que el track esté oculto durante la espera
+  if (!isVisible || marqueeAnim || startTimeout) return;
   track.style.visibility = "hidden";
-  // programar con remainingDelay (puede haber sido ajustado por pausas)
-  scheduleStart(remainingDelay);
+  scheduleStart();
 }
 
-/* ===== PAUSA / REANUDACIÓN por visibilidad ===== */
 function pauseAll(){
-  // pausar video
   try { video.pause(); } catch(e){}
-
-  // pausar animación y guardar tiempo
   if (marqueeAnim) {
-    try {
-      pausedAnimTime = marqueeAnim.currentTime || 0;
-      marqueeAnim.pause();
-    } catch(e){}
+    pausedAnimTime = marqueeAnim.currentTime || 0;
+    marqueeAnim.pause();
   }
-
-  // si había un timeout programado, actualizar remainingDelay y cancelarlo
   clearStartTimeout();
 }
 
 function resumeAll(){
-  // reanudar video
   video.play().catch(()=>{});
-
-  // si había una animación pausada, reanudarla desde pausedAnimTime
-  if (marqueeAnim) {
-    try {
-      marqueeAnim.play();
-      return;
-    } catch(e){}
-  }
-
+  if (marqueeAnim) { marqueeAnim.play(); return; }
   if (pausedAnimTime > 0) {
-    // reanudar la animación desde donde quedó
     playMarquee(pausedAnimTime);
     pausedAnimTime = 0;
     return;
   }
-
-  // si hay un timeout pendiente (startTimeout), reprogramarlo con remainingDelay
-  if (startTimeout) {
-    // ya está programado; nada que hacer
-    return;
-  }
-
-  // si no hay animación ni timeout, iniciar el ciclo (con delay)
   startMarquee();
 }
 
-/* ===== OBSERVER DE VISIBILIDAD ===== */
+/* ===== OBSERVER ===== */
 const observer = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
-    if (e.target !== container) return;
-    if (e.isIntersecting && e.intersectionRatio > 0) {
-      // visible
+    if (e.isIntersecting) {
       isVisible = true;
       resumeAll();
     } else {
-      // no visible
       isVisible = false;
       pauseAll();
     }
   });
-}, { threshold: [0.01] });
+},{ threshold:[0.01] });
 
 observer.observe(container);
 
-/* ===== INICIALIZACIÓN ===== */
+/* ===== INIT ===== */
 function init(){
-  // ocultar marquesina inicialmente y preparar delay completo
   track.style.visibility = "hidden";
   remainingDelay = START_DELAY;
-  pausedAnimTime = 0;
-
-  // intentar reproducir video (muted permite autoplay en la mayoría de navegadores)
   video.play().catch(()=>{});
-
-  // si el contenedor ya está visible al cargar, arrancar el ciclo
-  const rect = container.getBoundingClientRect();
-  const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
-  if (inViewport) {
-    isVisible = true;
-    startMarquee();
-  } else {
-    isVisible = false;
-  }
 }
 
-// recalcular parámetros y reiniciar ciclo si corresponde al redimensionar
-window.addEventListener('resize', () => {
-  // debounce simple
-  clearTimeout(window._marqueeResizeTimer);
-  window._marqueeResizeTimer = setTimeout(() => {
-    // si hay animación en curso, la dejamos continuar.
-    // si no hay animación ni timeout y el contenedor es visible, reiniciamos el ciclo con delay completo.
-    if (!marqueeAnim && !startTimeout && isVisible) {
-      remainingDelay = START_DELAY;
-      startMarquee();
-    }
-  }, 150);
-});
-
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(init).catch(init);
+if (document.fonts?.ready) {
+  document.fonts.ready.then(init);
 } else {
-  window.addEventListener('load', init);
-  setTimeout(init, 500);
+  window.addEventListener("load", init);
 }
 
 })();
