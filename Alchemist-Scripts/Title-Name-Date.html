@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -99,7 +99,45 @@
 
 <body>
 
-  <h1>AI.Quimista Ágil | Carlos David Navarro Navarro | DD/MM/YYYY | HH:MM </h1>
+  <h1 id="header-title">AI.Quimista Ágil | Carlos David Navarro Navarro | --/--/---- | --:--</h1>
+
+  <script>
+    // Añade un cero a la izquierda si es necesario
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
+    }
+
+    // Formatea la fecha y hora según las especificaciones
+    function formatDateTime(date) {
+      const day = pad(date.getDate());
+      const month = pad(date.getMonth() + 1);
+      const year = date.getFullYear();
+
+      let hours = date.getHours();
+      const minutes = pad(date.getMinutes());
+      const ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours === 0 ? 12 : hours;
+      const hoursStr = pad(hours);
+
+      return {
+        dateStr: `${day}/${month}/${year}`,
+        timeStr: `${hoursStr}:${minutes} ${ampm}`
+      };
+    }
+
+    // Actualiza el H1 con la fecha y hora del sistema
+    function updateHeader() {
+      const now = new Date(); // usa el reloj del sistema del cliente
+      const formatted = formatDateTime(now);
+      const header = document.getElementById('header-title');
+      header.textContent = `AI.Quimista Ágil | Carlos David Navarro Navarro | ${formatted.dateStr} | ${formatted.timeStr}`;
+    }
+
+    // Ejecuta al cargar y luego cada segundo para mantener la hora y minutos sincronizados sin refrescar
+    updateHeader();
+    setInterval(updateHeader, 1000);
+  </script>
 
 </body>
 </html>
