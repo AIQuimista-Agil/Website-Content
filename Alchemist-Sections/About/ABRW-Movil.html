@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ABOUT | Movil Video Frame</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --base-color:#FF6F00;
+  --shadow:0 2px 6px rgba(0,0,0,.6);
+}
+
+html,body{
+  margin:0;
+  height:100%;
+  background:transparent;
+  overflow:hidden;
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
+
+.video-wrapper{
+  position:relative;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+}
+
+video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* ===== BOTÓN AUDIO ===== */
+.sound-control{
+  position:absolute;
+  top:14px;
+  right:14px;
+  z-index:20;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:8px 12px;
+  border-radius:999px;
+
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+
+  color:#fff;
+  font-size:13px;
+  font-weight:500;
+
+  cursor:pointer;
+  user-select:none;
+
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+  opacity:1;
+  transition:opacity .35s ease;
+}
+
+.sound-control.hidden{
+  opacity:0;
+  pointer-events:none;
+}
+
+.sound-control svg{
+  width:16px;
+  height:16px;
+  stroke:#fff;
+  stroke-width:1.8;
+  fill:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="video-wrapper" id="videoWrapper">
+
+  <video
+    id="mainVideo"
+    src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Videos/Frame-Titulo.mp4"
+    autoplay
+    loop
+    muted
+    playsinline
+    preload="auto">
+  </video>
+
+  <!-- BOTÓN AUDIO -->
+  <div class="sound-control" id="soundControl">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M11 5L6 9H3v6h3l5 4V5z"/>
+      <path d="M15 9a4 4 0 010 6"/>
+    </svg>
+    <span id="soundLabel">Tap to unmute</span>
+  </div>
+
+</div>
+
+<script>
+(() => {
+
+  /* Renombradas variables y solo control de audio/video */
+  const videoWrapper = document.getElementById("videoWrapper");
+  const mainVideo = document.getElementById("mainVideo");
+  const soundControl = document.getElementById("soundControl");
+  const soundLabel = document.getElementById("soundLabel");
+
+  let hideTimeout = null;
+
+  function showSoundControl(){
+    soundControl.classList.remove("hidden");
+    resetHideTimeout();
+  }
+
+  function hideSoundControl(){
+    soundControl.classList.add("hidden");
+  }
+
+  function resetHideTimeout(){
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(hideSoundControl, 7000);
+  }
+
+  soundControl.addEventListener("click", () => {
+    if (mainVideo.muted) {
+      mainVideo.muted = false;
+      mainVideo.volume = 1;
+      mainVideo.play().catch(()=>{});
+      soundLabel.textContent = "Tap to mute";
+    } else {
+      mainVideo.muted = true;
+      soundLabel.textContent = "Tap to unmute";
+    }
+    showSoundControl();
+  });
+
+  /* Pausar/reanudar video según visibilidad en pantalla */
+  let isVisible = false;
+
+  function pauseVideo(){
+    try { mainVideo.pause(); } catch(e){}
+  }
+
+  function resumeVideo(){
+    mainVideo.play().catch(()=>{});
+  }
+
+  const visibilityObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.target !== videoWrapper) return;
+      if (entry.isIntersecting) {
+        isVisible = true;
+        resumeVideo();
+        showSoundControl();
+      } else {
+        isVisible = false;
+        pauseVideo();
+        clearTimeout(hideTimeout);
+      }
+    });
+  }, { threshold: [0.01] });
+
+  visibilityObserver.observe(videoWrapper);
+
+  /* Inicialización */
+  function init(){
+    mainVideo.play().catch(()=>{});
+    showSoundControl();
+  }
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(init).catch(init);
+  } else {
+    window.addEventListener("load", init);
+    setTimeout(init, 500);
+  }
+
+})();
+</script>
+
+</body>
+</html>
