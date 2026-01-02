@@ -39,7 +39,8 @@ video{
 /* ===== BOTÓN AUDIO ===== */
 .sound-control{
   position:absolute;
-  top:14px;
+  /* ubicado en el lado derecho y más abajo */
+  top:40%;
   right:14px;
   z-index:20;
 
@@ -63,7 +64,8 @@ video{
 
   box-shadow:0 4px 12px rgba(0,0,0,.35);
   opacity:1;
-  transition:opacity .35s ease;
+  transition:opacity .35s ease, transform .2s ease;
+  transform:translateY(-50%); /* centra verticalmente respecto a top:40% */
 }
 
 .sound-control.hidden{
@@ -87,7 +89,7 @@ video{
 
   <video
     id="mainVideo"
-    src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Videos/Frame-Titulo.mp4"
+    src="https://aiquimista-agil.github.io/Website-Content/Alchemist-Assets/Videos/Frame-Fenix.mp4"
     autoplay
     loop
     muted
