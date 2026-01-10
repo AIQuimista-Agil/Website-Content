@@ -1,36 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Resultados de la Búsqueda | AI.Quimista Ágil</title>
+  <meta charset="UTF-8" />
+  <title>Marquesina | AI.Quimista Ágil</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <style>
+    /* Fondo transparente para que el contenedor padre (o iframe) muestre su fondo */
     html, body {
+      height: 100%;
+      margin: 0;
       background: transparent;
       background-color: transparent;
-      color: #ffb347;
+      overflow: hidden; /* evita barras en la propia página */
       font-family: 'Share Tech Mono', monospace;
-      margin: 0;
-      padding: 40px;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #ffb347; /* texto primario naranja suave */
       text-shadow: 0 0 8px rgba(255, 150, 60, 0.6);
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      padding: 20px 40px;
+      box-sizing: border-box;
     }
 
-    h1 {
+    /* Contenedor de la marquesina */
+    .marquee-wrapper {
+      width: 100%;
+      overflow: hidden; /* recorta el contenido en los bordes */
+      cursor: pointer;
+      user-select: none;
+      box-sizing: border-box;
+    }
+
+    /* La pista contiene el elemento que se moverá */
+    .marquee {
+      display: block;
+      white-space: nowrap;
+      will-change: transform;
+      position: relative;
+      height: auto;
+    }
+
+    /* Restauración exacta del estilo del texto (igual que el h1 original) */
+    .marquee h1 {
+      display: inline-block;
+      margin: 0;
       font-family: 'Cinzel', serif;
       font-size: clamp(22px, 5vw, 32px);
       color: #ffcc55;
       text-align: center;
-      margin-bottom: 20px;
       text-shadow:
         0 0 15px rgba(255, 160, 60, 0.9),
-        0 0 30px rgba(255, 100, 0, 0.5),
+        0 0 30px rgba(255, 100, 0,   0.5),
         0 0 45px rgba(255, 140, 20, 0.4);
+      /* Mantengo la animación de resplandor original */
       animation: fireGlow 2.5s infinite alternate;
+      padding-right: 2rem; /* espacio al final para que no corte el texto al reiniciar */
     }
 
     @keyframes fireGlow {
@@ -50,43 +78,137 @@
       }
     }
 
-    @keyframes greenFlame {
-      0% {
-        box-shadow:
-          0 0 15px rgba(255, 140, 50, 0.15) inset,
-          0 0 25px rgba(255, 120, 30, 0.25);
-      }
-      100% {
-        box-shadow:
-          0 0 30px rgba(255, 140, 50, 0.35) inset,
-          0 0 50px rgba(255, 100, 0, 0.55);
-      }
+    /* Ocultar barras de desplazamiento si se carga dentro de un iframe */
+    iframe, iframe body, iframe html {
+      overflow: hidden !important;
+      scrollbar-width: none !important; /* Firefox */
+      -ms-overflow-style: none !important; /* IE 10+ */
+    }
+    iframe::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
-    @keyframes blink {
-      50% { opacity: 0; }
+    /* Accesibilidad */
+    .marquee-wrapper:focus {
+      outline: 2px dashed rgba(255,170,50,0.6);
+      outline-offset: 6px;
     }
 
-    @keyframes cursorFlame {
-      0% {
-        box-shadow:
-          0 0 8px rgba(255, 150, 80, 0.8),
-          0 0 15px #ff9933;
-      }
-      100% {
-        box-shadow:
-          0 0 12px rgba(255, 170, 90, 1),
-          0 0 25px #ffaa33;
-      }
-    }
-
-    @media screen and (max-width: 600px) {
-      body { padding: 20px; }
+    @media (max-width: 600px) {
+      html, body { padding: 12px 16px; }
+      .marquee h1 { font-size: clamp(16px, 6vw, 20px); padding-right: 1rem; }
     }
   </style>
 </head>
-
 <body>
-  <h1>Resultados de la Búsqueda | AI.Quimista Ágil</h1>
+
+  <div
+    class="marquee-wrapper"
+    role="button"
+    tabindex="0"
+    aria-label="Marquesina: Haz click para obtener el mensaje del Oráculo"
+    title="Haz click en esta Marquesina para obtener un mensaje del Oráculo"
+    id="marqueeButton"
+  >
+    <div class="marquee" id="marqueeTrack" aria-hidden="false">
+      <h1 id="marqueeText">Blog | Ai.Quimista Ágil | Oráculo de AI.Quimista Ágil | Haz click en esta Marquesina para obtener un mensaje que el Oráculo tiene para tí el día de Hoy</h1>
+    </div>
+  </div>
+
+  <script>
+    // Mensaje del Oráculo
+    const oracleMessage = "El Oráculo dice: Hoy es un buen día para aprender algo nuevo. Mantén la curiosidad y actúa con calma.";
+
+    const marqueeButton = document.getElementById('marqueeButton');
+    const track = document.getElementById('marqueeTrack');
+    const text = document.getElementById('marqueeText');
+
+    marqueeButton.addEventListener('click', () => alert(oracleMessage));
+    marqueeButton.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        alert(oracleMessage);
+      }
+    });
+
+    /* Animación por ciclos completos:
+       - Coloca el texto fuera a la derecha (translateX(startX))
+       - Transiciona hasta que el texto haya salido completamente por la izquierda (translateX(endX))
+       - Al terminar la transición, resetea sin transición y repite
+    */
+    (function marqueeLoop() {
+      let running = false;
+      const pxPerSecond = 120; // velocidad visual (ajusta si quieres más/menos velocidad)
+
+      function startOnce() {
+        if (running) return;
+        running = true;
+        runCycle();
+        window.addEventListener('resize', restartOnResize);
+      }
+
+      function restartOnResize() {
+        // reinicia el ciclo para recalcular dimensiones
+        running = false;
+        // small debounce
+        clearTimeout(restartOnResize._t);
+        restartOnResize._t = setTimeout(() => {
+          running = false;
+          runCycle();
+        }, 150);
+      }
+
+      function runCycle() {
+        // medidas
+        const wrapperWidth = track.parentElement.clientWidth;
+        const textWidth = text.offsetWidth;
+        // punto inicial: texto completamente fuera a la derecha
+        const startX = wrapperWidth;
+        // punto final: texto completamente fuera por la izquierda (negativo de su ancho)
+        const endX = -textWidth;
+        // distancia total a recorrer en px
+        const distance = startX - endX;
+        // duración en segundos
+        const duration = Math.max(3, distance / pxPerSecond);
+
+        // colocar en inicio sin transición
+        text.style.transition = 'none';
+        text.style.transform = `translateX(${startX}px)`;
+
+        // forzar reflow para que el navegador aplique el estado inicial
+        void text.offsetWidth;
+
+        // aplicar transición hacia la posición final
+        text.style.transition = `transform ${duration}s linear`;
+        text.style.transform = `translateX(${endX}px)`;
+
+        // cuando termine, reiniciar ciclo
+        const onEnd = () => {
+          text.removeEventListener('transitionend', onEnd);
+          // reset sin transición y volver a iniciar
+          text.style.transition = 'none';
+          text.style.transform = `translateX(${startX}px)`;
+          // forzar reflow
+          void text.offsetWidth;
+          // pequeña pausa opcional entre ciclos (0.3s)
+          setTimeout(() => {
+            // iniciar siguiente ciclo
+            runCycle();
+          }, 300);
+        };
+
+        text.addEventListener('transitionend', onEnd);
+      }
+
+      // iniciar cuando la página esté lista y fuentes cargadas
+      if (document.readyState === 'complete') {
+        startOnce();
+      } else {
+        window.addEventListener('load', startOnce);
+      }
+    })();
+  </script>
 </body>
 </html>
