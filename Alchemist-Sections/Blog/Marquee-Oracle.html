@@ -1,0 +1,105 @@
+<!DOCTYPE html>  
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados de la Búsqueda | AI.Quimista Ágil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      /* Fondo fuego: centro anaranjado -> negro */
+      background: radial-gradient(circle at center, #2b0a00 0%, #000 100%);
+      color: #ffb347; /* texto primario naranja suave */
+      font-family: 'Share Tech Mono', monospace;
+      margin: 0;
+      padding: 40px;
+      overflow-x: hidden;
+
+      /* Brillo cálido de fuego */
+      text-shadow: 0 0 8px rgba(255, 150, 60, 0.6);
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(22px, 5vw, 32px);
+
+      /* Tono fuego: amarillo + naranja */
+      color: #ffcc55;
+      text-align: center;
+      margin-bottom: 20px;
+
+      /* Resplandor cálido */
+      text-shadow:
+        0 0 15px rgba(255, 160, 60, 0.9),
+        0 0 30px rgba(255, 100, 0,   0.5),
+        0 0 45px rgba(255, 140, 20, 0.4);
+
+      animation: fireGlow 2.5s infinite alternate;
+    }
+
+    /* === ANIMACIÓN FUEGO === */
+    @keyframes fireGlow {
+      0% {
+        text-shadow: 
+          0 0 10px #ff8c3a,
+          0 0 20px #ffb347,
+          0 0 30px #ffcc66,
+          0 0 40px #ff9933;
+      }
+      100% {
+        text-shadow:
+          0 0 20px #ffc266,
+          0 0 40px #ff9933,
+          0 0 60px #ff7a29,
+          0 0 80px #ff5500;
+      }
+    }
+
+    /* === EFECTO LLAMA SUAVE === */
+    @keyframes greenFlame {
+      0% {
+        box-shadow: 
+          0 0 15px rgba(255, 140, 50, 0.15) inset,
+          0 0 25px rgba(255, 120, 30, 0.25);
+      }
+      100% {
+        box-shadow: 
+          0 0 30px rgba(255, 140, 50, 0.35) inset,
+          0 0 50px rgba(255, 100, 0, 0.55);
+      }
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* === CURSOR FUEGO === */
+    @keyframes cursorFlame {
+      0% {
+        box-shadow: 
+          0 0 8px rgba(255, 150, 80, 0.8), 
+          0 0 15px #ff9933;
+      }
+      100% {
+        box-shadow: 
+          0 0 12px rgba(255, 170, 90, 1), 
+          0 0 25px #ffaa33;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      body { padding: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Resultados de la Búsqueda | AI.Quimista Ágil</h1>
+
+</body>
+</html>
