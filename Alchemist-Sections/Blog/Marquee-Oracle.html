@@ -1,214 +1,294 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Marquesina | Oráculo | AI.Quimista Ágil</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<title>Frases Celebres | AI.Quimista Ágil</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-center:#2b0a00;
+  --bg-edge:#000;
+  --text-main:#ffb347;
+  --accent:#ffcc55;
+  --glass: rgba(255,255,255,0.04);
+  --marquee-speed: 60s; /* valor por defecto, será sobrescrito por JS */
+}
 
-  <style>
-    /* Fondo transparente para que el contenedor padre (o iframe) muestre su fondo */
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: transparent;
-      background-color: transparent;
-      overflow: hidden; /* evita barras en la propia página */
-      font-family: 'Share Tech Mono', monospace;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      color: #00ffff; /* texto primario cian */
-      text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px 40px;
-      box-sizing: border-box;
-    }
+html,body{
+  height:100%;
+  margin:0;
+  font-family:'Share Tech Mono', monospace;
+  background: radial-gradient(circle at center, var(--bg-center) 0%, var(--bg-edge) 100%);
+  color:var(--text-main);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  box-sizing:border-box;
+  overflow:hidden;
+}
 
-    /* Contenedor de la marquesina */
-    .marquee-wrapper {
-      width: 100%;
-      overflow: hidden; /* recorta el contenido en los bordes */
-      cursor: pointer;
-      user-select: none;
-      box-sizing: border-box;
-    }
+/* Contenedor principal */
+.marquee-wrap{
+  width:100%;
+  max-width:1100px;
+  background: linear-gradient(180deg, rgba(255,80,0,0.03), rgba(0,0,0,0.25));
+  border-radius:12px;
+  padding:18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  align-items:center;
+  user-select:none;
+}
 
-    /* La pista contiene el elemento que se moverá */
-    .marquee {
-      display: block;
-      white-space: nowrap;
-      will-change: transform;
-      position: relative;
-      height: auto;
-    }
+h1{
+  font-family:'Cinzel', serif;
+  font-size:clamp(18px,4vw,28px);
+  color:var(--accent);
+  margin:0;
+  text-align:center;
+  text-shadow: 0 0 12px rgba(255,160,60,0.9), 0 0 24px rgba(255,100,0,0.4);
+  animation: fireGlow 2.5s infinite alternate;
+}
 
-    /* Restauración exacta del estilo del texto (igual que el h1 original) */
-    .marquee h1 {
-      display: inline-block;
-      margin: 0;
-      font-family: 'Cinzel', serif;
-      font-size: clamp(22px, 5vw, 32px);
-      color: #00ffff;
-      text-align: center;
-      text-shadow:
-        0 0 15px rgba(0, 255, 255, 0.9),
-        0 0 30px rgba(0, 200, 200, 0.6),
-        0 0 45px rgba(0, 150, 150, 0.4);
-      /* Mantengo la animación de resplandor original */
-      animation: fireGlow 2.5s infinite alternate;
-      padding-right: 2rem; /* espacio al final para que no corte el texto al reiniciar */
-    }
+/* MARQUESINA */
+.marquee {
+  width:100%;
+  overflow:hidden;
+  border-radius:8px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.35), rgba(255,120,30,0.03));
+  padding:12px 6px;
+  box-sizing:border-box;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  position:relative;
+  border:1px solid rgba(255,140,50,0.06);
+}
 
-    @keyframes fireGlow {
-      0% {
-        text-shadow:
-          0 0 10px #00e5e5,
-          0 0 20px #00ffff,
-          0 0 30px #66ffff,
-          0 0 40px #00cccc;
-      }
-      100% {
-        text-shadow:
-          0 0 20px #66ffff,
-          0 0 40px #00cccc,
-          0 0 60px #00b3b3,
-          0 0 80px #009999;
-      }
-    }
+/* track contiene inner que a su vez contiene dos copias del contenido */
+.marquee .track {
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  --duration: var(--marquee-speed);
+}
 
-    /* Ocultar barras de desplazamiento si se carga dentro de un iframe */
-    iframe, iframe body, iframe html {
-      overflow: hidden !important;
-      scrollbar-width: none !important; /* Firefox */
-      -ms-overflow-style: none !important; /* IE 10+ */
-    }
-    iframe::-webkit-scrollbar {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-    }
+.marquee .track .inner {
+  display:inline-flex;
+  white-space:nowrap;
+  will-change:transform;
+  /* animación: mueve la inner que tiene 2 copias del contenido */
+  animation: scroll-left var(--duration) linear infinite;
+  font-size:clamp(16px,3.2vw,22px);
+  color:var(--text-main);
+  text-shadow:0 0 6px rgba(255,150,60,0.6);
+}
 
-    /* Accesibilidad */
-    .marquee-wrapper:focus {
-      outline: 2px dashed rgba(0,255,255,0.6);
-      outline-offset: 6px;
-    }
+/* cada copia ocupa su ancho natural; se separan con un pequeño gap */
+.marquee .track .inner .copy {
+  display:inline-block;
+  padding-right:3rem;
+}
 
-    @media (max-width: 600px) {
-      html, body { padding: 12px 16px; }
-      .marquee h1 { font-size: clamp(16px, 6vw, 20px); padding-right: 1rem; }
-    }
-  </style>
+/* pausa al hacer hover (útil para pruebas) */
+.marquee:hover .track .inner {
+  animation-play-state:paused;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* -50% porque inner tiene 200% del contenido (dos copias) */
+}
+
+/* Modal para mostrar la frase */
+.quote-modal { position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(0.98); min-width:280px; max-width:90%; background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.8)); border-radius:12px; padding:18px; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border:1px solid rgba(255,140,50,0.06); display:none; z-index:9999; color:#fff; text-align:center; backdrop-filter: blur(6px); }
+.quote-modal.show { display:block; animation:pop 220ms ease-out; transform:translate(-50%,-50%) scale(1); }
+@keyframes pop { from { opacity:0; transform:translate(-50%,-50%) scale(0.96);} to { opacity:1; transform:translate(-50%,-50%) scale(1);} }
+.quote-text { font-size:clamp(16px,2.6vw,20px); color:#ffeecf; margin-bottom:10px; }
+.quote-author { font-size:14px; color:#ffdca8; opacity:0.95; }
+.controls { display:flex; gap:8px; justify-content:center; margin-top:12px; }
+.btn { background:linear-gradient(180deg, rgba(255,140,50,0.14), rgba(255,120,30,0.06)); color:var(--accent); border:1px solid rgba(255,140,50,0.12); padding:8px 12px; border-radius:8px; cursor:pointer; font-family:inherit; font-size:13px; }
+.small-note { font-size:12px; color:rgba(255,200,150,0.6); margin-top:6px; text-align:center; }
+
+@keyframes fireGlow { 0% { text-shadow: 0 0 10px #ff8c3a, 0 0 20px #ffb347; } 100% { text-shadow: 0 0 20px #ffc266, 0 0 40px #ff9933; } }
+
+@media (max-width:600px){
+  .marquee .track .inner { font-size:16px; }
+  .marquee { padding:10px; }
+}
+</style>
 </head>
 <body>
+<div class="marquee-wrap" id="app">
+  <h1>Frases Celebres | AI.Quimista Ágil - Da Click Aquí</h1>
 
-  <div
-    class="marquee-wrapper"
-    role="button"
-    tabindex="0"
-    aria-label="Marquesina: Haz click para obtener el mensaje del Oráculo"
-    title="Haz click en esta Marquesina para obtener un mensaje del Oráculo"
-    id="marqueeButton"
-  >
-    <div class="marquee" id="marqueeTrack" aria-hidden="false">
-      <h1 id="marqueeText">Blog | Ai.Quimista Ágil | Oráculo de AI.Quimista Ágil | Haz click en esta Marquesina para obtener un mensaje que el Oráculo tiene para tí el día de Hoy</h1>
+  <div class="marquee" id="marquee" title="Haz click para obtener una frase">
+    <div class="track" id="track" aria-hidden="true">
+      <div class="inner" id="inner">
+        <div class="copy" id="copy1">Frases célebres, sabiduría antigua y moderna — pulsa aquí para descubrir lo que la vida quiere decirte ahora —</div>
+        <div class="copy" id="copy2">Frases célebres, sabiduría antigua y moderna — pulsa aquí para descubrir lo que la vida quiere decirte ahora —</div>
+      </div>
     </div>
   </div>
 
-  <script>
-    // Mensaje del Oráculo
-    const oracleMessage = "El Oráculo dice: Hoy es un buen día para aprender algo nuevo. Mantén la curiosidad y actúa con calma.";
+  <div class="small-note">La marquesina detecta clicks y solicita una frase célebre desde un servicio AI o usa un respaldo local.</div>
+</div>
 
-    const marqueeButton = document.getElementById('marqueeButton');
-    const track = document.getElementById('marqueeTrack');
-    const text = document.getElementById('marqueeText');
+<!-- Modal -->
+<div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="quote-text" id="quoteText">Cargando...</div>
+  <div class="quote-author" id="quoteAuthor"></div>
+  <div class="controls">
+    <button class="btn" id="anotherBtn">Otra frase</button>
+    <button class="btn" id="closeBtn">Cerrar</button>
+  </div>
+</div>
 
-    marqueeButton.addEventListener('click', () => alert(oracleMessage));
-    marqueeButton.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-        e.preventDefault();
-        alert(oracleMessage);
-      }
+<script>
+(function(){
+  // === CONFIGURACIÓN ===
+  const AI_API = {
+    enabled: false,
+    url: 'https://api.example.com/ai-quote',
+    fetchHeaders: { 'Content-Type': 'application/json' }
+  };
+
+  const localQuotes = [
+    { quote: "La imaginación es más importante que el conocimiento.", author: "Albert Einstein" },
+    { quote: "El conocimiento habla, pero la sabiduría escucha.", author: "Jimi Hendrix" },
+    { quote: "La simplicidad es la máxima sofisticación.", author: "Leonardo da Vinci" },
+    { quote: "No hay camino para la paz, la paz es el camino.", author: "Mahatma Gandhi" },
+    { quote: "La tecnología por sí sola no basta.", author: "Steve Jobs" },
+    { quote: "El secreto de la creatividad es saber cómo esconder tus fuentes.", author: "Albert Einstein" },
+    { quote: "La inteligencia consiste no sólo en el conocimiento, sino también en la destreza de aplicar los conocimientos en la práctica.", author: "Aristóteles" },
+    { quote: "La mejor manera de predecir el futuro es inventarlo.", author: "Alan Kay" }
+  ];
+
+  // === ELEMENTOS DOM ===
+  const marquee = document.getElementById('marquee');
+  const track = document.getElementById('track');
+  const inner = document.getElementById('inner');
+  const copy1 = document.getElementById('copy1');
+  const copy2 = document.getElementById('copy2');
+
+  const modal = document.getElementById('quoteModal');
+  const quoteText = document.getElementById('quoteText');
+  const quoteAuthor = document.getElementById('quoteAuthor');
+  const anotherBtn = document.getElementById('anotherBtn');
+  const closeBtn = document.getElementById('closeBtn');
+
+  // Inicializa el contenido de la marquesina con frases (puedes cambiar aquí)
+  function seedTrackWithQuotes(){
+    const samples = localQuotes.map(q => `${q.quote} — ${q.author}`).join(' • ');
+    copy1.textContent = samples + ' • ';
+    copy2.textContent = samples + ' • ';
+    // después de actualizar el texto, recalcular duración
+    requestAnimationFrame(updateMarqueeDuration);
+  }
+
+  // Calcula una duración basada en el ancho del contenido para velocidad constante
+  function updateMarqueeDuration(){
+    // ancho del contenido visible y del contenido real
+    const visibleWidth = track.clientWidth;
+    const contentWidth = inner.scrollWidth / 2; // una copia
+    // si el contenido es más corto que el contenedor, aún queremos desplazarlo suavemente
+    const effectiveDistance = Math.max(contentWidth, visibleWidth);
+    // velocidad en px por segundo (ajusta para acelerar/ralentizar)
+    const pxPerSecond = 80; // 80px/s por defecto
+    const durationSeconds = (effectiveDistance + visibleWidth) / pxPerSecond;
+    const duration = Math.max(durationSeconds, 8); // mínimo 8s para evitar animaciones instantáneas
+    // aplicar como variable CSS
+    inner.style.setProperty('--duration', duration + 's');
+    // también actualizar la variable global por si se usa en otro lado
+    document.documentElement.style.setProperty('--marquee-speed', duration + 's');
+  }
+
+  // Recalcular al cambiar tamaño de ventana
+  window.addEventListener('resize', function(){
+    // debounce simple
+    clearTimeout(window._marqueeResizeTimer);
+    window._marqueeResizeTimer = setTimeout(updateMarqueeDuration, 120);
+  });
+
+  // === Interacción: click para obtener frase ===
+  function onMarqueeClick(e){
+    if (modal.classList.contains('loading')) return;
+    showModalLoading();
+    fetchQuote().then(displayQuote).catch(err=>{
+      console.error('Error obteniendo frase:', err);
+      displayQuote(randomLocalQuote());
     });
+  }
+  marquee.addEventListener('click', onMarqueeClick);
 
-    /* Animación por ciclos completos:
-       - Coloca el texto fuera a la derecha (translateX(startX))
-       - Transiciona hasta que el texto haya salido completamente por la izquierda (translateX(endX))
-       - Al terminar la transición, resetea sin transición y repite
-    */
-    (function marqueeLoop() {
-      let running = false;
-      const pxPerSecond = 120; // velocidad visual (ajusta si quieres más/menos velocidad)
+  anotherBtn.addEventListener('click', function(){
+    showModalLoading();
+    fetchQuote().then(displayQuote).catch(err=>{
+      console.error('Error obteniendo frase:', err);
+      displayQuote(randomLocalQuote());
+    });
+  });
 
-      function startOnce() {
-        if (running) return;
-        running = true;
-        runCycle();
-        window.addEventListener('resize', restartOnResize);
-      }
+  closeBtn.addEventListener('click', hideModal);
 
-      function restartOnResize() {
-        // reinicia el ciclo para recalcular dimensiones
-        running = false;
-        // small debounce
-        clearTimeout(restartOnResize._t);
-        restartOnResize._t = setTimeout(() => {
-          running = false;
-          runCycle();
-        }, 150);
-      }
+  function showModalLoading(){
+    modal.classList.add('show','loading');
+    quoteText.textContent = 'Cargando frase...';
+    quoteAuthor.textContent = '';
+    modal.setAttribute('aria-hidden','false');
+  }
+  function hideModal(){
+    modal.classList.remove('show','loading');
+    modal.setAttribute('aria-hidden','true');
+  }
+  function displayQuote(obj){
+    modal.classList.remove('loading');
+    quoteText.textContent = obj.quote || 'Sin frase disponible.';
+    quoteAuthor.textContent = obj.author ? '— ' + obj.author : '';
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+  }
+  function randomLocalQuote(){
+    return localQuotes[Math.floor(Math.random()*localQuotes.length)];
+  }
 
-      function runCycle() {
-        // medidas
-        const wrapperWidth = track.parentElement.clientWidth;
-        const textWidth = text.offsetWidth;
-        // punto inicial: texto completamente fuera a la derecha
-        const startX = wrapperWidth;
-        // punto final: texto completamente fuera por la izquierda (negativo de su ancho)
-        const endX = -textWidth;
-        // distancia total a recorrer en px
-        const distance = startX - endX;
-        // duración en segundos
-        const duration = Math.max(3, distance / pxPerSecond);
+  async function fetchQuote(){
+    if (!AI_API.enabled) {
+      await new Promise(r=>setTimeout(r,350));
+      return randomLocalQuote();
+    }
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), 8000);
+    try {
+      const res = await fetch(AI_API.url, { method: 'GET', headers: AI_API.fetchHeaders, signal: controller.signal });
+      clearTimeout(timeout);
+      if (!res.ok) throw new Error('Respuesta no OK: ' + res.status);
+      const data = await res.json();
+      if (data.quote && data.author !== undefined) return { quote: data.quote, author: data.author };
+      if (data.text) return { quote: data.text, author: data.author || 'Desconocido' };
+      if (typeof data === 'string') return { quote: data, author: 'Desconocido' };
+      throw new Error('Formato de respuesta inesperado');
+    } catch (err) {
+      clearTimeout(timeout);
+      throw err;
+    }
+  }
 
-        // colocar en inicio sin transición
-        text.style.transition = 'none';
-        text.style.transform = `translateX(${startX}px)`;
+  // Accesibilidad: cerrar modal con Escape
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') hideModal();
+  });
 
-        // forzar reflow para que el navegador aplique el estado inicial
-        void text.offsetWidth;
+  // Inicializar
+  seedTrackWithQuotes();
 
-        // aplicar transición hacia la posición final
-        text.style.transition = `transform ${duration}s linear`;
-        text.style.transform = `translateX(${endX}px)`;
-
-        // cuando termine, reiniciar ciclo
-        const onEnd = () => {
-          text.removeEventListener('transitionend', onEnd);
-          // reset sin transición y volver a iniciar
-          text.style.transition = 'none';
-          text.style.transform = `translateX(${startX}px)`;
-          // forzar reflow
-          void text.offsetWidth;
-          // pequeña pausa opcional entre ciclos (0.3s)
-          setTimeout(() => {
-            // iniciar siguiente ciclo
-            runCycle();
-          }, 300);
-        };
-
-        text.addEventListener('transitionend', onEnd);
-      }
-
-      // iniciar cuando la página esté lista y fuentes cargadas
-      if (document.readyState === 'complete') {
-        startOnce();
-      } else {
-        window.addEventListener('load', startOnce);
-      }
-    })();
-  </script>
+  // Forzar recalculo inicial tras render
+  requestAnimationFrame(updateMarqueeDuration);
+})();
+</script>
 </body>
 </html>
